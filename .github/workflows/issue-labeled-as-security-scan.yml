@@ -3,9 +3,13 @@ on:
     types: [labeled]
     
 jobs:
-  security-check
-  runs-on: ubuntu-latest
-  if: github.event.label.name == 'update-fork'
+  security-check:
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'security-check'
 
-  steps:
-  - uses: actions/checkout@v2
+    steps:
+    - uses: actions/checkout@v2
+    
+    - run: |
+         echo "Found the issue that triggered this event with number [${{ github.event.issue.number }}]"
+         echo "Found the issue title [${{ github.event.issue.title }}]"
