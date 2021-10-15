@@ -21,10 +21,6 @@ jobs:
     - uses: actions/github-script@v5
       with:
         script: |
-            console.log(context.issue.number)
-            console.log(context.repo.owner)
-            console.log(context.repo.repo)
-
             // todo, figure out pagination:
             const comments = await github.rest.issues.listComments({
               owner: context.repo.owner,
@@ -34,13 +30,14 @@ jobs:
 
             console.log(comments)
 
+            let lastItem
             if (comments.data.length > 1) {
               // find latest
               console.log("a")
-              let lastItem = comments[comments.data.length]
+              lastItem = comments[comments.data.length]
             } else {
               console.log("b")
-              let lastItem = comments.data
+              lastItem = comments.data
               console.log("b2")
               console.log(lastItem)
             }
