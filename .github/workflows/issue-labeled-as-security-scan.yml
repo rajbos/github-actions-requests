@@ -45,7 +45,12 @@ jobs:
 
             if (body.startsWith('uses: ')) {
               console.log('starts with [uses: ]')
+              const action = body.substring(6)
+              console.log('Found action with name $action')
+              console.log(action)
             }
             else {
               console.log('nope')
+              // todo: create comment letting the user now what to do
+              return
             }
