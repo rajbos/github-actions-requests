@@ -10,9 +10,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - run: |
+    - with: 
+        body: ${{ github.event.issue.body }}
+      run: |
          echo 'Found the issue that triggered this event with number [${{ github.event.issue.number }}]'
          echo 'Found the issue title [${{ github.event.issue.title }}]'
          echo -e $body
-      with: 
-        body: ${{ github.event.issue.body }}
