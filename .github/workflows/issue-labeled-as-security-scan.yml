@@ -40,7 +40,7 @@ jobs:
               let lastItem = comments[comments.length-1]
             } else {
               console.log("b")
-              let lastItem = null
+              let lastItem = comments
             }
 
 
