@@ -25,7 +25,7 @@ jobs:
             console.log(context.repo.owner)
             console.log(context.repo.repo)
 
-            const options = github.rest.issues.listComments({
+            const options = github.rest.issues.listComments.endPoint({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
