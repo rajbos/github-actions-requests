@@ -34,12 +34,10 @@ jobs:
             if (comments.data.length > 1) {
               // find latest
               console.log("a")
-              lastItem = comments[comments.data.length]
+              lastItem = comments[comments.data.length-1]
             } else {
               console.log("b")
               lastItem = comments.data
-              console.log("b2")
-              console.log(lastItem)
             }
 
 
