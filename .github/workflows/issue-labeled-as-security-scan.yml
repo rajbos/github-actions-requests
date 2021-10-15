@@ -17,3 +17,18 @@ jobs:
          echo 'Found the issue that triggered this event with number [${{ github.event.issue.number }}]'
          echo 'Found the issue title [${{ github.event.issue.title }}]'
          echo -e $body
+
+    - uses: actions/github-script@v5
+      with:
+        script: |
+            const options = github.rest.issues.getComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+
+            const comments = await github.paginate(options)
+
+            for (const comment of comments) {
+              console.log(comment.body)
+            }
