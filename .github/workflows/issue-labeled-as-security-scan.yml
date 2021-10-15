@@ -26,14 +26,16 @@ jobs:
             console.log(context.repo.repo)
 
             const options = github.rest.issues.listComments({
-              issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
+              issue_number: context.issue.number,
             })
 
             console.log(options)
 
             const comments = await github.paginate(options)
+
+            console.log(comments)
 
             for (const comment of comments) {
               console.log(comment.body)
