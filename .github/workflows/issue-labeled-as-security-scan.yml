@@ -19,27 +19,33 @@ jobs:
          echo -e $body
 
     - uses: actions/github-script@v5
+      name: Find action from comment
       with:
         script: |
             // todo, figure out pagination:
+
+            // load all comments for this issue
             const comments = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
             })
 
-            console.log(comments)
-
+            // find the last comment
             let lastItem
             if (comments.data.length > 1) {
               // find latest
-              console.log("a")
               lastItem = comments.data[comments.data.length-1]
             } else {
-              console.log("b")
               lastItem = comments.data
             }
 
+            const body = lastItem.body
+            console.log(body)
 
-            console.log("c")
-            console.log(lastItem)
+            if (body.startsWith('uses: ')) {
+              console.log('starts with [uses: ]')
+            }
+            else {
+              console.log('nope')
+            }
