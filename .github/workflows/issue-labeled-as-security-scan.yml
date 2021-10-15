@@ -21,6 +21,10 @@ jobs:
     - uses: actions/github-script@v5
       with:
         script: |
+            console.log(context.issue.number)
+            console.log(context.repo.owner)
+            console.log(context.repo.repo)
+
             const options = github.rest.issues.listComments({
               issue_number: context.issue.number,
               owner: context.repo.owner,
