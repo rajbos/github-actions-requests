@@ -21,7 +21,7 @@ jobs:
     - uses: actions/github-script@v5
       with:
         script: |
-            const options = github.rest.issues.getComments({
+            const options = github.rest.listComments({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
