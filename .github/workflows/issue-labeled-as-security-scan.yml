@@ -7,12 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'security-check'
 
+    env:
+      body: ${{ github.event.issue.body }}
+
     steps:
     - uses: actions/checkout@v2
     
-    - with: 
-        body: ${{ github.event.issue.body }}
-      run: |
+    - run: |
          echo 'Found the issue that triggered this event with number [${{ github.event.issue.number }}]'
          echo 'Found the issue title [${{ github.event.issue.title }}]'
          echo -e $body
