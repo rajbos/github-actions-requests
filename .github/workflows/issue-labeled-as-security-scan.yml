@@ -11,5 +11,6 @@ jobs:
     - uses: actions/checkout@v2
     
     - run: |
-         echo "Found the issue that triggered this event with number [${{ github.event.issue.number }}]"
-         echo "Found the issue title [${{ github.event.issue.title }}]"
+         echo 'Found the issue that triggered this event with number [${{ github.event.issue.number }}]'
+         echo 'Found the issue title [${{ github.event.issue.title }}]'
+         echo 'Found the issue title '[${{ github.event.issue.body }}]'
