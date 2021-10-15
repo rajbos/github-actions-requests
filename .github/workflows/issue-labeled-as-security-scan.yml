@@ -25,7 +25,7 @@ jobs:
             console.log(context.repo.owner)
             console.log(context.repo.repo)
 
-            # todo, figure out pagination:
+            // todo, figure out pagination:
             const comments = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
