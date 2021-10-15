@@ -34,7 +34,15 @@ jobs:
 
             console.log(comments)
 
-            for (const comment of comments) {
-              console.log("- item")	
-              console.log(comment.body)
+            if (comments.length > 0) {
+              // find latest
+              console.log("a")
+              let lastItem = comments[(comments.length-1]
+            } else {
+              console.log("b")
+              let lastItem = null
             }
+
+
+            console.log("c")
+            console.log(lastItem)
