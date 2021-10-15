@@ -38,5 +38,6 @@ jobs:
             console.log(comments)
 
             for (const comment of comments) {
+              console.log("- item")	
               console.log(comment.body)
             }
