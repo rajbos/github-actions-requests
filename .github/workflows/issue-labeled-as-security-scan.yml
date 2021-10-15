@@ -34,13 +34,15 @@ jobs:
 
             console.log(comments)
 
-            if (comments.length > 0) {
+            if (comments.data.length > 0) {
               // find latest
               console.log("a")
-              let lastItem = comments[comments.length-1]
+              let lastItem = comments[comments.data.length-1]
             } else {
               console.log("b")
-              let lastItem = comments
+              let lastItem = comments.data
+              console.log("b2")
+              console.log(lastItem)
             }
 
 
