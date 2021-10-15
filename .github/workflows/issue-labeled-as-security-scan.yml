@@ -43,13 +43,16 @@ jobs:
             const body = lastItem.body
             console.log(body)
 
-            if (body.startsWith('uses: ')) {
-              const action = body.substring(6)
-              console.log(`Found action with name ${action}`)
-              console.log(action)
-            }
-            else {
+            let action
+            if (!body.startsWith('uses: ')) {              
               console.log('nope')
               // todo: create comment letting the user now what to do
               return
-            }
+            } 
+
+            // todo: search for last space as well to cut off the name at the end for more flexibility
+            action = body.substring(6)
+            console.log(`Found action with name ${action}`)
+            console.log(action)
+
+            
