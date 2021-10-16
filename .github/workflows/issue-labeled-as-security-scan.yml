@@ -156,3 +156,5 @@ jobs:
               sha: data.sha
             })
 
+            // todo: trigger the CodeQL workflow is default branch != main (hardcoded in the workflow file)
+            // todo: generate random cron schedule?
