@@ -115,6 +115,9 @@ jobs:
         script: |            
             const { repo, org } = process.env
             console.log(`Hello ${org} ${repo}`)
+            console.log(content.toString(`base64`))
+            console.log("---------------------------")
+            console.log(content.toString('base64'))
             
             // todo: read file contents from this repo
             content = "content needs to go here"
