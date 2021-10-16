@@ -54,7 +54,7 @@ jobs:
               console.log('no action found')
               
               // create comment letting the user now what to do
-              octokit.rest.issues.createComment({
+              github.rest.issues.createComment({
                 owner,
                 repo,
                 issue_number,
