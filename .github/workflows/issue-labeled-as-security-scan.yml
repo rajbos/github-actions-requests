@@ -20,7 +20,9 @@ jobs:
 
     - uses: actions/github-script@v5
       name: Find action from comment
+      id: get-action
       with:
+        result-encoding: string
         script: |
             // todo, figure out pagination:
 
@@ -55,4 +57,7 @@ jobs:
             console.log(`Found action with name ${action}`)
             console.log(action)
 
-            
+            return action
+
+    - name: Get result
+      run: echo "${{steps.get-action.outputs.result}}"
