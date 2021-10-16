@@ -131,7 +131,10 @@ jobs:
               targetPath 
             })
 
+            console.log('data:')
             console.log(data)
+            
+            console.log('data.content:')
             console.log(data.content)
 
             if (data === null) {
@@ -140,7 +143,10 @@ jobs:
 
             content2 = Buffer.from(content.toString('base64'), 'base64')
             console.log(content2)
-            //if (Buffer.from(data.content, 'base64').compare(content) === 0) return
+            if (Buffer.from(data.content, 'base64').compare(content2) === 0) {
+              console.log('data in the codeql workflow file is the same. Halting execution')
+              return
+            }
                         
             // todo: test if file already exists
             github.rest.repos.createOrUpdateFileContents({
