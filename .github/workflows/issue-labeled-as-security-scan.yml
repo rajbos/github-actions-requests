@@ -26,11 +26,15 @@ jobs:
         script: |
             // todo, figure out pagination:
 
+            const owner = context.repo.owner
+            const repo = context.repo.repo
+            const issue_number = context.issue.number
+
             // load all comments for this issue
             const comments = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
+              owner: owner,
+              repo: repo,
+              issue_number: number,
             })
 
             // find the last comment
@@ -47,8 +51,16 @@ jobs:
 
             let action
             if (!body.startsWith('uses: ')) {              
-              console.log('nope')
-              // todo: create comment letting the user now what to do
+              console.log('no action found')
+              
+              // create comment letting the user now what to do
+              octokit.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                "Couldn't find the action in the last comment. /n/rPlease create a comment that only has `uses: owner/action-name` in it./n/r:robot:",
+              });
+
               return
             } 
 
