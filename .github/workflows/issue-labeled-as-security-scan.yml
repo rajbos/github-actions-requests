@@ -52,13 +52,20 @@ jobs:
             let action
             if (!body.startsWith('uses: ')) {              
               console.log('no action found')
+
+              const body: Array<string> = [
+                "Couldn't find the action uses statement in the last comment.",
+                "Please create a comment that only has `uses: owner/action-name` in it.",
+                "",
+                ":robot:"
+              ]
               
               // create comment letting the user now what to do
               github.rest.issues.createComment({
                 owner,
                 repo,
                 issue_number,
-                body: "Couldn't find the action in the last comment. /n/rPlease create a comment that only has `uses: owner/action-name` in it./n/r:robot:"
+                body: body.join('\n')
               });
 
               return
