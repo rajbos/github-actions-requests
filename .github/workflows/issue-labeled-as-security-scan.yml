@@ -58,7 +58,7 @@ jobs:
                 owner,
                 repo,
                 issue_number,
-                "Couldn't find the action in the last comment. /n/rPlease create a comment that only has `uses: owner/action-name` in it./n/r:robot:",
+                body: "Couldn't find the action in the last comment. /n/rPlease create a comment that only has `uses: owner/action-name` in it./n/r:robot:"
               });
 
               return
