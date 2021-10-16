@@ -87,18 +87,17 @@ jobs:
             console.log(`::set-output name=owner::${actionOwner}`)
             console.log(`::set-output name=name::${actionName}`)
 
-            return action
-
-    - name: Get result
+    - name: Get result for verification
       run: |
-        echo "Result: ${{steps.get-action.outputs.result}}"
         echo "Owner: ${{steps.get-action.outputs.owner}}"
         echo "Name: ${{steps.get-action.outputs.name}}"
+
+    # todo: add a new comment to the issue indication the action of forking the repo over to the other org?
 
     - name: Fork the action repository to rajbos-actions-test
       uses: rajbos-actions/forker@v0.0.1
       with:
         token: ${{ secrets.GH_TOKEN }}
-        repo: rajbos-actions
-        owner: forker
+        repo: ${{steps.get-action.outputs.name}}
+        owner: ${{steps.get-action.outputs.owner}}
         org: rajbos-actions-test
