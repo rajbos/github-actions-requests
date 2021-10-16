@@ -100,4 +100,29 @@ jobs:
         token: ${{ secrets.GH_TOKEN }}
         repo: ${{steps.get-action.outputs.name}}
         owner: ${{steps.get-action.outputs.owner}}
-        org: rajbos-actions-test
+        org: rajbos-actions-test # todo: make central parameter
+
+    # since dependabot alerts and dependency graph is enabled on the organization level, we only need to add a CodeQL setup
+    # for it we need to inject the default CodeQL config into the forked action repository
+    - uses: actions/github-script@v5
+      name: Inject CodeQL workflow into new forked repository
+      id: CodeQL
+      env:
+        token: ${{ secrets.GH_TOKEN }}
+        repo: ${{steps.get-action.outputs.name}}
+        org: rajbos-actions-test # todo: make central parameter
+      with:        
+        script: |            
+            const { repo, org } = process.env
+            
+            octokit.rest.repos.createOrUpdateFileContents({
+              owner: org,
+              repo,
+              path: ".github/workflows/codeql-analysis.yml",
+              message: "Adding CodeQL setup",
+              content: "content needs to go here",
+              committer.name: "bot",
+              committer.email: "bot",
+              author.name: "bot",
+              author.email: "bot"
+            })
