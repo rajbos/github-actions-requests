@@ -120,9 +120,12 @@ jobs:
             github.rest.repos.createOrUpdateFileContents({
               owner: org,
               repo,
-              path: "/.github/workflows/codeql-analysis.yml",
+              path: ".github/workflows/codeql-analysis.yml",
               message: "Adding CodeQL setup",
-              content: "content needs to go here"
-              
+              content: "content needs to go here",
+              //committer.name: "bot",
+              //committer.email: "bot",
+              //author.name: "bot",
+              //author.email: "bot"
             })
 
