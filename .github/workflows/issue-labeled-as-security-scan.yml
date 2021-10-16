@@ -108,10 +108,10 @@ jobs:
       name: Inject CodeQL workflow into new forked repository
       id: CodeQL
       env:
-        token: ${{ secrets.GH_TOKEN }}
         repo: ${{steps.get-action.outputs.name}}
         org: rajbos-actions-test # todo: make central parameter
-      with:        
+      with:      
+        github-token: ${{ secrets.GH_TOKEN }}  
         script: |            
             const { repo, org } = process.env
             console.log(`Hello ${org} ${repo}`)
@@ -123,9 +123,9 @@ jobs:
               path: ".github/workflows/codeql-analysis.yml",
               message: "Adding CodeQL setup",
               content: "content needs to go here",
-              //committer.name: "bot",
-              //committer.email: "bot",
-              //author.name: "bot",
-              //author.email: "bot"
+              committer.name: "bot",
+              committer.email: "bot",
+              author.name: "bot",
+              author.email: "bot"
             })
 
