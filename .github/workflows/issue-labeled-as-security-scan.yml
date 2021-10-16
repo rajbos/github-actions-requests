@@ -72,11 +72,29 @@ jobs:
             } 
 
             // todo: search for last space as well to cut off the name at the end for more flexibility
-            action = body.substring(6)
+            let action = body.substring(6)
             console.log(`Found action with name ${action}`)
             console.log(action)
 
-            return action
+            // return action
+            let index = action.indexOf('/')
+            let owner = action.substring(0, index)
+            let name = action.substring(index+1)
+            console.log("::set-output name=owner::owner")
+            console.log("::set-output name=name::name")
 
+            return action
+            
     - name: Get result
-      run: echo "${{steps.get-action.outputs.result}}"
+      run: |
+        echo "Result: ${{steps.get-action.outputs.result}}"
+        echo "Owner: ${{steps.get-action.outputs.owner}}"
+        echo "Name: ${{steps.get-action.outputs.name}}"
+
+    - name: Fork the action repository to rajbos-actions-test
+      uses: rajbos-actions/forker@v0.0.1
+      with:
+        token: ${{ secrets.GH_TOKEN }}
+        repo: rajbos-actions
+        owner: forker
+        org: rajbos-actions-test
