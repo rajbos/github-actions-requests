@@ -130,7 +130,17 @@ jobs:
               repo,
               targetPath 
             })
-            if (Buffer.from(data.content, 'base64').compare(content) === 0) return
+
+            console.log(data)
+            console.log(data.content)
+
+            if (data === null) {
+              console.log('data is null')
+            }
+
+            content2 = Buffer.from(content.toString('base64'), 'base64')
+            console.log(content2)
+            //if (Buffer.from(data.content, 'base64').compare(content) === 0) return
                         
             // todo: test if file already exists
             github.rest.repos.createOrUpdateFileContents({
@@ -138,7 +148,7 @@ jobs:
               repo,
               path: targetPath,
               message: "Adding CodeQL setup",
-              content: content.toString('base64'),
+              content: content2.toString('base64'),
               sha: data.sha
             })
 
