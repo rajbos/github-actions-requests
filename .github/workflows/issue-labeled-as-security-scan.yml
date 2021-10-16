@@ -72,7 +72,7 @@ jobs:
             } 
 
             // todo: search for last space as well to cut off the name at the end for more flexibility
-            let action = body.substring(6)
+            action = body.substring(6)
             console.log(`Found action with name ${action}`)
             console.log(action)
 
@@ -84,7 +84,7 @@ jobs:
             console.log("::set-output name=name::name")
 
             return action
-            
+
     - name: Get result
       run: |
         echo "Result: ${{steps.get-action.outputs.result}}"
