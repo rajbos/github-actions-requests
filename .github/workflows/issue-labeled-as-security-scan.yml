@@ -123,9 +123,9 @@ jobs:
               path: ".github/workflows/codeql-analysis.yml",
               message: "Adding CodeQL setup",
               content: "content needs to go here",
-              ...committer.name: "bot",
-              ...committer.email: "bot@bot.com",
-              ...author.name: "bot",
-              ...author.email: "bot@bot.com"
+              "bot",
+              "bot@bot.com",
+              "bot",
+              "bot@bot.com"
             })
 
