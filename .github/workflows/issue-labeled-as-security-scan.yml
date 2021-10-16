@@ -116,12 +116,14 @@ jobs:
             const { repo, org } = process.env
             console.log(`Hello ${org} ${repo}`)
             
+            // todo: read file contents from this repo
+            content = "content needs to go here"
             // todo: test if file already exists
             github.rest.repos.createOrUpdateFileContents({
               owner: org,
               repo,
               path: ".github/workflows/codeql-analysis.yml",
               message: "Adding CodeQL setup",
-              content: "content needs to go here"              
+              content: content.toString('base64')            
             })
 
