@@ -117,14 +117,14 @@ jobs:
             console.log(`Hello ${org} ${repo}`)
             
             // todo: test if file already exists
-            octokit.rest.repos.createOrUpdateFileContents({
+            github.rest.repos.createOrUpdateFileContents({
               owner: org,
               repo,
               path: "/.github/workflows/codeql-analysis.yml",
               message: "Adding CodeQL setup",
-              content: "content needs to go here",
-              ...committer.name: "bot",
-              ...committer.email: "bot",
-              ...author.name: "bot",
-              ...author.email: "bot"
+              content: "content needs to go here"
+              committer.name: "bot",
+              committer.email: "bot",
+              author.name: "bot",
+              author.email: "bot"
             })
