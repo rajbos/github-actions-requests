@@ -53,7 +53,7 @@ jobs:
             if (!body.startsWith('uses: ')) {              
               console.log('no action found')
 
-              let body: Array<string> = [
+              let body = [
                 "Couldn't find the action uses statement in the last comment.",
                 "Please create a comment that only has `uses: owner/action-name` in it.",
                 "",
