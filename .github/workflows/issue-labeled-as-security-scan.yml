@@ -122,10 +122,6 @@ jobs:
               repo,
               path: ".github/workflows/codeql-analysis.yml",
               message: "Adding CodeQL setup",
-              content: "content needs to go here",
-              "bot",
-              "bot@bot.com",
-              "bot",
-              "bot@bot.com"
+              content: "content needs to go here"              
             })
 
