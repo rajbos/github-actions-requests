@@ -12,4 +12,4 @@ jobs:
     steps:
     
     - run: |
-         echo 'Found the issue for this run with number [$issue_number] and action: [$action]'
+         echo "Found the issue for this run with number [$issue_number] and action: [$action]"
