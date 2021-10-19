@@ -2,14 +2,15 @@ on:
   workflow_dispatch:
     
 jobs:
-  check:
+  check:    
+    runs-on: ubuntu-latest
+    #if: github.event.label.name == 'security-check'
+
     env:
       issue_number: 1
       action: "actions/github-script"
-    runs-on: ubuntu-latest
-    #if: github.event.label.name == 'security-check'
 
     steps:
     
     - run: |
-         echo "Found the issue for this run with number [$issue_number] and action: [$action]""
+         echo "Found the issue for this run with number [$issue_number] and action: [$action]"
