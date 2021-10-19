@@ -1,5 +1,9 @@
 on:
   workflow_dispatch:
+
+  push: 
+    branches:
+      - 6-dependabot-alerts
     
 jobs:
   check:    
