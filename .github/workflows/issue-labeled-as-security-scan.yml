@@ -11,8 +11,6 @@ jobs:
       body: ${{ github.event.issue.body }}
 
     steps:
-    - uses: actions/checkout@v2
-    
     - run: |
          echo 'Found the issue that triggered this event with number [${{ github.event.issue.number }}]'
          echo 'Found the issue title [${{ github.event.issue.title }}]'
@@ -84,8 +82,77 @@ jobs:
             console.log(`Found owner:${actionOwner}`)
             console.log(`Found action:${actionName}`)
 
+            console.log(`::set-output name=action::${action}`)
             console.log(`::set-output name=owner::${actionOwner}`)
             console.log(`::set-output name=name::${actionName}`)
+      
+            console.log(`::set-output name=request_owner::${owner}`)            
+            console.log(`::set-output name=request_repo::${repo}`)
+            console.log(`::set-output name=request_issue::${issue_number}`)
+    
+    - name: Check-out referenced Action
+      run: |
+        git clone https://github.com/${{ steps.get-action.outputs.action }}
+
+    - name: Check Dependabot configuration
+      id: has-dependabot-configuration
+      run: |
+        echo "Looking for 'dependabot.yml' in '.github' folder"
+        if [ -d ".github" ] && [ -n (find .github -maxdepth 1 -name dependabot.yml) ] ; then
+          jq -nc '{"body": "✅ Dependabot configuration found"}' | \
+          curl -sL  -X POST -d @- \
+            -H "Content-Type: application/json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ steps.get-action.outputs.request_owner }}/${{ steps.get-action.outputs.request_repo }}/issues/${{ steps.get-action.outputs.request_issue }}/comments"
+        else
+          jq -nc '{"body": "⛔️ No Dependabot configuration found"}' | \
+          curl -sL  -X POST -d @- \
+            -H "Content-Type: application/json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ steps.get-action.outputs.request_owner }}/${{ steps.get-action.outputs.request_repo }}/issues/${{ steps.get-action.outputs.request_issue }}/comments"
+        fi
+
+    - name: Check CodeQL step in Workflow
+      id: has-codeql-in-workflow
+      run: |
+        echo "Looking for CodeQL action in any Workflow"
+        if [ ! -d ".github/workflows" ]; then
+          jq -nc '{"body": "⛔️ No workflows found"}' | \
+            curl -sL  -X POST -d @- \
+              -H "Content-Type: application/json" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ steps.get-action.outputs.request_owner }}/${{ steps.get-action.outputs.request_repo }}/issues/${{ steps.get-action.outputs.request_issue }}/comments"
+        else
+          if [ `grep .github/workflows/*.yml -e 'uses: github/codeql-action/init' | wc -l` -gt 0 ]; then
+            WORKFLOW=`grep .github/workflows/*.yml -e 'uses: github/codeql-action/init' -H | cut -f1 -d' ' | sed "s/:$//g"`
+            jq -nc "{\"body\": \"✅ CodeQL Init step found in $WORKFLOW\"}" | \
+            curl -sL  -X POST -d @- \
+              -H "Content-Type: application/json" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ steps.get-action.outputs.request_owner }}/${{ steps.get-action.outputs.request_repo }}/issues/${{ steps.get-action.outputs.request_issue }}/comments"
+          else
+            jq -nc '{"body": "⛔️ No CodeQL Init step found"}' | \
+            curl -sL  -X POST -d @- \
+              -H "Content-Type: application/json" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ steps.get-action.outputs.request_owner }}/${{ steps.get-action.outputs.request_repo }}/issues/${{ steps.get-action.outputs.request_issue }}/comments"
+          fi
+
+          if [ `grep .github/workflows/*.yml -e 'uses: github/codeql-action/analyze' | wc -l` -gt 0 ]; then
+            WORKFLOW=`grep .github/workflows/*.yml -e 'uses: github/codeql-action/analyze' -H | cut -f1 -d' ' | sed "s/:$//g"`
+            jq -nc "{\"body\": \"✅ CodeQL Analyze step found in $WORKFLOW\"}" | \
+            curl -sL  -X POST -d @- \
+              -H "Content-Type: application/json" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ steps.get-action.outputs.request_owner }}/${{ steps.get-action.outputs.request_repo }}/issues/${{ steps.get-action.outputs.request_issue }}/comments"
+          else
+            jq -nc '{"body": "⛔️ No CodeQL Analyze step found"}' | \
+            curl -sL  -X POST -d @- \
+              -H "Content-Type: application/json" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ steps.get-action.outputs.request_owner }}/${{ steps.get-action.outputs.request_repo }}/issues/${{ steps.get-action.outputs.request_issue }}/comments"
+          fi
+        fi
 
     - name: Get result for verification
       run: |
