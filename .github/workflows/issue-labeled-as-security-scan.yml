@@ -92,13 +92,13 @@ jobs:
     
     - name: Check-out referenced Action
       run: |
-        git clone https://github.com/${{ steps.get-action.outputs.action }}
+        git clone https://github.com/${{ steps.get-action.outputs.action }} action
 
     - name: Check Dependabot configuration
       id: has-dependabot-configuration
       run: |
-        echo "Looking for 'dependabot.yml' in '.github' folder"
-        if [ -d ".github" ] && [ -n (find .github -maxdepth 1 -name dependabot.yml) ] ; then
+        echo "Looking for 'dependabot.yml' in '.github' folder of the action"
+        if [ -d "action/.github" ] && [ -n (find .github -maxdepth 1 -name dependabot.yml) ] ; then
           jq -nc '{"body": "✅ Dependabot configuration found"}' | \
           curl -sL  -X POST -d @- \
             -H "Content-Type: application/json" \
@@ -115,16 +115,16 @@ jobs:
     - name: Check CodeQL step in Workflow
       id: has-codeql-in-workflow
       run: |
-        echo "Looking for CodeQL action in any Workflow"
-        if [ ! -d ".github/workflows" ]; then
+        echo "Looking for CodeQL action in any Workflow of the action"
+        if [ ! -d "action/.github/workflows" ]; then
           jq -nc '{"body": "⛔️ No workflows found"}' | \
             curl -sL  -X POST -d @- \
               -H "Content-Type: application/json" \
               -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
               "https://api.github.com/repos/${{ steps.get-action.outputs.request_owner }}/${{ steps.get-action.outputs.request_repo }}/issues/${{ steps.get-action.outputs.request_issue }}/comments"
         else
-          if [ `grep .github/workflows/*.yml -e 'uses: github/codeql-action/init' | wc -l` -gt 0 ]; then
-            WORKFLOW=`grep .github/workflows/*.yml -e 'uses: github/codeql-action/init' -H | cut -f1 -d' ' | sed "s/:$//g"`
+          if [ `grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/init' | wc -l` -gt 0 ]; then
+            WORKFLOW=`grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/init' -H | cut -f1 -d' ' | sed "s/:$//g"`
             jq -nc "{\"body\": \"✅ CodeQL Init step found in $WORKFLOW\"}" | \
             curl -sL  -X POST -d @- \
               -H "Content-Type: application/json" \
@@ -138,8 +138,8 @@ jobs:
               "https://api.github.com/repos/${{ steps.get-action.outputs.request_owner }}/${{ steps.get-action.outputs.request_repo }}/issues/${{ steps.get-action.outputs.request_issue }}/comments"
           fi
 
-          if [ `grep .github/workflows/*.yml -e 'uses: github/codeql-action/analyze' | wc -l` -gt 0 ]; then
-            WORKFLOW=`grep .github/workflows/*.yml -e 'uses: github/codeql-action/analyze' -H | cut -f1 -d' ' | sed "s/:$//g"`
+          if [ `grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/analyze' | wc -l` -gt 0 ]; then
+            WORKFLOW=`grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/analyze' -H | cut -f1 -d' ' | sed "s/:$//g"`
             jq -nc "{\"body\": \"✅ CodeQL Analyze step found in $WORKFLOW\"}" | \
             curl -sL  -X POST -d @- \
               -H "Content-Type: application/json" \
