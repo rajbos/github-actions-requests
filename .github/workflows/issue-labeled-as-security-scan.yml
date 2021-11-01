@@ -74,7 +74,8 @@ jobs:
                 body: body.join('\n')
               });
 
-              return 1
+              core.setFailed(`Can't find action text in the last comment`)
+              return
             }
 
             let action
@@ -96,7 +97,8 @@ jobs:
                 body: body.join('\n')
               });
 
-              return 1
+              core.setFailed(`Can't find action text in the last comment`)
+              return
             } 
 
             // todo: search for last space as well to cut off the name at the end for more flexibility
