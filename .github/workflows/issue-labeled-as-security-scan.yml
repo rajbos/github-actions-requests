@@ -36,9 +36,6 @@ jobs:
               issue_number: issue_number,
             })
 
-            console.log(`comments: ${comments}`)
-            console.log(`comments.data.length: ${comments.data.length}`)
-
             // find the last comment
             let lastItem            
             if (comments.data.length > 0) {
@@ -48,6 +45,7 @@ jobs:
             } else {
               // use issue body
               // todo
+              console.log(`Can't find issue comment, we should use issue body. This is not supported yet.`)
             }
 
             const body = lastItem.body
@@ -96,14 +94,13 @@ jobs:
               return
             } 
 
-            // todo: search for last space as well to cut off the name at the end for more flexibility
             action = body.substring(6)
             let spaceIndex = action.indexOf(' ')
             if (spaceIndex > 0) {
               console.log(`found space at char [${spaceIndex}], cutting of the action text before it`)
               action = action.substring(0, spaceIndex)
             }
-            console.log(`Found action with name ${action}`)
+            console.log(`Found action with name [${action}]`)
             console.log(action)
 
             // return action
