@@ -27,25 +27,33 @@ jobs:
             const owner = context.repo.owner
             const repo = context.repo.repo
             const issue_number = context.issue.number
+            console.log(`running with issue number [${issue_number}]`)
 
-            // load all comments for this issue
+            // load all comments for this issue           
             const comments = await github.rest.issues.listComments({
               owner: owner,
               repo: repo,
               issue_number: issue_number,
             })
 
+            console.log(`comments: ${comments}`)
+            console.log(`comments.data.length: ${comments.data.length}`)
+
             // find the last comment
-            let lastItem
+            let lastItem            
             if (comments.data.length > 1) {
               // find latest
               lastItem = comments.data[comments.data.length-1]
             } else {
+              // there is only one comment?
               lastItem = comments.data
             }
 
             const body = lastItem.body
-            console.log(body)
+            console.log(`body: ${body}`)
+            if (!body) {
+              console.log(`can't load issue body`)
+            }
 
             let action
             if (!body.startsWith('uses: ')) {              
