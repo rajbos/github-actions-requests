@@ -98,6 +98,11 @@ jobs:
 
             // todo: search for last space as well to cut off the name at the end for more flexibility
             action = body.substring(6)
+            let spaceIndex = action.indexOf(' ')
+            if (spaceIndex > 0) {
+              console.log(`found space at char [${spaceIndex}], cutting of the action text before it`)
+              action = action.substring(0, spaceIndex)
+            }
             console.log(`Found action with name ${action}`)
             console.log(action)
 
