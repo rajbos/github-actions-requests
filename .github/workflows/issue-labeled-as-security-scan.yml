@@ -127,6 +127,7 @@ jobs:
         echo "Looking for 'dependabot.yml' in '.github' folder of the action"
         cd action
         ls -la
+        cd ..
         if [ -d "action/.github" ] && [ -n (find .github -maxdepth 1 -name dependabot.yml) ] ; then
           jq -nc '{"body": "✅ Dependabot configuration found"}' | \
           curl -sL  -X POST -d @- \
