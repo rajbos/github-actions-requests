@@ -41,19 +41,13 @@ jobs:
 
             // find the last comment
             let lastItem            
-            if (comments.data.length > 1) {
+            if (comments.data.length > 0) {
               // find latest
               console.log(`using last comment's data`)
               lastItem = comments.data[comments.data.length-1]
             } else {
-              // there is only one comment?
-              console.log(`there is only one comment, using that`)
-              console.log(`body1: ${comments.data}`)
-              console.log(`body2: ${comments.data.body}`)
-              console.log(`body3: ${comments.data[0]}`)
-              console.log(`body4: ${comments.data[0].body}`)
-              
-              lastItem = comments.data
+              // use issue body
+              // todo
             }
 
             const body = lastItem.body
