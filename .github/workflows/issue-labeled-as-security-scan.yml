@@ -43,16 +43,36 @@ jobs:
             let lastItem            
             if (comments.data.length > 1) {
               // find latest
+              console.log(`using last comment's data`)
               lastItem = comments.data[comments.data.length-1]
             } else {
               // there is only one comment?
+              console.log(`there is only one comment, using that`)
+              console.log(`body: ${comments.data}`)
+              
               lastItem = comments.data
             }
 
             const body = lastItem.body
-            console.log(`body: ${body}`)
             if (!body) {
               console.log(`can't load issue body`)
+
+              let body = [
+                "Couldn't find the action uses statement in the last comment.",
+                "Please create a comment that only has `uses: owner/action-name` in it.",
+                "",
+                ":robot:"
+              ]
+              
+              // create comment letting the user now what to do
+              github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body: body.join('\n')
+              });
+
+              return
             }
 
             let action
