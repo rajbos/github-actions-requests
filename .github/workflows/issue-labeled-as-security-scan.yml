@@ -48,7 +48,9 @@ jobs:
             } else {
               // there is only one comment?
               console.log(`there is only one comment, using that`)
-              console.log(`body: ${comments.data}`)
+              console.log(`body1: ${comments.data}`)
+              console.log(`body2: ${comments.data.body}`)
+              console.log(`body3: ${comments.data[0]}`)
               
               lastItem = comments.data
             }
@@ -72,7 +74,7 @@ jobs:
                 body: body.join('\n')
               });
 
-              return
+              return 1
             }
 
             let action
@@ -94,7 +96,7 @@ jobs:
                 body: body.join('\n')
               });
 
-              return
+              return 1
             } 
 
             // todo: search for last space as well to cut off the name at the end for more flexibility
