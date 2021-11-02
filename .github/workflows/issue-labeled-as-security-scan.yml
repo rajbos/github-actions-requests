@@ -295,7 +295,7 @@ jobs:
     needs: find-action-name
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: Fork the action repository to rajbos-actions-test
       uses: rajbos-actions/forker@v0.0.1
       with:
@@ -324,10 +324,12 @@ jobs:
             const content = readFileSync(`${process.env.GITHUB_WORKSPACE}/${path}`)
 
             const targetPath = ".github/workflows/codeql-analysis.yml"
+
+            // this call gives a 404, since the file does not exist, how to handle this?
             const { data } = await github.rest.repos.getContent({ 
               owner: org,
               repo,
-              path: ".github/workflows/codeql-analysis.yml" 
+              path: ".github/workflows/codeql-analysis.yml"  // todo: use variable here
             })
 
             console.log('data:')
