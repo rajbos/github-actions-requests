@@ -18,12 +18,12 @@ jobs:
       body: ${{ github.event.issue.body }}
 
     outputs:
-      action: ${{ needs.find-action-name.outputs.action }}
-      owner: ${{ needs.find-action-name.outputs.owner }}
-      name: ${{ needs.find-action-name.outputs.name }}
-      request_owner: ${{ needs.find-action-name.outputs.request_owner }}
-      request_repo: ${{ needs.find-action-name.outputs.request_repo }}
-      request_issue: ${{ needs.find-action-name.outputs.request_issue }}
+      action: ${{ steps.get-action.outputs.action }}
+      owner: ${{ steps.get-action.outputs.owner }}
+      name: ${{ steps.get-action.outputs.name }}
+      request_owner: ${{ steps.get-action.outputs.request_owner }}
+      request_repo: ${{ steps.get-action.outputs.request_repo }}
+      request_issue: ${{ steps.get-action.outputs.request_issue }}
 
     steps:
     - id: dispatch_issue_find
