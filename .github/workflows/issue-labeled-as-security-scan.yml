@@ -1,6 +1,8 @@
 on:
   issues: 
     types: [labeled, unlabeled]
+  workflow_dispatch:
+    
     
 jobs:
   find-action-name:
