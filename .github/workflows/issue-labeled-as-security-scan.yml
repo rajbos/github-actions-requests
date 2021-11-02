@@ -34,7 +34,7 @@ jobs:
          else
            echo "issue number found"
            // output a fixed set of variables
-           console.log(`::set-output name=issue_number::"${{ github.event.inputs.issue }}"`)
+           console.log(`::set-output name=issue_number::'${{github.event.inputs.issue}}'`)
          fi
 
          echo 'Found the issue that triggered this event with number [${{ github.event.issue.number }}]'
