@@ -34,7 +34,7 @@ jobs:
            echo "issue number not found"
          else
            echo "issue number found: [$issue_number]"
-           // output a fixed set of variables
+           # output a fixed variable
            echo "::set-output name=issue_number::${issue_number}"
          fi
 
