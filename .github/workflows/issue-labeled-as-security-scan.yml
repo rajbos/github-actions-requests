@@ -52,7 +52,7 @@ jobs:
 
             const owner = context.repo.owner
             const repo = context.repo.repo
-            const issue_number = context.issue.number
+            let issue_number = context.issue.number
 
             if (issue_number == null) {
               // try to load issue number from other step:
