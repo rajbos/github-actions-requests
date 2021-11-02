@@ -2,6 +2,11 @@ on:
   issues: 
     types: [labeled, unlabeled]
   workflow_dispatch:
+    inputs:
+      issue:
+        description: 'Issue number to work with'
+        required: true
+        default: '11'
     
     
 jobs:
@@ -22,7 +27,13 @@ jobs:
 
     steps:
     - run: |
-         echo "event: ${{ github.event }}"
+         echo "event: ${{ github.event.workflow_dispatch }}"
+         if [ "${{ github.event.workflow_dispatch }}" ]; then
+           echo "workflow distpatch"
+         else
+           echo "no workflow dispatch"
+         fi
+         echo "- in ${{ github.event.inputs.issue }}!"
 
          echo 'Found the issue that triggered this event with number [${{ github.event.issue.number }}]'
          echo 'Found the issue title [${{ github.event.issue.title }}]'
