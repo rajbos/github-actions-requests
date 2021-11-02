@@ -294,6 +294,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: find-action-name
     steps:
+    - uses: actions/checkout@v2
+    
     - name: Fork the action repository to rajbos-actions-test
       uses: rajbos-actions/forker@v0.0.1
       with:
@@ -315,7 +317,7 @@ jobs:
         github-token: ${{ secrets.GH_TOKEN }}  
         script: |            
             const { repo, org } = process.env
-            console.log(`Hello ${org}/${repo}`)
+            console.log(`Looking at this repository: [${org}/${repo}]`)
 
             const { readFileSync } = require('fs')
             const path = 'codeql-analysis.yml'
