@@ -26,18 +26,20 @@ jobs:
       request_issue: ${{ needs.find-action-name.outputs.request_issue }}
 
     steps:
-    - run: |
-         echo "event: ${{ github.event.inputs.issue }}"
+    - id: dispatch_issue_find
+      run: |
+         echo "Testing for dispatch event with issue number: ${{ github.event.inputs.issue }}"
          if [ "${{ github.event.inputs.issue }}" == "" ]; then
            echo "issue number not found"
          else
            echo "issue number found"
+           // output a fixed set of variables
+           console.log(`::set-output name=issue_number::${{ github.event.inputs.issue }}`)
          fi
-         echo "- in ${{ github.event.inputs.issue }}!"
 
          echo 'Found the issue that triggered this event with number [${{ github.event.issue.number }}]'
          echo 'Found the issue title [${{ github.event.issue.title }}]'
-         echo -e $body
+         echo -e $body         
 
     - uses: actions/github-script@v5
       name: Find action from comment
@@ -50,7 +52,20 @@ jobs:
             const owner = context.repo.owner
             const repo = context.repo.repo
             const issue_number = context.issue.number
+
+            if (issue_number == null) {
+              // try to load issue number from other step:
+              console.log(`issue number not found in context, searching for it in workflow dispatch step`)
+              
+              issue_number = ${{ steps.dispatch_issue_find.outputs.issue_number }}
+            }
+
             console.log(`running with issue number [${issue_number}]`)
+
+            if (issue_number == null) {
+              core.setFailed('issue_number not found')
+              return
+            }
 
             // load all comments for this issue           
             const comments = await github.rest.issues.listComments({
