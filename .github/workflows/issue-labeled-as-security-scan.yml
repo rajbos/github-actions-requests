@@ -28,10 +28,10 @@ jobs:
     steps:
     - run: |
          echo "event: ${{ github.event.issue.number }}"
-         if [ "${{ github.event.issue.number }}" ]; then
-           echo "issue number found"
+         if [ "${{ github.event.issue.number }}" == "" ]; then
+           echo "issue number not found"
          else
-           echo "no issue number found"
+           echo "issue number found"
          fi
          echo "- in ${{ github.event.inputs.issue }}!"
 
