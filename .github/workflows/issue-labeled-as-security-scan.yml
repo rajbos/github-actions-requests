@@ -29,12 +29,13 @@ jobs:
     - id: dispatch_issue_find
       run: |
          echo "Testing for dispatch event with issue number: ${{ github.event.inputs.issue }}"
+         issue_number=${{ github.event.inputs.issue }}
          if [ "${{ github.event.inputs.issue }}" == "" ]; then
            echo "issue number not found"
          else
-           echo "issue number found"
+           echo "issue number found: [$issue_number]"
            // output a fixed set of variables
-           console.log(`::set-output name=issue_number::'${{github.event.inputs.issue}}'`)
+           console.log(`::set-output name=issue_number::${issue_number}`)
          fi
 
          echo 'Found the issue that triggered this event with number [${{ github.event.issue.number }}]'
