@@ -324,7 +324,7 @@ jobs:
             const content = readFileSync(`${process.env.GITHUB_WORKSPACE}/${path}`)
 
             const targetPath = ".github/workflows/codeql-analysis.yml"
-
+            console.log(`Checking to see if [${targetPath}] already exists in the forked repo`)
             // this call gives a 404, since the file does not exist, how to handle this?
             let data 
             try {
@@ -344,11 +344,12 @@ jobs:
               console.log('e:')
               console.log(e)
             }
-
-            const content2 = Buffer.from(content.toString('base64'), 'base64')
+            
             if (data === null) {
               console.log('data is null, so workflow does not exist yet')
+              const content2 = content
             } else {              
+              const content2 = Buffer.from(data.content.toString('base64'), 'base64')
               # console.log('content2')
               # console.log(content2)
               if (Buffer.from(data.content, 'base64').compare(content2) === 0) {
