@@ -306,6 +306,8 @@ jobs:
 
     # since dependabot alerts and dependency graph is enabled on the organization level, we only need to add a CodeQL setup
     # for it we need to inject the default CodeQL config into the forked action repository
+
+    # todo: what if the action.yml indicates it runs in a docker image? Then we have not neccesarily a way to run CodeQL on actual CODE
     - uses: actions/github-script@v5
       name: Inject CodeQL workflow into new forked repository
       # todo: clear all other workflows first
@@ -322,50 +324,59 @@ jobs:
             const { readFileSync } = require('fs')
             const path = 'codeql-analysis.yml'
             const content = readFileSync(`${process.env.GITHUB_WORKSPACE}/${path}`)
-
+            
             const targetPath = ".github/workflows/codeql-analysis.yml"
-
+            console.log(`Checking to see if [${targetPath}] already exists in the forked repo`)
+            
             // this call gives a 404, since the file does not exist, how to handle this?
-            let data 
+            let data
             try {
-              { data } = await github.rest.repos.getContent({ 
+               console.log(`before the call`)
+               let { data } = await github.rest.repos.getContent({ 
                 owner: org,
                 repo,
                 path: ".github/workflows/codeql-analysis.yml"  // todo: use variable here
               })
+              console.log(`after the call`)
 
-              console.log('data:')
+              console.log(`data:`)
               console.log(data)
               
-              console.log('data.content:')
+              console.log(`data.content:`)
               console.log(data.content)
             }
             catch (e) {
-              console.log('e:')
+              console.log(`in the catch with e:`)
               console.log(e)
             }
-
-            const content2 = Buffer.from(content.toString('base64'), 'base64')
-            if (data === null) {
+            console.log(`after the catch`)
+            
+            let content2
+            if (data === undefined || data.content === undefined) {
               console.log('data is null, so workflow does not exist yet')
-            } else {              
-              # console.log('content2')
-              # console.log(content2)
+              content2 = content
+            } else {
+              console.log('data is not null, so does exist? We need to compare their hashes to see if we need to overwrite')
+              content2 = Buffer.from(data.content.toString('base64'), 'base64')
               if (Buffer.from(data.content, 'base64').compare(content2) === 0) {
                 console.log('data in the codeql workflow file is the same. Halting execution')
                 return
               }
             }
                         
-            // todo: test if file already exists
+            console.log(`Uploading the CodeQL workflow to the forked repository`)
             github.rest.repos.createOrUpdateFileContents({
               owner: org,
               repo,
               path: targetPath,
               message: "Adding CodeQL setup",
               content: content2.toString('base64'),
-              sha: data.sha
+              sha: data === undefined ? null : data.sha
             })
 
-            // todo: trigger the CodeQL workflow is default branch != main (hardcoded in the workflow file)
+            console.log('CodeQL workflow uploaded')
+
+            // todo: find the CodeQL workflow execution and wait for it to complete
+            // todo: handle the result of the workflow execution: what if all languages fail?
+            // todo: read the results from the CodeQL workflow
             // todo: generate random cron schedule?
