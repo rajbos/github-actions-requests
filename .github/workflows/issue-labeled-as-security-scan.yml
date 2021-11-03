@@ -344,15 +344,16 @@ jobs:
               console.log(data.content)
             }
             catch (e) {
-              console.log(`e:`)
+              console.log(`in the catch with e:`)
               console.log(e)
             }
             console.log(`after the catch`)
             
-            if (data === null) {
+            if (data === null || data.content === null) {
               console.log('data is null, so workflow does not exist yet')
               const content2 = content
-            } else {              
+            } else {
+              console.log('data is not null, so does exist? We need to compare their hashes to see if we need to overwrite')
               const content2 = Buffer.from(data.content.toString('base64'), 'base64')
               // console.log('content2')
               // console.log(content2)
