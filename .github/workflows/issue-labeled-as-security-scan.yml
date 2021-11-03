@@ -349,7 +349,7 @@ jobs:
             }
             console.log(`after the catch`)
             
-            if (data === null || data.content === null) {
+            if (data === undefined || data.content === undefined) {
               console.log('data is null, so workflow does not exist yet')
               const content2 = content
             } else {
