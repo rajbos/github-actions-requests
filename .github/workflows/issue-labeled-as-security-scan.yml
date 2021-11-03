@@ -322,7 +322,7 @@ jobs:
             const { readFileSync } = require('fs')
             const path = 'codeql-analysis.yml'
             const content = readFileSync(`${process.env.GITHUB_WORKSPACE}/${path}`)
-
+            
             const targetPath = ".github/workflows/codeql-analysis.yml"
             console.log(`Checking to see if [${targetPath}] already exists in the forked repo`)
             
@@ -356,15 +356,13 @@ jobs:
             } else {
               console.log('data is not null, so does exist? We need to compare their hashes to see if we need to overwrite')
               content2 = Buffer.from(data.content.toString('base64'), 'base64')
-              // console.log('content2')
-              // console.log(content2)
               if (Buffer.from(data.content, 'base64').compare(content2) === 0) {
                 console.log('data in the codeql workflow file is the same. Halting execution')
                 return
               }
             }
                         
-            // todo: test if file already exists
+            console.log(`Uploading the CodeQL workflow to the forked repository`)
             github.rest.repos.createOrUpdateFileContents({
               owner: org,
               repo,
@@ -374,5 +372,8 @@ jobs:
               sha: data === undefined ? null : data.sha
             })
 
-            // todo: trigger the CodeQL workflow is default branch != main (hardcoded in the workflow file)
+            console.log('CodeQL workflow uploaded')
+
+            // todo: find the CodeQL workflow execution and wait for it to complete
+            // todo: read the results from the CodeQL workflow
             // todo: generate random cron schedule?
