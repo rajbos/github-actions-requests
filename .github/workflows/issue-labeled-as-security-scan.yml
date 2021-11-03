@@ -340,6 +340,10 @@ jobs:
               console.log('data.content:')
               console.log(data.content)
             }
+            catch (e) {
+              console.log('e:')
+              console.log(e)
+            }
 
             const content2 = Buffer.from(content.toString('base64'), 'base64')
             if (data === null) {
