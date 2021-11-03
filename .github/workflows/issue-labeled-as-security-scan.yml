@@ -352,8 +352,8 @@ jobs:
               const content2 = content
             } else {              
               const content2 = Buffer.from(data.content.toString('base64'), 'base64')
-              # console.log('content2')
-              # console.log(content2)
+              // console.log('content2')
+              // console.log(content2)
               if (Buffer.from(data.content, 'base64').compare(content2) === 0) {
                 console.log('data in the codeql workflow file is the same. Halting execution')
                 return
