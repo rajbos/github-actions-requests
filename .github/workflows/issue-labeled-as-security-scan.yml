@@ -325,6 +325,7 @@ jobs:
 
             const targetPath = ".github/workflows/codeql-analysis.yml"
             console.log(`Checking to see if [${targetPath}] already exists in the forked repo`)
+            return
             // this call gives a 404, since the file does not exist, how to handle this?
             let data 
             try {
