@@ -306,6 +306,8 @@ jobs:
 
     # since dependabot alerts and dependency graph is enabled on the organization level, we only need to add a CodeQL setup
     # for it we need to inject the default CodeQL config into the forked action repository
+
+    # todo: what if the action.yml indicates it runs in a docker image? Then we have not neccesarily a way to run CodeQL on actual CODE
     - uses: actions/github-script@v5
       name: Inject CodeQL workflow into new forked repository
       # todo: clear all other workflows first
@@ -375,5 +377,6 @@ jobs:
             console.log('CodeQL workflow uploaded')
 
             // todo: find the CodeQL workflow execution and wait for it to complete
+            // todo: handle the result of the workflow execution: what if all languages fail?
             // todo: read the results from the CodeQL workflow
             // todo: generate random cron schedule?
