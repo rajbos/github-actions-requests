@@ -329,11 +329,13 @@ jobs:
             // this call gives a 404, since the file does not exist, how to handle this?
             let data
             try {
-               { data } = await github.rest.repos.getContent({ 
+               console.log(`before the call`)
+               let { data } = await github.rest.repos.getContent({ 
                 owner: org,
                 repo,
                 path: ".github/workflows/codeql-analysis.yml"  // todo: use variable here
               })
+              console.log(`after the call`)
 
               console.log('data:')
               console.log(data)
