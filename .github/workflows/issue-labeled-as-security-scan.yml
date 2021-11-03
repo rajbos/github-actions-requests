@@ -337,16 +337,17 @@ jobs:
               })
               console.log(`after the call`)
 
-              console.log('data:')
+              console.log(`data:`)
               console.log(data)
               
-              console.log('data.content:')
+              console.log(`data.content:`)
               console.log(data.content)
             }
             catch (e) {
-              console.log('e:')
+              console.log(`e:`)
               console.log(e)
             }
+            console.log(`after the catch`)
             
             if (data === null) {
               console.log('data is null, so workflow does not exist yet')
