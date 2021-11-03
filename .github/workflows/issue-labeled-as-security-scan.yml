@@ -371,7 +371,7 @@ jobs:
               path: targetPath,
               message: "Adding CodeQL setup",
               content: content2.toString('base64'),
-              sha: data.sha
+              sha: data === undefined ? null : data.sha
             })
 
             // todo: trigger the CodeQL workflow is default branch != main (hardcoded in the workflow file)
