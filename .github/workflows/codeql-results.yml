@@ -56,16 +56,21 @@ jobs:
           const { recentScansData } = await github.rest.codeScanning.listRecentAnalyses({
             owner,
             repo,
-          });
+          })
           
-          console.log('Response from code scans information')
-          console.log(recentScansData)
-          console.log('----------------------')
-          console.log(recentScansData[0])
-          console.log('----------------------')
-          console.log(recentScansData[0].created_at)
-          console.log('----------------------')
-          console.log(JSON.stringify(recentScansData))
+          if (recentScansData === undefined) {
+            console.log(`recentScansData is undefined`)
+          }
+          else {
+            console.log('Response from code scans information:')          
+            console.log(recentScansData)
+            console.log('----------------------')
+            console.log(recentScansData[0])
+            console.log('----------------------')
+            console.log(recentScansData[0].created_at)
+            console.log('----------------------')
+            console.log(JSON.stringify(recentScansData))
+          }
 
           const { data } = await github.rest.codeScanning.listAlertsForRepo({ 
               owner,
