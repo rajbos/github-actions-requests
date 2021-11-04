@@ -346,6 +346,7 @@ jobs:
               console.log(data.content)
             }
             catch (e) {
+              // strange: seems like we are not getting here at all :-(
               console.log(`in the catch with e:`)
               console.log(e)
             }
@@ -371,7 +372,7 @@ jobs:
               path: targetPath,
               message: "Adding CodeQL setup",
               content: content2.toString('base64'),
-              sha: data === undefined ? null : data.sha
+              sha: data === undefined ? undefined : data.sha
             })
 
             console.log('CodeQL workflow uploaded')
