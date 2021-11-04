@@ -50,7 +50,7 @@ jobs:
           const owner = "${{ needs.find-action-name.outputs.request_owner }}"
           const repo = "${{ needs.find-action-name.outputs.request_repo }}"
 
-          console.log(`Found owner [${owner}] and repo [${repo}]`)
+          console.log(`Found owner [${owner}] and repo [${repo}] to check the code scanning alerts for`)
 
           const recentScansData = await github.rest.codeScanning.listRecentAnalyses({
             owner,
@@ -62,15 +62,11 @@ jobs:
           }
           else {
             console.log('Response from code scans information:')          
-            console.log(recentScansData.data)
-            console.log('----------------------')
-            console.log(recentScansData.data[0])
-            console.log('----------------------')
-            console.log(recentScansData.data[0].created_at)
-            console.log('----------------------')
-            console.log(JSON.stringify(recentScansData.data))
+            const mostRecentScan = recentScansData.data[0]
+            console.log(`Found most recent scan data that was created at [${mostRecentScan.created_at}] that can be found at [${mostRecentScan.url}]. The scan had [${mostRecentScan.results}] results`)
           }
 
+          // list all alerts, not just the most recent scan:
           const { data } = await github.rest.codeScanning.listAlertsForRepo({ 
               owner,
               repo
@@ -84,10 +80,11 @@ jobs:
             console.log(JSON.stringify(data))
 
             if (data.length === 0) {
-              console.log(`No code scanning alerts found`)
+              console.log(`Overall check: No code scanning alerts found for the repo`)
             }
             else {
-              console.log(`Found ${data.length} alerts`)
+              console.log(`Overall check: Found [${data.length}] code scanning alerts for the repo`)
+              // todo: check the severity of each alert / group by severity
               for (const alert of data) {
                 console.log(`Alert: ${JSON.stringify(alert)}`)
               }
