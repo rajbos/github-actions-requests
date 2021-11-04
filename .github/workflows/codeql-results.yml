@@ -21,11 +21,11 @@ jobs:
       with:
         result-encoding: string
         script: |
-            const action="snyk/snyk-actions"
-            const actionOwner="snyk"
-            const actionName="snyk-action"
+            const action="calibreapp/image-actions"
+            const actionOwner="calibreapp"
+            const actionName="image-actions"
             const owner="rajbos-actions-test"
-            const repo="github-action-request"
+            const repo="image-actions"
 
             console.log(`::set-output name=action::${action}`)
             console.log(`::set-output name=owner::${actionOwner}`)
