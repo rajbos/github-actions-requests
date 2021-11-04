@@ -1,4 +1,4 @@
-async function getResults(github, owner, repo) {
+module.exports = async ({github, owner, repo}) => {
     
     console.log(`Found owner [${owner}] and repo [${repo}] to check the code scanning alerts for`)
 
@@ -39,5 +39,3 @@ async function getResults(github, owner, repo) {
         }
     }
 }
-
-module.exports = getResults
