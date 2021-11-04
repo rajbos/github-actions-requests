@@ -49,7 +49,9 @@ jobs:
           const owner = "${{ needs.find-action-name.outputs.request_owner }}"
           const repo = "${{ needs.find-action-name.outputs.request_repo }}"
 
-          let { data } = await github.rest.codeScanning.listAlertsForRepo({ 
+          console.log('Found owner [${owner}] and repo [$[repo]]')
+
+          const { data } = await github.rest.codeScanning.listAlertsForRepo({ 
               owner,
               repo
             })
