@@ -46,8 +46,8 @@ jobs:
       with:
         script: |
           // note: owner is now the organization the FORK lives in:
-          const owner = ${{ needs.find-action-name.outputs.request_owner }}
-          const repo = ${{ needs.find-action-name.outputs.request_repo }}
+          const owner = "${{ needs.find-action-name.outputs.request_owner }}"
+          const repo = "${{ needs.find-action-name.outputs.request_repo }}"
 
           let { data } = await github.rest.codeScanning.listAlertsForRepo({ 
               owner,
