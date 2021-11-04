@@ -24,7 +24,7 @@ jobs:
             const action="snyk/snyk-actions"
             const actionOwner="snyk"
             const actionName="snyk-action"
-            const owner="rajbos"
+            const owner="rajbos-actions-test"
             const repo="github-action-request"
 
             console.log(`::set-output name=action::${action}`)
@@ -45,10 +45,15 @@ jobs:
       id: get-codeql-results
       with:
         script: |
-            let { data } = await github.rest.codeScanning.listAlertsForRepo({ 
-                owner: org,
-                repo
-              })
-              
-            console.log(JSON.stringify(data))
+          // note: owner is now the organization the FORK lives in:
+          const owner = needs.find-action-name.outputs.request_owner }}
+          const repo = ${{ needs.find-action-name.outputs.request_repo }}
+
+          let { data } = await github.rest.codeScanning.listAlertsForRepo({ 
+              owner,
+              repo
+            })
+            
+          console.log('Response from code scanning:')
+          console.log(JSON.stringify(data))
 
