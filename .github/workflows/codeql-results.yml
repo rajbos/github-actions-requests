@@ -57,6 +57,6 @@ jobs:
            const owner = "${{ needs.find-action-name.outputs.request_owner }}"
            const repo = "${{ needs.find-action-name.outputs.request_repo }}"
 
-           console.log(script({github, owner, repo}))
+           console.log(await script({github, owner, repo}))
           
 
