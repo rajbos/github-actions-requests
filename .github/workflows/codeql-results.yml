@@ -77,6 +77,21 @@ jobs:
               repo
             })
             
-          console.log('Response from code scanning:')
-          console.log(JSON.stringify(data))
+          if (data === undefined) {
+            console.log(`Alert response is undefined`)
+          }
+          else {
+            console.log('Response from code scanning:')
+            console.log(JSON.stringify(data))
+
+            if (data.length === 0) {
+              console.log(`No code scanning alerts found`)
+            }
+            else {
+              console.log(`Found ${data.length} alerts`)
+              for (const alert of data) {
+                console.log(`Alert: ${JSON.stringify(alert)}`)
+              }
+            }
+          }
 
