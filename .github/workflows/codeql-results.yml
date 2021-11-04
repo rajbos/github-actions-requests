@@ -27,6 +27,10 @@ jobs:
             const owner="rajbos-actions-test"
             const repo="image-actions"
 
+            // this private repo has 1 code scanning alerts
+            //const owner="Microsoft-Bootcamp"
+            //const repo="demo-rob"
+
             console.log(`::set-output name=action::${action}`)
             console.log(`::set-output name=owner::${actionOwner}`)
             console.log(`::set-output name=name::${actionName}`)
@@ -63,7 +67,7 @@ jobs:
           else {
             console.log('Response from code scans information:')          
             const mostRecentScan = recentScansData.data[0]
-            console.log(`Found most recent scan data that was created at [${mostRecentScan.created_at}] that can be found at [${mostRecentScan.url}]. The scan had [${mostRecentScan._count}] results`)
+            console.log(`Found most recent scan data that was created at [${mostRecentScan.created_at}] that can be found at [${mostRecentScan.url}]. The scan had [${mostRecentScan.results_count}] results`)
           }
 
           // list all alerts, not just the most recent scan:
