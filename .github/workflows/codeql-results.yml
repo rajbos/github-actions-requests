@@ -52,15 +52,7 @@ jobs:
 
           console.log(`Found owner [${owner}] and repo [${repo}]`)
 
-          const recentScansData2 = await github.rest.codeScanning.listRecentAnalyses({
-            owner,
-            repo,
-          })
-          console.log('Found in first call:')
-          console.log(JSON.stringify(recentScansData2))
-
-          // todo: check if a workflow has run first
-          const { recentScansData } = await github.rest.codeScanning.listRecentAnalyses({
+          const recentScansData = await github.rest.codeScanning.listRecentAnalyses({
             owner,
             repo,
           })
@@ -70,13 +62,13 @@ jobs:
           }
           else {
             console.log('Response from code scans information:')          
-            console.log(recentScansData)
+            console.log(recentScansData.data)
             console.log('----------------------')
-            console.log(recentScansData[0])
+            console.log(recentScansData.data[0])
             console.log('----------------------')
-            console.log(recentScansData[0].created_at)
+            console.log(recentScansData.data[0].created_at)
             console.log('----------------------')
-            console.log(JSON.stringify(recentScansData))
+            console.log(JSON.stringify(recentScansData.data))
           }
 
           const { data } = await github.rest.codeScanning.listAlertsForRepo({ 
