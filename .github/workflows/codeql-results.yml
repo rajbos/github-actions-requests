@@ -24,12 +24,12 @@ jobs:
             const action="calibreapp/image-actions"
             const actionOwner="calibreapp"
             const actionName="image-actions"
-            const owner="rajbos-actions-test"
-            const repo="image-actions"
+            let owner="rajbos-actions-test"
+            let repo="image-actions"
 
             // this private repo has 1 code scanning alerts
-            //const owner="Microsoft-Bootcamp"
-            //const repo="demo-rob"
+            const owner="Microsoft-Bootcamp"
+            const repo="demo-rob"
 
             console.log(`::set-output name=action::${action}`)
             console.log(`::set-output name=owner::${actionOwner}`)
