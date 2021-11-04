@@ -44,6 +44,7 @@ jobs:
       name: Get resuls from CodeQL scan
       id: get-codeql-results
       with:
+        github-token: ${{ secrets.GH_TOKEN }}
         script: |
           // note: owner is now the organization the FORK lives in:
           const owner = "${{ needs.find-action-name.outputs.request_owner }}"
