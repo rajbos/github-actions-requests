@@ -59,6 +59,12 @@ jobs:
           });
           
           console.log('Response from code scans information')
+          console.log(recentScansData)
+          console.log('----------------------')
+          console.log(recentScansData[0])
+          console.log('----------------------')
+          console.log(recentScansData[0].created_at)
+          console.log('----------------------')
           console.log(JSON.stringify(recentScansData))
 
           const { data } = await github.rest.codeScanning.listAlertsForRepo({ 
