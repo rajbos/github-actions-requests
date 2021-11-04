@@ -50,7 +50,9 @@ jobs:
           const owner = "${{ needs.find-action-name.outputs.request_owner }}"
           const repo = "${{ needs.find-action-name.outputs.request_repo }}"
 
-          console.log('Found owner [${owner}] and repo [$[repo]]')
+          console.log(`Found owner [${owner}] and repo [$[repo]]`)
+
+          // todo: check if a workflow has run first
 
           const { data } = await github.rest.codeScanning.listAlertsForRepo({ 
               owner,
