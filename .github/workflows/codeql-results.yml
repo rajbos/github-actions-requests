@@ -13,7 +13,7 @@ jobs:
       name: ${{ steps.get-action.outputs.name }}
       request_owner: ${{ steps.get-action.outputs.request_owner }}
       request_repo: ${{ steps.get-action.outputs.request_repo }}
-      request_issue: ${{ steps.get-action.outputs.request_issue }}
+      #request_issue: ${{ steps.get-action.outputs.request_issue }}
     steps:
     - uses: actions/github-script@v5
       name: Find action from comment
@@ -46,7 +46,7 @@ jobs:
       with:
         script: |
           // note: owner is now the organization the FORK lives in:
-          const owner = needs.find-action-name.outputs.request_owner }}
+          const owner = ${{ needs.find-action-name.outputs.request_owner }}
           const repo = ${{ needs.find-action-name.outputs.request_repo }}
 
           let { data } = await github.rest.codeScanning.listAlertsForRepo({ 
