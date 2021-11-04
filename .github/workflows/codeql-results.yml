@@ -89,7 +89,7 @@ jobs:
               console.log(`Overall check: Found [${data.length}] code scanning alerts for the repo`)
               // todo: check the severity of each alert / group by severity
               for (const alert of data) {
-                console.log(`Alert [${alert.number}], created at: [${alert.created_at}], state: [${alert.state}], dismissed: [${alert.dismissed}], severity: [${alert.rule}]`)
+                console.log(`Alert [${alert.number}], created at: [${alert.created_at}], state: [${alert.state}], dismissed: [${alert.dismissed}], severity: [${JSON.stringify(alert.rule)}]`)
               }
             }
           }
