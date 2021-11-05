@@ -28,8 +28,8 @@ jobs:
             let repo="image-actions"
 
             // this private repo has 1 code scanning alerts
-            owner="Microsoft-Bootcamp"
-            repo="demo-rob"
+            // owner="Microsoft-Bootcamp"
+            // repo="demo-rob"
 
             console.log(`::set-output name=action::${action}`)
             console.log(`::set-output name=owner::${actionOwner}`)
