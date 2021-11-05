@@ -113,126 +113,34 @@ jobs:
     runs-on: ubuntu-latest
     needs: find-action-name
     steps:
+    - name: Check-out actions-request repo
+      uses: actions/checkout@v2
+
     - name: Check-out referenced Action
       run: |
         git clone https://github.com/${{ needs.find-action-name.outputs.action }} action
 
-    - name: Check Dependabot configuration
-      id: has-dependabot-configuration
-      run: |
-        echo "Looking for 'dependabot.yml' in '.github' folder of the action"
-        cd action
-        ls -la
-        cd .
-        if [ -d "action/.github" ] && [ -n (find .github -maxdepth 1 -name dependabot.yml) ] ; then
-          jq -nc '{"body": "✅ Dependabot configuration found"}' | \
-          curl -sL  -X POST -d @- \
-            -H "Content-Type: application/json" \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
-        else
-          jq -nc '{"body": "⛔️ No Dependabot configuration found"}' | \
-          curl -sL  -X POST -d @- \
-            -H "Content-Type: application/json" \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
-        fi
-
-    - name: Check CodeQL step in Workflow
-      id: has-codeql-in-workflow
-      run: |
-        echo "Looking for CodeQL action in any Workflow of the action"
-        if [ ! -d "action/.github/workflows" ]; then
-          jq -nc '{"body": "⛔️ No workflows found"}' | \
-            curl -sL  -X POST -d @- \
-              -H "Content-Type: application/json" \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
-        else
-          if [ `grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/init' | wc -l` -gt 0 ]; then
-            WORKFLOW=`grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/init' -H | cut -f1 -d' ' | sed "s/:$//g"`
-            jq -nc "{\"body\": \"✅ CodeQL Init step found in $WORKFLOW\"}" | \
-            curl -sL  -X POST -d @- \
-              -H "Content-Type: application/json" \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
-          else
-            jq -nc '{"body": "⛔️ No CodeQL Init step found"}' | \
-            curl -sL  -X POST -d @- \
-              -H "Content-Type: application/json" \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
-          fi
-
-          if [ `grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/analyze' | wc -l` -gt 0 ]; then
-            WORKFLOW=`grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/analyze' -H | cut -f1 -d' ' | sed "s/:$//g"`
-            jq -nc "{\"body\": \"✅ CodeQL Analyze step found in $WORKFLOW\"}" | \
-            curl -sL  -X POST -d @- \
-              -H "Content-Type: application/json" \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
-          else
-            jq -nc '{"body": "⛔️ No CodeQL Analyze step found"}' | \
-            curl -sL  -X POST -d @- \
-              -H "Content-Type: application/json" \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
-          fi
-        fi
-    
-    - name: Scan docker container when present
-      id: scan-docker-container-when-present
-      run: |
-        #!/bin/bash
-
-        set -ueo pipefail
-
-        if [ "docker" != `yq e '.runs.using' action/action.yml` ] ; then
-          jq -nc '{"body": "Action is not using a Docker image"}' | \
-          curl -sL  -X POST -d @- \
-            -H "Content-Type: application/json" \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
-                    
-          exit 0
-        fi
-
-        echo "Installing trivy"
-        sudo apt-get install wget apt-transport-https gnupg lsb-release
-        wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-        echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
-        sudo apt-get update
-        sudo apt-get install trivy
-
-        if [ "Dockerfile" == `yq e '.runs.image' action/action.yml` ]; then
-          echo "Scan docker image with trivy"
-          docker build -t action-checkout/${{ needs.find-action-name.outputs.action }} action/
-          trivy --quiet image action-checkout/${{ needs.find-action-name.outputs.action }} > issues
-          docker image rm action-checkout/${{ needs.find-action-name.outputs.action }}
-        else
-          echo "Scan docker image with trivy"
-          trivy --quiet image $IMAGE > issues
-        fi
-
-        # Check if LOW or MEDIUM issues are found
-        if [ `cat issues | grep -e LOW -e MEDIUM | wc -l` -gt 1 ] ; then
-          jq -nc '{"body": "⚠️ Docker image scanning found LOW or MEDIUM issues. Please check the logs."}' | \
-            curl -sL  -X POST -d @- \
-              -H "Content-Type: application/json" \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
-        fi
-
-        # Check if HIGH or CRITICAL issues are found
-        if [ `cat issues | grep -e HIGH -e CRITICAL | wc -l` -gt 1 ] ; then
-          jq -nc '{"body": "⛔ Docker image scanning found HIGH or CRITICAL issues. Please check the logs."}' | \
-            curl -sL  -X POST -d @- \
-              -H "Content-Type: application/json" \
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
-            
-            exit 17
-        fi
+    - name: Check for .github and workflows folder
+      id: scan
+      run: .github/security-scan.sh
+      env:
+        ACTION: ${{ needs.find-action-name.outputs.action }}
+        
+    - name: Update comment with results
+      run: .github/update-issue-comment.sh
+      env:
+        HAS_GITHUB_FOLDER: ${{ steps.scan.outputs.has_github_folder }}
+        HAS_WORKFLOWS_FOLDER: ${{ steps.scan.outputs.has_workflows_folder }}
+        HAS_DEPENDABOT_CONFIGURATION: ${{ steps.scan.outputs.has_dependabot_configuration }}
+        HAS_CODEQL_INIT: ${{ steps.scan.outputs.has_codeql_init }}
+        WORKFLOW_WITH_CODEQL_INIT: ${{ steps.scan.outputs.workflow_with_codeql_init }}
+        HAS_CODEQL_ANALYZE: ${{ steps.scan.outputs.has_codeql_analyze }}
+        WORKFLOW_WITH_CODEQL_ANALYZE: ${{ steps.scan.outputs.workflow_with_codeql_analyze }}
+        ACTION_USES_DOCKER: ${{ steps.scan.outputs.action_uses_docker }}
+        HAS_LOW_MEDIUM_ISSUES: ${{ steps.scan.outputs.has_low_medium_issues }}
+        LOW_MEDIUM_ISSUES: ${{ steps.scan.outputs.low_medium_issues }}
+        HAS_HIGH_CRITICAL_ISSUES: ${{ steps.scan.outputs.has_high_critical_issues }}
+        HIGH_CRITICAL_ISSUES: ${{ steps.scan.outputs.high_critical_issues }}
 
   # add a CodeQL scan on the forked repo
   codeql:
