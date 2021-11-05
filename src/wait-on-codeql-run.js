@@ -62,11 +62,12 @@ module.exports = async ({github, owner, repo}) => {
             await wait(60000)
             await waitForScan(github, owner, repo, run_id)
         } else {
+            // currently this fails in the test example: only one job is successful and the rest fails. We should do something with that :-)
             if (data.data.conclusion !== 'success' && data.data.conclusion !== null) {
-            throw new Error(`${data.data.name} concluded with status ${data.data.conclusion} (${data.data.html_url}).`)
+            throw new Error(`${data.data.name} concluded with status ${data.data.conclusion} ${data.data.html_url}`)
             }
             else {
-                console.log(`${data.data.name} concluded with status ${data.data.conclusion} (${data.data.html_url}).`)
+                console.log(`${data.data.name} concluded with status ${data.data.conclusion} ${data.data.html_url}`)
             }
         }
     }
