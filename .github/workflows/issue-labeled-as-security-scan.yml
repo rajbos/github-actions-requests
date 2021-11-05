@@ -216,7 +216,9 @@ jobs:
 
   codeql:
     runs-on: ubuntu-latest
-    needs: fork-action-test
+    needs: 
+      - fork-action-test
+      - find-action-name
     env:
       owner: rajbos-actions-test # todo: make central parameter
     steps:
