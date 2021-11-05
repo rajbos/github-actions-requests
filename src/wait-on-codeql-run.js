@@ -50,23 +50,21 @@ module.exports = async ({github, owner, repo}) => {
     await waitForScan(github, owner, repo, lastRun.id)
     
     async function waitForScan(github, owner, repo, run_id) {
-        const {
-            data: {name, status, conclusion, html_url}
-        } = await github.rest.actions.getWorkflowRun({
+        const data  = await github.rest.actions.getWorkflowRun({
             owner,
             repo,
             run_id
         })
 
-        if (status !== 'completed') {
+        if (data.data.status !== 'completed') {
             await wait(60000)
             await waitForScan(run_id)
         } else {
-            if (conclusion !== 'success' && conclusion !== null) {
-            throw new Error(`${name} concluded with status ${conclusion} (${html_url}).`)
+            if (data.data.conclusion !== 'success' && data.data.conclusion !== null) {
+            throw new Error(`${data.data.name} concluded with status ${data.data.conclusion} (${data.data.html_url}).`)
             }
             else {
-                console.log(`${name} concluded with status ${conclusion} (${html_url}).`)
+                console.log(`${data.data.name} concluded with status ${data.data.conclusion} (${data.data.html_url}).`)
             }
         }
     }
