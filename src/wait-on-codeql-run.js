@@ -6,9 +6,6 @@ module.exports = async ({github, owner, repo}) => {
             repo
         })
 
-        console.log(`data:`)
-        console.log(data)        
-
         if (data === undefined) {
             console.log(`data is undefined`)
             return 1
@@ -19,6 +16,7 @@ module.exports = async ({github, owner, repo}) => {
         // get the most recent one, is always on top:
         codeQLRun = codeqlRuns[0]
         console.log(`codeQLRun info: id: [${codeQLRun.id}], status: [${codeQLRun.status}], created_at: [${codeQLRun.created_at}], conclusion: [${codeQLRun.conclusion}], workflow_id: [${codeQLRun.workflow_id}]`)
+        return codeQLRun
     }
     
     console.log(`Looking at this repository: [${owner}/${repo}]`)
@@ -47,7 +45,7 @@ module.exports = async ({github, owner, repo}) => {
     console.log(`lastRun: ${lastRun}`)
 
     // wait for the workflow to finish
-    waitForScan(github, owner, repo, lastRun.id)
+    await waitForScan(github, owner, repo, lastRun.id)
     
     async function waitForScan(github, owner, repo, run_id) {
         const {
