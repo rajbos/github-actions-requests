@@ -52,8 +52,8 @@ jobs:
           const script = require('./src/find-action-from-comment.js')
                   
           // note: owner is now the organization the FORK lives in:
-          const owner = "${{ needs.find-action-name.outputs.request_owner }}"
-          const repo = "${{ needs.find-action-name.outputs.request_repo }}" 
+          const owner = context.repo.owner
+          const repo = context.repo.repo
           let issue_number = context.issue.number         
           
           if (issue_number == null) {
@@ -223,7 +223,7 @@ jobs:
         owner: rajbos-actions-test # todo: make central parameter
       with:      
         github-token: ${{ secrets.GH_TOKEN }}  
-        script: |            
+        script: |
            const script = require('./src/inject-codeql.js')
            
            const owner = process.env.owner
