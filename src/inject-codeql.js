@@ -14,7 +14,7 @@ module.exports = async ({github, owner, repo}) => {
     try {
         console.log(`before the call`)
         let { data } = await github.rest.repos.getContent({ 
-            owner: org,
+            owner,
             repo,
             path: ".github/workflows/codeql-analysis.yml"  // todo: use variable here
         })
@@ -48,7 +48,7 @@ module.exports = async ({github, owner, repo}) => {
                 
     console.log(`Uploading the CodeQL workflow to the forked repository`)
     github.rest.repos.createOrUpdateFileContents({
-        owner: org,
+        owner,
         repo,
         path: targetPath,
         message: "Adding CodeQL setup",
