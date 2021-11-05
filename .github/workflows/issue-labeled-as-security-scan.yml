@@ -313,10 +313,12 @@ jobs:
       # todo: clear all other workflows first
       id: CodeQL
       env:
-        repo: ${{needs.find-action-name.outputs.name}}
         owner: rajbos-actions-test # todo: make central parameter
       with:      
         github-token: ${{ secrets.GH_TOKEN }}  
         script: |            
            const script = require('./src/inject-codeql.js')
+           
+           const owner = process.env.owner
+           const repo = "${{ needs.find-action-name.outputs.name }}"
            console.log(await script({github, owner, repo}))
