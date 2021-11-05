@@ -36,13 +36,13 @@ module.exports = async ({github, owner, repo}) => {
     console.log(`codeQLRun info: id: [${codeQLRun.id}], status: : [${codeQLRun.status}], created_at: [${codeQLRun.created_at}], conclusion: : [${codeQLRun.conclusion}], workflow_id: [${codeqlRun.workflow_id}]`)
 
     // manually dispatch the workflow again, so that we can wait for it
-    let { data } = await github.rest.actions.createWorkflowDispatch({
+    let { dispatchData } = await github.rest.actions.createWorkflowDispatch({
         owner,
         repo,
         workflow_id: codeqlRun.workflow_id,
         ref: codeqlRun.head_branch,
     });
 
-    console.log(`Start workflow result data: [${JSON.stringify(data)}]`)
+    console.log(`Start workflow result data: [${JSON.stringify(dispatchData)}]`)
 
 }
