@@ -31,9 +31,11 @@ module.exports = async ({github, owner, repo}) => {
         ref: lastRun.head_branch,
     });
 
-    // todo: check if result is a 204 (data is empty)
-    console.log(`Start workflow result: [${JSON.stringify(dispatchData)}]`)
-    console.log(`Start workflow result data: [${JSON.stringify(dispatchData.data)}]`)
+    if (dispatchData.status !== 204) {	
+        console.log(`Error starting the CodeQL workflow dispatch:`)
+        console.log(`Start workflow result: [${JSON.stringify(dispatchData)}]`)
+        return 1
+    }
 
     // wait for the workflow to be started
     await wait(5000)
@@ -42,7 +44,7 @@ module.exports = async ({github, owner, repo}) => {
     // todo: check if the newRun.id is not the same as oldrun.id
     // todo: handle longer starting of the run as well?
     lastRun = await getLastRun(github, owner, repo)
-    console.log(`lastRun: ${lastRun}`)
+    console.log(`lastRun: ${JSON.stringify(lastRun)}`)
 
     // wait for the workflow to finish
     await waitForScan(github, owner, repo, lastRun.id)
@@ -57,8 +59,8 @@ module.exports = async ({github, owner, repo}) => {
         })
 
         if (status !== 'completed') {
-            await this.wait(60000)
-            await this.waitForScan(run_id)
+            await wait(60000)
+            await waitForScan(run_id)
         } else {
             if (conclusion !== 'success' && conclusion !== null) {
             throw new Error(`${name} concluded with status ${conclusion} (${html_url}).`)
