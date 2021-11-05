@@ -36,7 +36,7 @@ module.exports = async ({github, owner, repo}) => {
     console.log(`Start workflow result data: [${JSON.stringify(dispatchData.data)}]`)
 
     // wait for the workflow to be started
-    await this.wait(5000)
+    await wait(5000)
 
     // retrieve the last run (should be the new one)
     // todo: check if the newRun.id is not the same as oldrun.id
@@ -49,23 +49,32 @@ module.exports = async ({github, owner, repo}) => {
     
     async function waitForScan(github, owner, repo, run_id) {
         const {
-          data: {name, status, conclusion, html_url}
+            data: {name, status, conclusion, html_url}
         } = await github.rest.actions.getWorkflowRun({
-          owner,
-          repo,
-          run_id
+            owner,
+            repo,
+            run_id
         })
 
         if (status !== 'completed') {
-          await this.wait(60000)
-          await this.waitForScan(run_id)
+            await this.wait(60000)
+            await this.waitForScan(run_id)
         } else {
-          if (conclusion !== 'success' && conclusion !== null) {
+            if (conclusion !== 'success' && conclusion !== null) {
             throw new Error(`${name} concluded with status ${conclusion} (${html_url}).`)
-          }
-          else {
-              console.log(`${name} concluded with status ${conclusion} (${html_url}).`)
-          }
+            }
+            else {
+                console.log(`${name} concluded with status ${conclusion} (${html_url}).`)
+            }
         }
-      }
+    }
+
+    function wait(milliseconds) {
+        return new Promise(_resolve => {
+          if (typeof milliseconds !== 'number') {
+            throw new Error('milliseconds not a number')
+          }
+          setTimeout(() => _resolve('done!'), milliseconds)
+        })
+    }
 }
