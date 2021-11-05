@@ -60,7 +60,7 @@ module.exports = async ({github, owner, repo}) => {
         console.log(`CodeQL run information of run with id: [${run_id}], status: [${data.data.status}] and conclusion: [${data.data.conclusion}]`)
         if (data.data.status !== 'completed') {
             await wait(60000)
-            await waitForScan(run_id)
+            await waitForScan(github, owner, repo, run_id)
         } else {
             if (data.data.conclusion !== 'success' && data.data.conclusion !== null) {
             throw new Error(`${data.data.name} concluded with status ${data.data.conclusion} (${data.data.html_url}).`)
