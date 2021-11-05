@@ -12,10 +12,7 @@ module.exports = async ({github, owner, repo}) => {
         console.log(`after the call`)
 
         console.log(`data:`)
-        console.log(data)
-        
-        console.log(`data.content:`)
-        console.log(data.content)
+        console.log(data)        
     }
     catch (e) {
         // strange: seems like we are not getting here at all :-(
