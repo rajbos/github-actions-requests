@@ -250,7 +250,7 @@ jobs:
                   
            // note: owner is now the organization the FORK lives in:
            const owner = process.env.owner
-           const repo = "${{ needs.find-action-name.outputs.request_repo }}"
+           const repo = "${{ needs.find-action-name.outputs.name }}"
 
            console.log(await script({github, owner, repo}))        
 
