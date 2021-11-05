@@ -26,6 +26,7 @@ jobs:
       request_issue: ${{ steps.get-action.outputs.request_issue }}
 
     steps:
+    - uses: actions/checkout@v2
     - id: dispatch_issue_find
       run: |
          echo "Testing for dispatch event with issue number: ${{ github.event.inputs.issue }}"
