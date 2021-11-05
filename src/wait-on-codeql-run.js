@@ -44,18 +44,20 @@ module.exports = async ({github, owner, repo}) => {
     // todo: check if the newRun.id is not the same as oldrun.id
     // todo: handle longer starting of the run as well?
     lastRun = await getLastRun(github, owner, repo)
-    console.log(`lastRun: ${JSON.stringify(lastRun)}`)
+    console.log(`lastRun.id: ${lastRun.id}`)
 
     // wait for the workflow to finish
     await waitForScan(github, owner, repo, lastRun.id)
     
     async function waitForScan(github, owner, repo, run_id) {
+        console.log(`Waiting for the CodeQL run to finish: [${run_id}]`)
         const data  = await github.rest.actions.getWorkflowRun({
             owner,
             repo,
             run_id
         })
-
+        
+        console.log(`CodeQL run information of run with id: [${run_id}], status: [${data.data.status}] and conclusion: [${data.data.conclusion}]`)
         if (data.data.status !== 'completed') {
             await wait(60000)
             await waitForScan(run_id)
