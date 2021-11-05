@@ -20,8 +20,10 @@ module.exports = async ({github, owner, repo}) => {
         console.log(e)
     }
     console.log(`after the catch`)
-
+    console.log(`data:`)
+    console.log(data)    
     if (data === undefined) {
+        console.log(`data is undefined`)
         return 1
     }
 
