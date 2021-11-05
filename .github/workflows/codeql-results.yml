@@ -28,8 +28,8 @@ jobs:
             let repo="image-actions"
 
             // this private repo has 1 code scanning alerts
-            owner="Microsoft-Bootcamp"
-            repo="demo-rob"
+            // owner="Microsoft-Bootcamp"
+            // repo="demo-rob"
 
             console.log(`::set-output name=action::${action}`)
             console.log(`::set-output name=owner::${actionOwner}`)
@@ -51,7 +51,7 @@ jobs:
       with:
         github-token: ${{ secrets.GH_TOKEN }}
         script: |
-           const script = require('./src/get-codeql-results.js')
+           const script = require('./src/wait-on-codeql-run.js')
                   
            // note: owner is now the organization the FORK lives in:
            const owner = "${{ needs.find-action-name.outputs.request_owner }}"
