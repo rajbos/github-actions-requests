@@ -211,16 +211,21 @@ jobs:
         owner: ${{needs.find-action-name.outputs.owner}}
         org: rajbos-actions-test # todo: make central parameter
 
-    # since dependabot alerts and dependency graph is enabled on the organization level, we only need to add a CodeQL setup
-    # for it we need to inject the default CodeQL config into the forked action repository
+  # since dependabot alerts and dependency graph is enabled on the organization level, but that will not be enabled on new forks
+  # we need to enable the features on the new forked repo
 
+  codeql:
+    runs-on: ubuntu-latest
+    needs: fork-action-test
+    env:
+      owner: rajbos-actions-test # todo: make central parameter
+    steps:
     # todo: what if the action.yml indicates it runs in a docker image? Then we have not neccesarily a way to run CodeQL on actual CODE
+    - uses: actions/checkout@v2
     - uses: actions/github-script@v5
       name: Inject CodeQL workflow into new forked repository
-      # todo: clear all other workflows first
-      id: CodeQL
-      env:
-        owner: rajbos-actions-test # todo: make central parameter
+      # todo: clear all other workflows first, to prevent them from running
+      id: CodeQL-inject      
       with:      
         github-token: ${{ secrets.GH_TOKEN }}  
         script: |
@@ -229,3 +234,23 @@ jobs:
            const owner = process.env.owner
            const repo = "${{ needs.find-action-name.outputs.name }}"
            console.log(await script({github, owner, repo}))
+
+    - name: Wait for CodeQL workflow to completed
+      run: |
+        echo "Waiting for CodeQL workflow to complete"
+        sleep 3m
+
+    - uses: actions/github-script@v5
+      name: Get resuls from CodeQL scan
+      id: get-codeql-results
+      with:
+        github-token: ${{ secrets.GH_TOKEN }}
+        script: |
+           const script = require('./src/get-codeql-results.js')
+                  
+           // note: owner is now the organization the FORK lives in:
+           const owner = process.env.owner
+           const repo = "${{ needs.find-action-name.outputs.request_repo }}"
+
+           console.log(await script({github, owner, repo}))        
+
