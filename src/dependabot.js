@@ -34,7 +34,5 @@ module.exports = async ({github, owner, repo}) => {
     console.log(`Found [${highAlerts.length}] advisory with severity 'HIGH'`)
     console.log(`Found [${moderateAlerts.length}] advisory with severity 'MODERATE'`)
 
-    console.log(`high: ${JSON.stringify(highAlerts)}`)
-
     return {high: highAlerts.length,  moderate: moderateAlerts.length}
 }
