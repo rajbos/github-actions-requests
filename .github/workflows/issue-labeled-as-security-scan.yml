@@ -1,21 +1,46 @@
 on:
   issues: 
     types: [labeled, unlabeled]
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: 'Issue number to work with'
+        required: true
+        default: '11'
+    
     
 jobs:
-  security-check:
+  find-action-name:
     runs-on: ubuntu-latest
     #if: github.event.label.name == 'security-check'
 
     env:
       body: ${{ github.event.issue.body }}
 
+    outputs:
+      action: ${{ steps.get-action.outputs.action }}
+      owner: ${{ steps.get-action.outputs.owner }}
+      name: ${{ steps.get-action.outputs.name }}
+      request_owner: ${{ steps.get-action.outputs.request_owner }}
+      request_repo: ${{ steps.get-action.outputs.request_repo }}
+      request_issue: ${{ steps.get-action.outputs.request_issue }}
+
     steps:
     - uses: actions/checkout@v2
-    
-    - run: |
-         echo 'Found the issue that triggered this event with number [${{ github.event.issue.number }}]'
-         echo 'Found the issue title [${{ github.event.issue.title }}]'
+    - id: dispatch_issue_find
+      run: |
+         echo "Testing for dispatch event with issue number: ${{ github.event.inputs.issue }}"
+         issue_number=${{ github.event.inputs.issue }}
+         if [ "${{ github.event.inputs.issue }}" == "" ]; then
+           echo "issue number not found in workflow dispatch event"
+           echo 'Found the issue that triggered this event with number [${{ github.event.issue.number }}]'
+           echo 'Found the issue title [${{ github.event.issue.title }}]'
+         else
+           echo "issue number found: [$issue_number]"
+           # output a fixed variable
+           echo "::set-output name=issue_number::${issue_number}"
+         fi
+         
          echo -e $body
 
     - uses: actions/github-script@v5
@@ -24,137 +49,210 @@ jobs:
       with:
         result-encoding: string
         script: |
-            // todo, figure out pagination:
+          const script = require('./src/find-action-from-comment.js')
+                  
+          // note: owner is now the organization the FORK lives in:
+          const owner = context.repo.owner
+          const repo = context.repo.repo
+          let issue_number = context.issue.number         
+          
+          if (issue_number == null) {
+            // try to load issue number from other step:
+            console.log(`issue number not found in context, searching for it in workflow dispatch step`)
+            console.log(`issue number: [${{ steps.dispatch_issue_find.outputs.issue_number }}]`)
+            issue_number = `${{ steps.dispatch_issue_find.outputs.issue_number }}`
+          }
 
-            const owner = context.repo.owner
-            const repo = context.repo.repo
-            const issue_number = context.issue.number
+          console.log(await script({github, owner, repo, issue_number}))
+    
+  check-action-security-setup:
+    runs-on: ubuntu-latest
+    needs: find-action-name
+    steps:
+    - name: Check-out referenced Action
+      run: |
+        git clone https://github.com/${{ needs.find-action-name.outputs.action }} action
 
-            // load all comments for this issue
-            const comments = await github.rest.issues.listComments({
-              owner: owner,
-              repo: repo,
-              issue_number: issue_number,
-            })
+    - name: Check Dependabot configuration
+      id: has-dependabot-configuration
+      run: |
+        echo "Looking for 'dependabot.yml' in '.github' folder of the action"
+        cd action
+        ls -la
+        cd .
+        if [ -d "action/.github" ] && [ -n (find .github -maxdepth 1 -name dependabot.yml) ] ; then
+          jq -nc '{"body": "✅ Dependabot configuration found"}' | \
+          curl -sL  -X POST -d @- \
+            -H "Content-Type: application/json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
+        else
+          jq -nc '{"body": "⛔️ No Dependabot configuration found"}' | \
+          curl -sL  -X POST -d @- \
+            -H "Content-Type: application/json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
+        fi
 
-            // find the last comment
-            let lastItem
-            if (comments.data.length > 1) {
-              // find latest
-              lastItem = comments.data[comments.data.length-1]
-            } else {
-              lastItem = comments.data
-            }
+    - name: Check CodeQL step in Workflow
+      id: has-codeql-in-workflow
+      run: |
+        echo "Looking for CodeQL action in any Workflow of the action"
+        if [ ! -d "action/.github/workflows" ]; then
+          jq -nc '{"body": "⛔️ No workflows found"}' | \
+            curl -sL  -X POST -d @- \
+              -H "Content-Type: application/json" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
+        else
+          if [ `grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/init' | wc -l` -gt 0 ]; then
+            WORKFLOW=`grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/init' -H | cut -f1 -d' ' | sed "s/:$//g"`
+            jq -nc "{\"body\": \"✅ CodeQL Init step found in $WORKFLOW\"}" | \
+            curl -sL  -X POST -d @- \
+              -H "Content-Type: application/json" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
+          else
+            jq -nc '{"body": "⛔️ No CodeQL Init step found"}' | \
+            curl -sL  -X POST -d @- \
+              -H "Content-Type: application/json" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
+          fi
 
-            const body = lastItem.body
-            console.log(body)
+          if [ `grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/analyze' | wc -l` -gt 0 ]; then
+            WORKFLOW=`grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/analyze' -H | cut -f1 -d' ' | sed "s/:$//g"`
+            jq -nc "{\"body\": \"✅ CodeQL Analyze step found in $WORKFLOW\"}" | \
+            curl -sL  -X POST -d @- \
+              -H "Content-Type: application/json" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
+          else
+            jq -nc '{"body": "⛔️ No CodeQL Analyze step found"}' | \
+            curl -sL  -X POST -d @- \
+              -H "Content-Type: application/json" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
+          fi
+        fi
+    
+    - name: Scan docker container when present
+      id: scan-docker-container-when-present
+      run: |
+        #!/bin/bash
 
-            let action
-            if (!body.startsWith('uses: ')) {              
-              console.log('no action found')
+        set -ueo pipefail
 
-              let body = [
-                "Couldn't find the action uses statement in the last comment.",
-                "Please create a comment that only has `uses: owner/action-name` in it.",
-                "",
-                ":robot:"
-              ]
-              
-              // create comment letting the user now what to do
-              github.rest.issues.createComment({
-                owner,
-                repo,
-                issue_number,
-                body: body.join('\n')
-              });
+        if [ "docker" != `yq e '.runs.using' action/action.yml` ] ; then
+          jq -nc '{"body": "Action is not using a Docker image"}' | \
+          curl -sL  -X POST -d @- \
+            -H "Content-Type: application/json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
+                    
+          exit 0
+        fi
 
-              return
-            } 
+        echo "Installing trivy"
+        sudo apt-get install wget apt-transport-https gnupg lsb-release
+        wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+        echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+        sudo apt-get update
+        sudo apt-get install trivy
 
-            // todo: search for last space as well to cut off the name at the end for more flexibility
-            action = body.substring(6)
-            console.log(`Found action with name ${action}`)
-            console.log(action)
+        if [ "Dockerfile" == `yq e '.runs.image' action/action.yml` ]; then
+          echo "Scan docker image with trivy"
+          docker build -t action-checkout/${{ needs.find-action-name.outputs.action }} action/
+          trivy --quiet image action-checkout/${{ needs.find-action-name.outputs.action }} > issues
+          docker image rm action-checkout/${{ needs.find-action-name.outputs.action }}
+        else
+          echo "Scan docker image with trivy"
+          trivy --quiet image $IMAGE > issues
+        fi
 
-            // return action
-            let index = action.indexOf('/')
-            let actionOwner = action.substring(0, index)
-            let actionName = action.substring(index+1)
+        # Check if LOW or MEDIUM issues are found
+        if [ `cat issues | grep -e LOW -e MEDIUM | wc -l` -gt 1 ] ; then
+          jq -nc '{"body": "⚠️ Docker image scanning found LOW or MEDIUM issues. Please check the logs."}' | \
+            curl -sL  -X POST -d @- \
+              -H "Content-Type: application/json" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
+        fi
 
-            console.log(`Found owner:${actionOwner}`)
-            console.log(`Found action:${actionName}`)
-
-            console.log(`::set-output name=owner::${actionOwner}`)
-            console.log(`::set-output name=name::${actionName}`)
+        # Check if HIGH or CRITICAL issues are found
+        if [ `cat issues | grep -e HIGH -e CRITICAL | wc -l` -gt 1 ] ; then
+          jq -nc '{"body": "⛔ Docker image scanning found HIGH or CRITICAL issues. Please check the logs."}' | \
+            curl -sL  -X POST -d @- \
+              -H "Content-Type: application/json" \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ needs.find-action-name.outputs.request_owner }}/${{ needs.find-action-name.outputs.request_repo }}/issues/${{ needs.find-action-name.outputs.request_issue }}/comments"
+            
+            exit 17
+        fi
 
     - name: Get result for verification
       run: |
-        echo "Owner: ${{steps.get-action.outputs.owner}}"
-        echo "Name: ${{steps.get-action.outputs.name}}"
+        echo "Owner: ${{needs.find-action-name.outputs.owner}}"
+        echo "Name: ${{needs.find-action-name.outputs.name}}"
 
     # todo: add a new comment to the issue indication the action of forking the repo over to the other org?
+
+  fork-action-test:
+    runs-on: ubuntu-latest
+    needs: find-action-name
+    steps:
+    - uses: actions/checkout@v2
 
     - name: Fork the action repository to rajbos-actions-test
       uses: rajbos-actions/forker@v0.0.1
       with:
         token: ${{ secrets.GH_TOKEN }}
-        repo: ${{steps.get-action.outputs.name}}
-        owner: ${{steps.get-action.outputs.owner}}
+        repo: ${{needs.find-action-name.outputs.name}}
+        owner: ${{needs.find-action-name.outputs.owner}}
         org: rajbos-actions-test # todo: make central parameter
 
-    # since dependabot alerts and dependency graph is enabled on the organization level, we only need to add a CodeQL setup
-    # for it we need to inject the default CodeQL config into the forked action repository
+  # since dependabot alerts and dependency graph is enabled on the organization level, but that will not be enabled on new forks
+  # we need to enable the features on the new forked repo
+
+  codeql:
+    runs-on: ubuntu-latest
+    needs: 
+      - fork-action-test
+      - find-action-name
+    env:
+      owner: rajbos-actions-test # todo: make central parameter
+    steps:
+    # todo: what if the action.yml indicates it runs in a docker image? Then we have not neccesarily a way to run CodeQL on actual CODE
+    - uses: actions/checkout@v2
     - uses: actions/github-script@v5
       name: Inject CodeQL workflow into new forked repository
-      id: CodeQL
-      env:
-        repo: ${{steps.get-action.outputs.name}}
-        org: rajbos-actions-test # todo: make central parameter
+      # todo: clear all other workflows first, to prevent them from running
+      id: CodeQL-inject      
       with:      
         github-token: ${{ secrets.GH_TOKEN }}  
-        script: |            
-            const { repo, org } = process.env
-            console.log(`Hello ${org}/${repo}`)
+        script: |
+           const script = require('./src/inject-codeql.js')
+           
+           const owner = process.env.owner
+           const repo = "${{ needs.find-action-name.outputs.name }}"
+           console.log(await script({github, owner, repo}))
 
-            const { readFileSync } = require('fs')
-            const path = 'codeql-analysis.yml'
-            const content = readFileSync(`${process.env.GITHUB_WORKSPACE}/${path}`)
+    - name: Wait for CodeQL workflow to completed
+      run: |
+        echo "Waiting for CodeQL workflow to complete"
+        sleep 3m
 
-            const targetPath = ".github/workflows/codeql-analysis.yml"
-            const { data } = await github.rest.repos.getContent({ 
-              owner: org,
-              repo,
-              path: ".github/workflows/codeql-analysis.yml" 
-            })
+    - uses: actions/github-script@v5
+      name: Get resuls from CodeQL scan
+      id: get-codeql-results
+      with:
+        github-token: ${{ secrets.GH_TOKEN }}
+        script: |
+           const script = require('./src/get-codeql-results.js')
+                  
+           // note: owner is now the organization the FORK lives in:
+           const owner = process.env.owner
+           const repo = "${{ needs.find-action-name.outputs.name }}"
 
-            console.log('data:')
-            console.log(data)
-            
-            console.log('data.content:')
-            console.log(data.content)
+           console.log(await script({github, owner, repo}))        
 
-            if (data === null) {
-              console.log('data is null')
-            }
-
-            content2 = Buffer.from(content.toString('base64'), 'base64')
-            console.log('content2')
-            console.log(content2)
-
-            if (Buffer.from(data.content, 'base64').compare(content2) === 0) {
-              console.log('data in the codeql workflow file is the same. Halting execution')
-              return
-            }
-                        
-            // todo: test if file already exists
-            github.rest.repos.createOrUpdateFileContents({
-              owner: org,
-              repo,
-              path: targetPath,
-              message: "Adding CodeQL setup",
-              content: content2.toString('base64'),
-              sha: data.sha
-            })
-
-            // todo: trigger the CodeQL workflow is default branch != main (hardcoded in the workflow file)
-            // todo: generate random cron schedule?
