@@ -4,7 +4,7 @@ module.exports = async ({github, owner, repo}) => {
     // todo: handle pagination if needed
     const {
         result ,
-      } = await github.graphql(`{
+      } = await github.graphql(`
         query repository($owner: String!, $repo: String!") {
             vulnerabilityAlerts(first: 100) {
                 nodes {
@@ -21,8 +21,7 @@ module.exports = async ({github, owner, repo}) => {
                     }
                 }
             }
-        }
-    }`,
+        }`,
     {
         owner,
         repo,
