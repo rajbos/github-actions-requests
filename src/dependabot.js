@@ -3,7 +3,7 @@ module.exports = async ({github, owner, repo}) => {
 
     // todo: handle pagination if needed
     const {
-        result ,
+        data: result,
       } = await github.graphql(`
       query ($name:String!, $owner:String!){
         repository(name: $name, owner: $owner) {
