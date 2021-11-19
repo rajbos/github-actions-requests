@@ -2,14 +2,53 @@ on:
   workflow_dispatch:
     
 jobs:
-  check:
-    env:
-      issue_number: 1
-      action: "actions/github-script"
+  find-action-name:
     runs-on: ubuntu-latest
-    #if: github.event.label.name == 'security-check'
-
+    outputs:
+      action: ${{ steps.get-action.outputs.action }}
+      owner: ${{ steps.get-action.outputs.owner }}
+      name: ${{ steps.get-action.outputs.name }}
+      request_owner: ${{ steps.get-action.outputs.request_owner }}
+      request_repo: ${{ steps.get-action.outputs.request_repo }}
+      #request_issue: ${{ steps.get-action.outputs.request_issue }}
     steps:
-    
-    - run: |
-         echo "Found the issue for this run with number [$issue_number] and action: [$action]"
+    - uses: actions/github-script@v5
+      name: Find action from comment
+      id: get-action
+      with:
+        result-encoding: string
+        script: |
+            const action="calibreapp/image-actions"
+            const actionOwner="calibreapp"
+            const actionName="image-actions"
+
+            let owner="rajbos-actions-test"
+            let repo="image-actions"
+
+            console.log(`::set-output name=action::${action}`)
+            console.log(`::set-output name=owner::${actionOwner}`)
+            console.log(`::set-output name=name::${actionName}`)
+      
+            console.log(`::set-output name=request_owner::${owner}`)            
+            console.log(`::set-output name=request_repo::${repo}`)
+
+  dependabot-results:
+    runs-on: ubuntu-latest
+    needs: find-action-name
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/github-script@v5
+      name: Get resuls from Dependabot scan
+      id: get-codeql-results
+      with:      
+        github-token: ${{ secrets.GH_TOKEN }}
+        # todo: wait for the actual scans to have been completed
+        script: |
+           const script = require('./src/dependabot.js')
+                  
+           // note: owner is now the organization the FORK lives in:
+           const owner = "${{ needs.find-action-name.outputs.request_owner }}"
+           const repo = "${{ needs.find-action-name.outputs.request_repo }}"
+
+           console.log(await script({github, owner, repo}))
+          
