@@ -27,7 +27,7 @@ module.exports = async ({github, owner, repo}) => {
         name: repo,
     });
     
-    console.log(`Count of the result: ${repository.vulnerabilityAlerts.nodes.length}`)
+    console.log(`Found ofa total of [${repository.vulnerabilityAlerts.nodes.length}] vulnerability alerts (contains duplicates)`)
     // todo: run a distinct query on top of it. In the example repo we have 15 results while we only have 11  in the UI
     const highAlerts = repository.vulnerabilityAlerts.nodes.filter(alert => alert.securityVulnerability.advisory.severity === 'HIGH')
     const moderateAlerts = repository.vulnerabilityAlerts.nodes.filter(alert => alert.securityVulnerability.advisory.severity === 'MODERATE')
