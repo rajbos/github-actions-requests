@@ -2,9 +2,7 @@ module.exports = async ({github, owner, repo}) => {
     console.log(`Looking at this repository: [${owner}/${repo}]`)
 
     // todo: handle pagination if needed
-    const {
-        data: result,
-      } = await github.graphql(`
+    const data = await github.graphql(`
       query ($name:String!, $owner:String!){
         repository(name: $name, owner: $owner) {
             vulnerabilityAlerts(first: 100) {
@@ -30,6 +28,6 @@ module.exports = async ({github, owner, repo}) => {
     });
       
 
-    console.log(`Repository result: ${result}`)      
+    console.log(`Repository result: ${data}`)      
 
 }
