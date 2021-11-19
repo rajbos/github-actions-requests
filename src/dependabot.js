@@ -27,7 +27,7 @@ module.exports = async ({github, owner, repo}) => {
         name: repo,
     });
 
-    console.log(`Repository result: ${JSON.stringify(repository)}`)      
+    console.log(`Repository result: ${JSON.stringify(repository.vulnerabilityAlerts.nodes)}`)
     console.log(`-----------------------------------------------`)      
-    console.log(`Count of the result: ${repository.vulnerabilityAlerts.nodes.count}`)
+    console.log(`Count of the result: ${repository.vulnerabilityAlerts.nodes.length}`)
 }
