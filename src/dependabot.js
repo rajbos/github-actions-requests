@@ -30,4 +30,7 @@ module.exports = async ({github, owner, repo}) => {
     console.log(`Repository result: ${JSON.stringify(repository.vulnerabilityAlerts.nodes)}`)
     console.log(`-----------------------------------------------`)      
     console.log(`Count of the result: ${repository.vulnerabilityAlerts.nodes.length}`)
+    const alerts = repository.vulnerabilityAlerts.nodes.filter(alert => alert.securityVulnerability.advisory.severity === 'HIGH')
+
+    console.log(`Found [${alerts}] advisory with severity 'HIGH'`)
 }
