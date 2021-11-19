@@ -5,7 +5,7 @@ module.exports = async ({github, owner, repo}) => {
     const {
         result ,
       } = await github.graphql(`
-        query repository($owner: String!, $repo: String!") {
+        query repository($owner: String!, $repo: String!) {
             vulnerabilityAlerts(first: 100) {
                 nodes {
                     createdAt
