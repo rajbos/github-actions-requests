@@ -106,12 +106,12 @@ jobs:
            const totalVulnerabilities = results.high + results.moderate
            let body = ''
            if (totalVulnerabilities > 1) {
-             body = '✅'
+             body = '⚠️'
            }
            else {
-              body = '⚠️'
+              body = '✅'
            }
-           body = body + ` found [${totalVulnerabilities}] Dependabot security vulnerabilities: ${results.high} where high and ${results.moderate} where moderate. Use this [link](https://github.com/${owner}/{repo}/security/dependabot) to verify the alerts.`
+           body = body + ` Found ${totalVulnerabilities} Dependabot security vulnerabilities: ${results.high} where high and ${results.moderate} where moderate. Use this [link](https://github.com/${owner}/{repo}/security/dependabot) to verify the alerts.`
            issue_number = `${{ needs.find-action-name.outputs.request_issue }}`
            console.log(`Commenting the information on issue with number: ${issue_number}`)
            console.log(`Body: [${body}]`)
