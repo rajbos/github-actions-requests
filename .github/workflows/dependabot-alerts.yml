@@ -62,7 +62,9 @@ jobs:
   # find the results from security vulnerabilities in Dependabot 
   dependabot-results:
     runs-on: ubuntu-latest
-    needs: find-action-name
+    needs: 
+      - find-action-name
+      - dispatch_issue_find
     steps:
     - uses: actions/checkout@v2
     - uses: actions/github-script@v5
@@ -99,4 +101,19 @@ jobs:
               console.log(`::set-output name=dependabot_moderate::999`)
            }
 
-          
+           const totalVulnerabilities = results.high + results.moderate
+           let body = '';
+           if (totalVulnerabilities > 1) {
+             body = '✅'
+           }
+           else {
+              body = '⚠️'
+           }
+           body = body + ` found [${totalVulnerabilities}] Dependabot security vulnerabilities: ${results.high} where high and ${results.moderate} where moderate. Use this [link](https://github.com/${owner}/{repo}/security/dependabot) to verify the alerts.`
+
+           github.rest.issues.createComment({
+              owner,
+              repo,
+              issue_number = +${{ steps.dispatch_issue_find.outputs.issue_number }},
+              body,
+            });
