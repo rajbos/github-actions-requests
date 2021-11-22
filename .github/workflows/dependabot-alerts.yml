@@ -53,7 +53,6 @@ jobs:
            const results = await script({github, owner, repo})
 
            console.log(`result: ${JSON.stringify(results)}`)
-           console.log(`result2: ${results}`)
-           console.log(`::set-output name=request_owner::${results.high}`)
-           console.log(`::set-output name=request_repo::${results.moderate}`)
+           console.log(`::set-output name=dependabot_high::${results.high}`)
+           console.log(`::set-output name=dependabot_moderate::${results.moderate}`)
           
