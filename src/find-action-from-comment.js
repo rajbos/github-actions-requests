@@ -53,7 +53,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
 
   let action
   if (!body.startsWith('uses: ')) {              
-    console.log('No action found in the last comment: [${body}]')    
+    console.log(`No action found in the last comment: [${body}]`)
 
     let body = [
       "Couldn't find the action uses statement in the last comment.",
