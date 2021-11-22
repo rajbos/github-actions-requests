@@ -85,9 +85,10 @@ jobs:
              repo
            })
 
+           let results
            if (enabledResult && enabledResult.status === 204) { 
             console.log(`Dependabot security alerts has been enabled for the repo ${owner}/${repo}, loading the alerts`)
-            const results = await script({github, owner, repo})
+            results = await script({github, owner, repo})
 
             console.log(`result: ${JSON.stringify(results)}`)
             console.log(`::set-output name=dependabot_high::${results.high}`)
@@ -98,6 +99,8 @@ jobs:
               
               console.log(`::set-output name=dependabot_high::999`)
               console.log(`::set-output name=dependabot_moderate::999`)
+              
+              results = {high: 999, moderate: 999}
            }
 
            const totalVulnerabilities = results.high + results.moderate
