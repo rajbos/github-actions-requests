@@ -56,10 +56,7 @@ jobs:
              repo
            })
 
-           console.log(`enabledResult: [${enabledResult}]`)
-           console.log(`enabledResult: [${JSON.stringify(enabledResult)}]`)
-
-           if (enabledResult) { 
+           if (enabledResult && enabledResult.status === 204) { 
             console.log(`Dependabot security alerts has been enabled for the repo ${owner}/${repo}, loading the alerts`)
             const results = await script({github, owner, repo})
 
