@@ -90,8 +90,8 @@ jobs:
           script: |
             
             // note: owner is now the organization the FORK lives in:
-            const owner = "${{ needs.find-action-name.outputs.request_owner }}"
-            const repo = "${{ needs.find-action-name.outputs.request_repo }}"
+            const owner = "${{ needs.find-action-name.outputs.owner }}"
+            const repo = "${{ needs.find-action-name.outputs.name }}"
 
             // enable dependabot security updates for the repo
             await github.request('PUT /repos/{owner}/{repo}/vulnerability-alerts', {
