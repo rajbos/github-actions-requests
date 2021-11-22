@@ -31,7 +31,7 @@ jobs:
       
             console.log(`::set-output name=request_owner::${owner}`)
             console.log(`::set-output name=request_repo::${repo}`)
-
+  
   dependabot-results:
     runs-on: ubuntu-latest
     needs: find-action-name
@@ -50,9 +50,28 @@ jobs:
            const owner = "${{ needs.find-action-name.outputs.request_owner }}"
            const repo = "${{ needs.find-action-name.outputs.request_repo }}"
 
-           const results = await script({github, owner, repo})
+           // check if  dependabot security updates are enabled for the repo
+           const enabledResult = await octokit.request('GET /repos/{owner}/{repo}/vulnerability-alerts', {
+             owner,
+             repo
+           })
 
-           console.log(`result: ${JSON.stringify(results)}`)
-           console.log(`::set-output name=dependabot_high::${results.high}`)
-           console.log(`::set-output name=dependabot_moderate::${results.moderate}`)
+           console.log(`enabledResult: [${enabledResult}]`)
+           console.log(`enabledResult: [${JSON.stringify(enabledResult)}]`)
+
+           if (enabledResult) { 
+            console.log(`Dependabot security alerts has been enabled for the repo ${owner}/${repo}, loading the alerts`)
+            const results = await script({github, owner, repo})
+
+            console.log(`result: ${JSON.stringify(results)}`)
+            console.log(`::set-output name=dependabot_high::${results.high}`)
+            console.log(`::set-output name=dependabot_moderate::${results.moderate}`)
+           }
+           else {
+              console.log(`Dependabot security alerts have not been enabled for the repo ${owner}/${repo}, skipping the scan`)
+              
+              console.log(`::set-output name=dependabot_high::999`)
+              console.log(`::set-output name=dependabot_moderate::999`)
+           }
+
           
