@@ -100,4 +100,6 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   console.log(`::set-output name=request_owner::${owner}`)            
   console.log(`::set-output name=request_repo::${repo}`)
   console.log(`::set-output name=request_issue::${issue_number}`)
+
+  return 0
 }
