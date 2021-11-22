@@ -50,7 +50,7 @@ jobs:
            const owner = "${{ needs.find-action-name.outputs.request_owner }}"
            const repo = "${{ needs.find-action-name.outputs.request_repo }}"
 
-           const {results} = await script({github, owner, repo})
+           const results = await script({github, owner, repo})
 
            console.log(`result: ${JSON.stringify(results)}`)
            console.log(`result2: ${results}`)
