@@ -82,7 +82,9 @@ jobs:
   enable-dependabot:
     # enable dependabot settings on the forked repo
     runs-on: ubuntu-latest
-    needs: fork-action-test
+    needs:
+      - fork-action-test
+      - find-action-name
     steps:
       - uses: actions/github-script@v5
         with: 
