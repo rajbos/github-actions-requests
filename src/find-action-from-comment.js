@@ -1,10 +1,10 @@
 module.exports = async ({github, owner, repo, issue_number, core}) => {
 
   console.log(`Looking at this repository: [${owner}/${repo}]`)
-  console.log(`running with issue number [${issue_number}]`)
+  console.log(`Running with issue number [${issue_number}]`)
 
   if (issue_number == null) {
-    core.setFailed('issue_number not found')
+    core.setFailed('Issue_number not found')
     return
   }
 
@@ -20,7 +20,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   let lastItem            
   if (comments.data.length > 0) {
     // find latest
-    console.log(`using last comment's data`)
+    console.log(`Using last comment's data, found [${comments.data.length}] comments on the issue.`)
     lastItem = comments.data[comments.data.length-1]
   } else {
     // use issue body
@@ -30,7 +30,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
 
   const body = lastItem.body
   if (!body) {
-    console.log(`can't load issue body`)
+    console.log(`Can't load issue body`)
 
     let body = [
       "Couldn't find the action uses statement in the last comment.",
@@ -53,7 +53,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
 
   let action
   if (!body.startsWith('uses: ')) {              
-    console.log('no action found')
+    console.log('No action found in the last comment: [${body}]')    
 
     let body = [
       "Couldn't find the action uses statement in the last comment.",
