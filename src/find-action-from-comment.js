@@ -1,4 +1,4 @@
-module.exports = async ({github, owner, repo, issue_number}) => {
+module.exports = async ({github, owner, repo, issue_number, core}) => {
 
   console.log(`Looking at this repository: [${owner}/${repo}]`)
   console.log(`running with issue number [${issue_number}]`)
