@@ -109,7 +109,7 @@ jobs:
               body = '⚠️'
            }
            body = body + ` found [${totalVulnerabilities}] Dependabot security vulnerabilities: ${results.high} where high and ${results.moderate} where moderate. Use this [link](https://github.com/${owner}/{repo}/security/dependabot) to verify the alerts.`
-           issue_number = `${{ needs.find-action-name.outputs.issue_number }}`
+           issue_number = `${{ needs.find-action-name.outputs.request_issue }}`
            console.log(`Commenting the information on issue with number: ${issue_number}`)
 
            github.rest.issues.createComment({
