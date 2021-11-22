@@ -25,14 +25,15 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   } else {
     // use issue body
     // todo
-    console.log(`Can't find issue comment, we should use issue body. This is not supported yet.`)
+    core.setFailed(`Can't find issue comment, we should use issue body. This is not supported yet.`)
+    return
   }
 
   const body = lastItem.body
   if (!body) {
     console.log(`Can't load issue body`)
 
-    let body = [
+    let commentBody = [
       "Couldn't find the action uses statement in the last comment.",
       "Please create a comment that only has `uses: owner/action-name` in it.",
       "",
@@ -44,18 +45,19 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
       owner,
       repo,
       issue_number,
-      body: body.join('\n')
+      body: commentBody.join('\n')
     });
 
     core.setFailed(`Can't find action text in the last comment`)
     return
   }
 
-  let action
+  console.log(`Body we are analyzing: [${body}]`)
+  let action  
   if (!body.startsWith('uses: ')) {              
     console.log(`No action found in the last comment: [${body}]`)
 
-    let body = [
+    let commentBody = [
       "Couldn't find the action uses statement in the last comment.",
       "Please create a comment that only has `uses: owner/action-name` in it.",
       "",
@@ -67,7 +69,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
       owner,
       repo,
       issue_number,
-      body: body.join('\n')
+      body: commentBody.join('\n')
     });
 
     core.setFailed(`Can't find action text in the last comment`)
