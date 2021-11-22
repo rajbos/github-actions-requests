@@ -29,7 +29,7 @@ jobs:
             console.log(`::set-output name=owner::${actionOwner}`)
             console.log(`::set-output name=name::${actionName}`)
       
-            console.log(`::set-output name=request_owner::${owner}`)            
+            console.log(`::set-output name=request_owner::${owner}`)
             console.log(`::set-output name=request_repo::${repo}`)
 
   dependabot-results:
@@ -50,5 +50,10 @@ jobs:
            const owner = "${{ needs.find-action-name.outputs.request_owner }}"
            const repo = "${{ needs.find-action-name.outputs.request_repo }}"
 
-           console.log(await script({github, owner, repo}))
+           const {results} = await script({github, owner, repo})
+
+           console.log(`result: ${JSON.stringify(results)}`)
+           console.log(`result2: ${results}`)
+           console.log(`::set-output name=request_owner::${results.high}`)
+           console.log(`::set-output name=request_repo::${results.moderate}`)
           
