@@ -94,7 +94,7 @@ jobs:
             const repo = "${{ needs.find-action-name.outputs.request_repo }}"
 
             // enable dependabot security updates for the repo
-            await octokit.request('PUT /repos/{owner}/{repo}/vulnerability-alerts', {
+            await github.request('PUT /repos/{owner}/{repo}/vulnerability-alerts', {
               owner,
               repo
             })
