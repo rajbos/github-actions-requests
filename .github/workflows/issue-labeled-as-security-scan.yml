@@ -14,9 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     #if: github.event.label.name == 'security-check'
 
-    env:
-      body: ${{ github.event.issue.body }}
-
     outputs:
       action: ${{ steps.get-action.outputs.action }}
       owner: ${{ steps.get-action.outputs.owner }}
@@ -28,6 +25,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - id: dispatch_issue_find
+      name: Find action from issue
       run: |
          echo "Testing for dispatch event with issue number: ${{ github.event.inputs.issue }}"
          issue_number=${{ github.event.inputs.issue }}
@@ -40,8 +38,6 @@ jobs:
            # output a fixed variable
            echo "::set-output name=issue_number::${issue_number}"
          fi
-         
-         echo -e $body
 
     - uses: actions/github-script@v5
       name: Find action from comment
@@ -64,7 +60,51 @@ jobs:
           }
 
           console.log(await script({github, owner, repo, issue_number}))
-    
+
+  # fork the repo so we can run dependabot security scan and a CodeQL scan on the fork        
+  fork-action-test:
+    runs-on: ubuntu-latest
+    needs: find-action-name
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Fork the action repository to rajbos-actions-test
+      uses: rajbos-actions/forker@v0.0.1
+      with:
+        token: ${{ secrets.GH_TOKEN }}
+        repo: ${{needs.find-action-name.outputs.name}}
+        owner: ${{needs.find-action-name.outputs.owner}}
+        org: rajbos-actions-test # todo: make central parameter
+        # todo: add a new comment to the issue indication the action of forking the repo over to the other org?
+
+  # since dependabot alerts and dependency graph is enabled on the organization level, but that will not be enabled on new forks
+  # we need to enable the features on the new forked repo
+  enable-dependabot:
+    # enable dependabot settings on the forked repo
+    runs-on: ubuntu-latest
+    needs: fork-action-test
+    steps:
+      - uses: actions/github-script@v5
+        with: 
+          github-token: ${{ secrets.GH_TOKEN }}
+          script: |
+            
+            // note: owner is now the organization the FORK lives in:
+            const owner = "${{ needs.find-action-name.outputs.request_owner }}"
+            const repo = "${{ needs.find-action-name.outputs.request_repo }}"
+
+            // enable dependabot security updates for the repo
+            await octokit.request('PUT /repos/{owner}/{repo}/vulnerability-alerts', {
+              owner,
+              repo
+            })
+
+            console.log(`Enabled dependabot on the forked reop ${owner}/${repo}. We don't know when those checks are completed. Use another label to trigger the 'dependabot-alerts' workflow`)
+  
+  # check if the original repo had:
+  # 1) a dependabot configuration file
+  # 2) a CodeQL workflow
+  # 3) run a scan on the used container, if any is used
   check-action-security-setup:
     runs-on: ubuntu-latest
     needs: find-action-name
@@ -190,30 +230,7 @@ jobs:
             exit 17
         fi
 
-    - name: Get result for verification
-      run: |
-        echo "Owner: ${{needs.find-action-name.outputs.owner}}"
-        echo "Name: ${{needs.find-action-name.outputs.name}}"
-
-    # todo: add a new comment to the issue indication the action of forking the repo over to the other org?
-
-  fork-action-test:
-    runs-on: ubuntu-latest
-    needs: find-action-name
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Fork the action repository to rajbos-actions-test
-      uses: rajbos-actions/forker@v0.0.1
-      with:
-        token: ${{ secrets.GH_TOKEN }}
-        repo: ${{needs.find-action-name.outputs.name}}
-        owner: ${{needs.find-action-name.outputs.owner}}
-        org: rajbos-actions-test # todo: make central parameter
-
-  # since dependabot alerts and dependency graph is enabled on the organization level, but that will not be enabled on new forks
-  # we need to enable the features on the new forked repo
-
+  # add a CodeQL scan on the forked repo
   codeql:
     runs-on: ubuntu-latest
     needs: 
@@ -241,6 +258,7 @@ jobs:
       run: |
         echo "Waiting for CodeQL workflow to complete"
         sleep 3m
+        # todo: actually wait for the workflow, by loading the run id and wait for it to complete
 
     - uses: actions/github-script@v5
       name: Get resuls from CodeQL scan
