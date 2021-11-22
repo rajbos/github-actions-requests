@@ -51,7 +51,7 @@ jobs:
            const repo = "${{ needs.find-action-name.outputs.request_repo }}"
 
            // check if  dependabot security updates are enabled for the repo
-           const enabledResult = await octokit.request('GET /repos/{owner}/{repo}/vulnerability-alerts', {
+           const enabledResult = await github.request('GET /repos/{owner}/{repo}/vulnerability-alerts', {
              owner,
              repo
            })
