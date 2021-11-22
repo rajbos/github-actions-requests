@@ -114,5 +114,5 @@ jobs:
               owner,
               repo,
               issue_number = +${{ steps.dispatch_issue_find.outputs.issue_number }},
-              body,
+              body
             });
