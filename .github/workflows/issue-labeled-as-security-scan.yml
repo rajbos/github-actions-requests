@@ -14,9 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     #if: github.event.label.name == 'security-check'
 
-    env:
-      body: ${{ github.event.issue.body }}
-
     outputs:
       action: ${{ steps.get-action.outputs.action }}
       owner: ${{ steps.get-action.outputs.owner }}
@@ -28,6 +25,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - id: dispatch_issue_find
+      name: Find action from issue
       run: |
          echo "Testing for dispatch event with issue number: ${{ github.event.inputs.issue }}"
          issue_number=${{ github.event.inputs.issue }}
@@ -40,8 +38,6 @@ jobs:
            # output a fixed variable
            echo "::set-output name=issue_number::${issue_number}"
          fi
-         
-         echo -e $body
 
     - uses: actions/github-script@v5
       name: Find action from comment
