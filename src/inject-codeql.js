@@ -73,7 +73,7 @@ module.exports = async ({github, owner, repo}) => {
         })
 
         console.log(`repository result: ${JSON.stringify(repository)}`)
-        console.log(`Default_branch for repo [${repo}] is [${repository.default_branch}]`)
+        console.log(`Default_branch for repo [${repo}] is [${repository.data.default_branch}]`)
         
         try {
           // https://docs.github.com/en/rest/reference/git#get-a-reference
@@ -84,7 +84,7 @@ module.exports = async ({github, owner, repo}) => {
           } = await github.request('GET /repos/{owner}/{repo}/git/ref/{ref}', {
             owner,
             repo,
-            ref: `heads/${repository.default_branch}`
+            ref: `heads/${repository.data.default_branch}`
           })
           // https://docs.github.com/en/graphql/reference/mutations#createcommitonbranch
           const {
