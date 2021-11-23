@@ -18,11 +18,7 @@ module.exports = async ({github, owner, repo}) => {
         })
 
         console.log('CodeQL workflow uploaded')
-
-        // todo: find the CodeQL workflow execution and wait for it to complete
-        // todo: handle the result of the workflow execution: what if all languages fail?
-        // todo: read the results from the CodeQL workflow
-        // todo: generate random cron schedule?
+        return targetPath
     }
 
     async function deleteExistingWorkflows(github, owner, repo) {   
@@ -79,9 +75,12 @@ module.exports = async ({github, owner, repo}) => {
         } catch (error) {
           throw error
         }
+        return ref
       }
 
     console.log(`Looking at this repository: [${owner}/${repo}]`)
-    await deleteExistingWorkflows(github, owner, repo)
-    await addCodeQLworkflow(github, owner, repo)
+    const ref = await deleteExistingWorkflows(github, owner, repo)
+    const path = await addCodeQLworkflow(github, owner, repo)
+
+    return { ref, targetPath }
 }

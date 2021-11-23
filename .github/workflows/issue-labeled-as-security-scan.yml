@@ -256,13 +256,24 @@ jobs:
            const repo = "${{ needs.find-action-name.outputs.name }}"
 
            console.log(`Using this repository: [${owner}/${repo}]`)
-           await script({github, owner, repo})
+           const { ref, targetPath } = await script({github, owner, repo})
+    
+           echo "Waiting for CodeQL workflow to complete"
+           # sleep 3m
+           # todo: actually wait for the workflow, by loading the run id and wait for it to complete
+           const start-and-wait-script = require('./src/start-and-wait-codeql.js')
+              
+           const owner = "${{ env.fork-owner }}"
+           const repo = "${{ needs.find-action-name.outputs.name }}"
 
-    - name: Wait for CodeQL workflow to completed
-      run: |
-        echo "Waiting for CodeQL workflow to complete"
-        sleep 3m
-        # todo: actually wait for the workflow, by loading the run id and wait for it to complete
+           console.log(`Using this repository: [${owner}/${repo}] with path [${targetPath}] and ref [${ref}]`)
+           const success = await start-and-wait-script({github, owner, repo, path: targetPath, ref})
+           if (success === 0) {
+             console.log(`CodeQL workflow completed successfully`)
+           } 
+           else {
+             core.setFailed(`CodeQL workflow failed with exit code ${success}`)
+           }
 
     - uses: actions/github-script@v5
       name: Get resuls from CodeQL scan
