@@ -103,7 +103,7 @@ jobs:
               repo
             })
 
-            console.log(`Enabled dependabot on the forked reop ${owner}/${repo}. We don't know when those checks are completed. Use another label to trigger the 'dependabot-alerts' workflow`)
+            console.log(`Enabled dependabot on the forked repo ${owner}/${repo}. We don't know when those checks are completed. Use another label to trigger the 'dependabot-alerts' workflow`)
   
   # check if the original repo had:
   # 1) a dependabot configuration file
