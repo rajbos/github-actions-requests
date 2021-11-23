@@ -53,7 +53,7 @@ module.exports = async ({github, owner, repo, path, ref}) => {
     }
 
     async function waitForScan(github, owner, repo, run_id) {
-        console.log(`Waiting for CodeQL run [${run_id}] that was created at [${lastRun}] to finish`)
+        console.log(`Waiting for CodeQL run [${run_id}] to finish`)
         // https://docs.github.com/en/rest/reference/actions#get-a-workflow-run
         const {
           data: {name, status, conclusion, html_url}
