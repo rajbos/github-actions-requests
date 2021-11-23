@@ -276,5 +276,5 @@ jobs:
            const owner = "${{ env.fork-owner }}"
            const repo = "${{ needs.find-action-name.outputs.name }}"
 
-           console.log(await script({github, owner, repo}))
+           await script({github, owner, repo})
 
