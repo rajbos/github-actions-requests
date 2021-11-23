@@ -80,7 +80,7 @@ module.exports = async ({github, owner, repo}) => {
 
     console.log(`Looking at this repository: [${owner}/${repo}]`)
     const ref = await deleteExistingWorkflows(github, owner, repo)
-    const path = await addCodeQLworkflow(github, owner, repo)
+    const targetPath = await addCodeQLworkflow(github, owner, repo)
 
     return { ref, targetPath }
 }
