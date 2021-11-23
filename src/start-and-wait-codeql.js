@@ -64,12 +64,12 @@ module.exports = async ({github, owner, repo, path, ref}) => {
 
     function wait(milliseconds) {
         return new Promise(_resolve => {
-          if (typeof milliseconds !== 'number') {
+            if (typeof milliseconds !== 'number') {
             throw new Error('milliseconds not a number')
-          }
-          setTimeout(() => _resolve('done!'), milliseconds)
+            }
+            setTimeout(() => _resolve('done!'), milliseconds)
         })
-      }
+    }
 
     const success = await triggerScans(github, owner, repo, path, ref)
     return success

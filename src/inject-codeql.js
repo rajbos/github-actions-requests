@@ -18,7 +18,7 @@ module.exports = async ({github, owner, repo}) => {
         })
 
         // wait for the backend to process the new file, so that we don't trigger it to fast
-        await this.wait(5000)
+        await wait(5000)
         console.log('CodeQL workflow uploaded')
         return targetPath
     }
@@ -78,7 +78,16 @@ module.exports = async ({github, owner, repo}) => {
           throw error
         }
         return ref
-      }
+    }
+
+    function wait(milliseconds) {
+      return new Promise(_resolve => {
+          if (typeof milliseconds !== 'number') {
+          throw new Error('milliseconds not a number')
+          }
+          setTimeout(() => _resolve('done!'), milliseconds)
+      })
+  }
 
     console.log(`Looking at this repository: [${owner}/${repo}]`)
     const ref = await deleteExistingWorkflows(github, owner, repo)
