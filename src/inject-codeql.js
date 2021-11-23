@@ -33,7 +33,6 @@ module.exports = async ({github, owner, repo}) => {
             repo
         })
 
-        console.log(`repository result: ${JSON.stringify(repository)}`)
         console.log(`Default_branch for repo [${repo}] is [${repository.default_branch}]`)
         
         const ref = repository.default_branch
