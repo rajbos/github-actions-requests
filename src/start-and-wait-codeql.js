@@ -14,14 +14,14 @@ module.exports = async ({github, owner, repo, path, ref}) => {
 
         try {
             // https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event
-            await github.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
-                owner,
-                repo,
-                workflow_id: path,
-                ref
-            })
-            // wait for the dispatch event to trigger
-            await wait(5000)
+            // await github.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
+            //     owner,
+            //     repo,
+            //     workflow_id: path,
+            //     ref
+            // })
+            // // wait for the dispatch event to trigger
+            // await wait(5000)
             // https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository
             const {
                 data: {workflow_runs}
@@ -33,7 +33,6 @@ module.exports = async ({github, owner, repo, path, ref}) => {
             let run_id = 0
             let lastRun = new Date(0)
             for (const wfr of workflow_runs) {
-                console.log(`Found workflow run [${wfr.id}] that was created at [${wfr.created_at}] which converts to [${getDateFromString(wfr.created_at)}]`)
                 if (wfr.name === 'CodeQL' && getDateFromString(wfr.created_at) > lastRun) {
                     run_id = wfr.id
                     lastRun = getDateFromString(wfr.created_at)
