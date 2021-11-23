@@ -14,14 +14,17 @@ module.exports = async ({github, owner, repo, path, ref}) => {
 
         try {
             // https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event
-            // await github.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
-            //     owner,
-            //     repo,
-            //     workflow_id: path,
-            //     ref
-            // })
-            // // wait for the dispatch event to trigger
-            // await wait(5000)
+            const dispatchWorkflow = false // seems like adding the file to the repo as we currently do, already triggers the workflow. Now clue why!
+            if (dispatchWorkflow) {
+                await github.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
+                    owner,
+                    repo,
+                    workflow_id: path,
+                    ref
+                })
+                // wait for the dispatch event to trigger
+                await wait(5000)
+            }
             // https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository
             const {
                 data: {workflow_runs}
