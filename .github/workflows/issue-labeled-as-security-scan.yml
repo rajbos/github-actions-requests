@@ -87,12 +87,14 @@ jobs:
       - find-action-name
     steps:
       - uses: actions/github-script@v5
+        env: 
+          owner: rajbos-actions-test # todo: make central parameter
         with: 
           github-token: ${{ secrets.GH_TOKEN }}
           script: |
             
             // note: owner is now the organization the FORK lives in:
-            const owner = "${{ needs.find-action-name.outputs.owner }}"
+            const owner = process.env.owner
             const repo = "${{ needs.find-action-name.outputs.name }}"
 
             // enable dependabot security updates for the repo
