@@ -8,6 +8,8 @@ on:
         required: true
         default: '11'
     
+env: 
+  fork-owner: rajbos-actions-test # where to place the forks
     
 jobs:
   find-action-name:
@@ -72,9 +74,9 @@ jobs:
       uses: rajbos-actions/forker@v0.0.1
       with:
         token: ${{ secrets.GH_TOKEN }}
-        repo: ${{needs.find-action-name.outputs.name}}
-        owner: ${{needs.find-action-name.outputs.owner}}
-        org: rajbos-actions-test # todo: make central parameter
+        repo: ${{ needs.find-action-name.outputs.name }}
+        owner: ${{ needs.find-action-name.outputs.owner }}
+        org: ${{ env.fork-owner }}
         # todo: add a new comment to the issue indication the action of forking the repo over to the other org?
 
   # since dependabot alerts and dependency graph is enabled on the organization level, but that will not be enabled on new forks
@@ -86,15 +88,13 @@ jobs:
       - fork-action-test
       - find-action-name
     steps:
-      - uses: actions/github-script@v5
-        env: 
-          owner: rajbos-actions-test # todo: make central parameter
+      - uses: actions/github-script@v5       
         with: 
           github-token: ${{ secrets.GH_TOKEN }}
           script: |
             
             // note: owner is now the organization the FORK lives in:
-            const owner = process.env.owner
+            const owner = ${{ env.fork-owner }}
             const repo = "${{ needs.find-action-name.outputs.name }}"
 
             // enable dependabot security updates for the repo
@@ -240,8 +240,6 @@ jobs:
     needs: 
       - fork-action-test
       - find-action-name
-    env:
-      owner: rajbos-actions-test # todo: make central parameter
     steps:
     # todo: what if the action.yml indicates it runs in a docker image? Then we have not neccesarily a way to run CodeQL on actual CODE
     - uses: actions/checkout@v2
@@ -254,7 +252,7 @@ jobs:
         script: |
            const script = require('./src/inject-codeql.js')
            
-           const owner = process.env.owner
+           const owner = process.env.fork-owner
            const repo = "${{ needs.find-action-name.outputs.name }}"
            console.log(await script({github, owner, repo}))
 
@@ -273,7 +271,7 @@ jobs:
            const script = require('./src/get-codeql-results.js')
                   
            // note: owner is now the organization the FORK lives in:
-           const owner = process.env.owner
+           const owner = process.env.fork-owner
            const repo = "${{ needs.find-action-name.outputs.name }}"
 
            console.log(await script({github, owner, repo}))        
