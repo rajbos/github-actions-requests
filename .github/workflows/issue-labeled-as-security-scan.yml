@@ -254,7 +254,7 @@ jobs:
            
            const owner = process.env.fork-owner
            const repo = "${{ needs.find-action-name.outputs.name }}"
-           console.log(await script({github, owner, repo}))
+           await script({github, owner, repo})
 
     - name: Wait for CodeQL workflow to completed
       run: |
@@ -274,5 +274,5 @@ jobs:
            const owner = process.env.fork-owner
            const repo = "${{ needs.find-action-name.outputs.name }}"
 
-           console.log(await script({github, owner, repo}))        
+           console.log(await script({github, owner, repo}))
 
