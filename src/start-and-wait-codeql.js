@@ -64,7 +64,7 @@ module.exports = async ({github, owner, repo, path, ref}) => {
         })
         if (status !== 'completed') {
           await wait(60000)
-          await waitForScan(run_id)
+          await waitForScan(github, owner, repo, run_id)
         } else {
           if (conclusion !== 'success' && conclusion !== null) {
             //throw new Error(`${name} concluded with status ${conclusion} (${html_url}).`)
