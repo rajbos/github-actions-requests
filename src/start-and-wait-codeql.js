@@ -16,7 +16,7 @@ module.exports = async ({github, owner, repo, path, ref}) => {
                 ref
             })
             // wait for the dispatch event to trigger
-            await this.wait(5000)
+            await wait(5000)
             // https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository
             const {
             data: {workflow_runs}
@@ -31,7 +31,7 @@ module.exports = async ({github, owner, repo, path, ref}) => {
             }
             // wait for the scanner to finish
             if (run_id > 0) {
-              await this.waitForScan(github, owner, repo, run_id)
+              await waitForScan(github, owner, repo, run_id)
               return 0
             }
             else {
@@ -53,14 +53,23 @@ module.exports = async ({github, owner, repo, path, ref}) => {
           run_id
         })
         if (status !== 'completed') {
-          await this.wait(60000)
-          await this.waitForScan(run_id)
+          await wait(60000)
+          await waitForScan(run_id)
         } else {
           if (conclusion !== 'success' && conclusion !== null) {
             throw new Error(`${name} concluded with status ${conclusion} (${html_url}).`)
           }
         }
     }
+
+    function wait(milliseconds) {
+        return new Promise(_resolve => {
+          if (typeof milliseconds !== 'number') {
+            throw new Error('milliseconds not a number')
+          }
+          setTimeout(() => _resolve('done!'), milliseconds)
+        })
+      }
 
     const success = await triggerScans(github, owner, repo, path, ref)
     return success
