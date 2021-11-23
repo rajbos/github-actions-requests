@@ -1,4 +1,9 @@
 module.exports = async ({github, owner, repo, path, ref}) => {
+
+    function getDateFromString(dateString) {
+        return new Date(dateString)
+    }
+    
     async function triggerScans(github, owner, repo, path, ref) {
 
         if (path.indexOf('/') > 0) { 
@@ -26,11 +31,12 @@ module.exports = async ({github, owner, repo, path, ref}) => {
                     event: 'workflow_dispatch'
                 })
             let run_id = 0
-            let lastRun = 0
+            let lastRun = new Date(0)
             for (const wfr of workflow_runs) {
-                if (wfr.name === 'CodeQL' && wfr.created_at > lastRun) {
+                console.log(`Found workflow run [${wfr.id}] that was created at [${wfr.created_at}] which converts to [${getDateFromString(wfr.created_at)}]`)
+                if (wfr.name === 'CodeQL' && getDateFromString(wfr.created_at) > lastRun) {
                     run_id = wfr.id
-                    lastRun = wfr.created_at
+                    lastRun = getDateFromString(wfr.created_at)
                 }
             }
             // wait for the scanner to finish
