@@ -3,9 +3,9 @@ module.exports = async ({github, owner, repo, path, ref}) => {
 
         if (path.indexOf('/') > 0) { 
             const paths = path.split('/')
-            path = paths[paths.length - 1]
-            console.log(`working with workflow path: ${path}`)
+            path = paths[paths.length - 1]            
         }
+        console.log(`Working with workflow path [${path}] and ref [${ref}]`)
 
         try {
             // https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event
