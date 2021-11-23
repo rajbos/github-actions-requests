@@ -252,7 +252,7 @@ jobs:
         script: |
            const script = require('./src/inject-codeql.js')
            
-           const owner = "${{ env.fork-owner }}""
+           const owner = "${{ env.fork-owner }}"
            const repo = "${{ needs.find-action-name.outputs.name }}"
 
            console.log(`Using this repository: [${owner}/${repo}]`)
