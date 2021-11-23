@@ -258,7 +258,7 @@ jobs:
            console.log(`Using this repository: [${owner}/${repo}]`)
            const { ref, targetPath } = await script({github, owner, repo})
     
-           echo "Waiting for CodeQL workflow to complete"
+           console.log(`Waiting for CodeQL workflow to complete`)
            
            
 
