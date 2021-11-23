@@ -270,7 +270,7 @@ jobs:
            } 
            else {
              // todo: output information so it can be read by the user (issue comment)
-             core.setFailed(`CodeQL workflow failed with exit code ${success}`)
+             console.log(`CodeQL workflow failed with exit code ${success}`)
            }
 
     - uses: actions/github-script@v5
