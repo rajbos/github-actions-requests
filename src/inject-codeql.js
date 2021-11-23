@@ -1,6 +1,6 @@
 module.exports = async ({github, owner, repo}) => {
 
-    async function addCodeQLworkflow(owner, repo) {
+    async function addCodeQLworkflow(github, owner, repo) {
         
         const { readFileSync } = require('fs')
         const path = 'codeql-analysis.yml'
@@ -120,6 +120,6 @@ module.exports = async ({github, owner, repo}) => {
       }
 
     console.log(`Looking at this repository: [${owner}/${repo}]`)
-    await deleteExistingWorkflows(owner, repo)
-    await addCodeQLworkflow(owner, repo)
+    await deleteExistingWorkflows(github, owner, repo)
+    await addCodeQLworkflow(github, owner, repo)
 }
