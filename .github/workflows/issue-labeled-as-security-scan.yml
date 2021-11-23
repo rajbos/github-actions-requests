@@ -285,5 +285,6 @@ jobs:
            const owner = "${{ env.fork-owner }}"
            const repo = "${{ needs.find-action-name.outputs.name }}"
 
-           await script({github, owner, repo})
+           const result = await script({github, owner, repo})
+           console.log(`CodeQL scan completed with result: ${result}`)
 
