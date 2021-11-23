@@ -94,7 +94,7 @@ jobs:
           script: |
             
             // note: owner is now the organization the FORK lives in:
-            const owner = ${{ env.fork-owner }}
+            const owner = "${{ env.fork-owner }}"
             const repo = "${{ needs.find-action-name.outputs.name }}"
 
             // enable dependabot security updates for the repo
@@ -273,7 +273,7 @@ jobs:
            const script = require('./src/get-codeql-results.js')
                   
            // note: owner is now the organization the FORK lives in:
-           const owner = `${process.env.fork-owner}`
+           const owner = "${{ env.fork-owner }}"
            const repo = "${{ needs.find-action-name.outputs.name }}"
 
            console.log(await script({github, owner, repo}))
