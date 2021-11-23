@@ -252,7 +252,7 @@ jobs:
         script: |
            const script = require('./src/inject-codeql.js')
            
-           const owner = `${process.env.fork-owner}`
+           const owner = "${{ env.fork-owner }}""
            const repo = "${{ needs.find-action-name.outputs.name }}"
 
            console.log(`Using this repository: [${owner}/${repo}]`)
@@ -273,7 +273,7 @@ jobs:
            const script = require('./src/get-codeql-results.js')
                   
            // note: owner is now the organization the FORK lives in:
-           const owner = process.env.fork-owner
+           const owner = `${process.env.fork-owner}`
            const repo = "${{ needs.find-action-name.outputs.name }}"
 
            console.log(await script({github, owner, repo}))
