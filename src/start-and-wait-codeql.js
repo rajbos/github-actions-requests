@@ -84,8 +84,9 @@ module.exports = async ({github, owner, repo, path, ref}) => {
             })
 
             // check each job
+            console.log(`Job results:`)
             for (const job of data.jobs) {
-                console.log(`Job [${job.name}] status [${job.status}] conclusion [${job.conclusion}]`)
+                console.log(` - Job [${job.name}] status [${job.status}] conclusion [${job.conclusion}]`)
             }
 
             return 1
