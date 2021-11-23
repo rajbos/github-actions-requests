@@ -39,8 +39,7 @@ module.exports = async ({github, owner, repo, path, ref}) => {
                 }
             }
             // wait for the scanner to finish
-            if (run_id > 0) {
-                console.log(`Waiting for CodeQL run [${run_id}] that was created at [${lastRun}] to finish`)
+            if (run_id > 0) {                
                 const scanResult = await waitForScan(github, owner, repo, run_id)
                 return scanResult
             }
@@ -54,6 +53,7 @@ module.exports = async ({github, owner, repo, path, ref}) => {
     }
 
     async function waitForScan(github, owner, repo, run_id) {
+        console.log(`Waiting for CodeQL run [${run_id}] that was created at [${lastRun}] to finish`)
         // https://docs.github.com/en/rest/reference/actions#get-a-workflow-run
         const {
           data: {name, status, conclusion, html_url}
@@ -64,8 +64,9 @@ module.exports = async ({github, owner, repo, path, ref}) => {
         })
         if (status !== 'completed') {
           await wait(60000)
-          await waitForScan(github, owner, repo, run_id)
-        } else {
+          return await waitForScan(github, owner, repo, run_id)
+        } 
+        else {
           if (conclusion !== 'success' && conclusion !== null) {
             //throw new Error(`${name} concluded with status ${conclusion} (${html_url}).`)
             console.log(`Workflow [${name}] concluded with status [${conclusion}]: ${html_url}`)
@@ -74,7 +75,7 @@ module.exports = async ({github, owner, repo, path, ref}) => {
 
           // scan completed successfully
           console.log(`Workflow [${name}] completed successfully: ${html_url}`)
-          return 0;
+          return 0
         }
     }
 
@@ -88,5 +89,6 @@ module.exports = async ({github, owner, repo, path, ref}) => {
     }
 
     const success = await triggerScans(github, owner, repo, path, ref)
+    console.log(`Success: ${success}`)
     return success
 }
