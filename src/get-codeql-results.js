@@ -7,7 +7,7 @@ module.exports = async ({github, owner, repo}) => {
         repo,
     })
 
-    let scanResult
+    let scanResult= {}
     if (recentScansData === undefined) {
         console.log(`recentScansData is undefined`)
     }
