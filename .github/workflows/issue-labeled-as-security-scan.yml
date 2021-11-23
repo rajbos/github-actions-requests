@@ -269,6 +269,7 @@ jobs:
              console.log(`CodeQL workflow completed successfully`)
            } 
            else {
+             // todo: output information so it can be read by the user (issue comment)
              core.setFailed(`CodeQL workflow failed with exit code ${success}`)
            }
 

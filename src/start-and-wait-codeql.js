@@ -19,20 +19,21 @@ module.exports = async ({github, owner, repo, path, ref}) => {
             await wait(5000)
             // https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository
             const {
-            data: {workflow_runs}
+                data: {workflow_runs}
             } = await github.request('GET /repos/{owner}/{repo}/actions/runs', {
-                owner,
-                repo,
-                event: 'workflow_dispatch'
-            })
+                    owner,
+                    repo,
+                    event: 'workflow_dispatch'
+                })
             let run_id = 0
             for (const wfr of workflow_runs) {
                 if (wfr.name === 'CodeQL') run_id = wfr.id
             }
             // wait for the scanner to finish
             if (run_id > 0) {
-              await waitForScan(github, owner, repo, run_id)
-              return 0
+                console.log(`Waiting for CodeQL run [${run_id}] to finish`)
+                const scanResult = await waitForScan(github, owner, repo, run_id)
+                return scanResult
             }
             else {
                 console.log('No CodeQL runs found')
@@ -57,8 +58,14 @@ module.exports = async ({github, owner, repo, path, ref}) => {
           await waitForScan(run_id)
         } else {
           if (conclusion !== 'success' && conclusion !== null) {
-            throw new Error(`${name} concluded with status ${conclusion} (${html_url}).`)
+            //throw new Error(`${name} concluded with status ${conclusion} (${html_url}).`)
+            console.log(`Workflow [${name}] concluded with status [${conclusion}]: ${html_url}.`)
+            return 1
           }
+
+          // scan completed successfully
+          console.log(`Workflow [${name}] completed successfully: ${html_url}.`)
+          return 0;
         }
     }
 
