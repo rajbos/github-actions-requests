@@ -259,8 +259,8 @@ jobs:
            const { ref, targetPath } = await script({github, owner, repo})
     
            echo "Waiting for CodeQL workflow to complete"
-           # sleep 3m
-           # todo: actually wait for the workflow, by loading the run id and wait for it to complete
+           
+           // actually wait for the workflow, by dispatching and loading the run id and wait for it to complete
            const start-and-wait-script = require('./src/start-and-wait-codeql.js')
               
            const owner = "${{ env.fork-owner }}"
