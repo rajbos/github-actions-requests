@@ -73,6 +73,21 @@ module.exports = async ({github, owner, repo, path, ref}) => {
           if (conclusion !== 'success' && conclusion !== null) {
             //throw new Error(`${name} concluded with status ${conclusion} (${html_url}).`)
             console.log(`Workflow [${name}] concluded with status [${conclusion}]: ${html_url}`)
+
+            // load the jobs for the run and their results
+            const {
+                data
+            } = await github.request('GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs', {
+                owner,
+                repo,
+                run_id
+            })
+
+            // check each job
+            for (const job of data.jobs) {
+                console.log(`Job [${job.name}] status [${job.status}] conclusion [${job.conclusion}]`)
+            }
+
             return 1
           }
 
