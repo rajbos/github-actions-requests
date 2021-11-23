@@ -17,6 +17,8 @@ module.exports = async ({github, owner, repo}) => {
             sha: undefined
         })
 
+        // wait for the backend to process the new file, so that we don't trigger it to fast
+        await this.wait(5000)
         console.log('CodeQL workflow uploaded')
         return targetPath
     }
