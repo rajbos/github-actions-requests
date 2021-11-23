@@ -67,14 +67,15 @@ module.exports = async ({github, owner, repo}) => {
     async function deleteExistingWorkflows(github, owner, repo) {   
         console.log(`Deleting existing workflows in the fork`) 
         // load default branch from repo
-        const repository = await github.rest.repos.get({
+        const {data: repository} = await github.rest.repos.get({
             owner,
             repo
         })
 
         console.log(`repository result: ${JSON.stringify(repository)}`)
-        console.log(`Default_branch for repo [${repo}] is [${repository.data.default_branch}]`)
+        console.log(`Default_branch for repo [${repo}] is [${repository.default_branch}]`)
         
+        const ref = repository.default_branch
         try {
           // https://docs.github.com/en/rest/reference/git#get-a-reference
           const {
@@ -84,7 +85,7 @@ module.exports = async ({github, owner, repo}) => {
           } = await github.request('GET /repos/{owner}/{repo}/git/ref/{ref}', {
             owner,
             repo,
-            ref: `heads/${repository.data.default_branch}`
+            ref: `heads/${ref}`
           })
           // https://docs.github.com/en/graphql/reference/mutations#createcommitonbranch
           const {
