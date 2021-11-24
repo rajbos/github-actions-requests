@@ -289,7 +289,9 @@ jobs:
 
            const result = await script({github, owner, repo})
            console.log(`CodeQL scan completed with result: ${JSON.stringify(result)}`)
-           console.log(`::set-output name=codeql::'${JSON.stringify(result)}'`)
+           const output = JSON.stringify(result)
+           console.log(`::set-output name=codeql::'${output}'`)
+           console.log(`::set-output name=test::'my-test-value'`)
 
   display-results:
     needs: 
@@ -305,3 +307,6 @@ jobs:
           script: |
             const codeql = "${{ needs.codeql.outputs.codeql }}"
             console.log(`CodeQL scan result: ${codeql}`)  
+
+            const test = "${{ needs.codeql.outputs.my-test-value }}"
+            console.log(`Test output: ${test}`)  
