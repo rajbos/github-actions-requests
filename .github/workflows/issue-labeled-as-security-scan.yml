@@ -297,7 +297,7 @@ jobs:
       - codeql
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello world"
+      - uses: actions/checkout@v2
       - uses: actions/github-script@v5
         name: Display results
         id: display-results
