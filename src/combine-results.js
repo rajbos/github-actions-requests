@@ -11,16 +11,9 @@ module.exports = async ({github, owner, repo, issue_number, codeqlResult}) => {
     console.log(`- results.count: [${codeqlResult.results_count}]`)
     console.log(`- environment: [${codeqlResult.environment}]`)
     console.log(`- created_at: [${codeqlResult.created_at}]`)
-
-    const codeqlInfo = JSON.parse(codeqlResult.substring(1, codeqlResult.length - 1))
-    console.log(`CodeQL scan results 2:`)
-    console.log(`- url: ${codeqlInfo.url}`)
-    console.log(`- results.count: [${codeqlInfo.results_count}]`)
-    console.log(`- environment: [${codeqlInfo.environment}]`)
-    console.log(`- created_at: [${codeqlInfo.created_at}]`)
-
+    
     let codeQLSymbol = ''
-    if (codeqlInfo.results_count === 0) {
+    if (codeqlResult.results_count === 0) {
         codeQLSymbol = ':white_check_mark:'
     }
     else {
