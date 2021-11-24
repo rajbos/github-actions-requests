@@ -308,5 +308,5 @@ jobs:
             const codeql = "${{ needs.codeql.outputs.codeql }}"
             console.log(`CodeQL scan result: ${codeql}`)  
 
-            const test = "${{ needs.codeql.outputs.my-test-value }}"
+            const test = "${{ needs.codeql.outputs.test }}"
             console.log(`Test output: ${test}`)  
