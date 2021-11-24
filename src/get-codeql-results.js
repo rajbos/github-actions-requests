@@ -26,7 +26,7 @@ module.exports = async ({github, owner, repo}) => {
         scanResult.url = mostRecentScan.url
         scanResult.results_count = mostRecentScan.results_count
         scanResult.error = mostRecentScan.error
-        scanResult.environment = mostRecentScan.environment.replaceAll("\\\"", "'").replaceAll("\"", "")
+        scanResult.environment = mostRecentScan.environment.replace(/\\/g, "'").replace(/\\"/g, "")
     }
 
     // list all alerts, not just the most recent scan:
