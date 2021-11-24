@@ -309,6 +309,6 @@ jobs:
             const test = "${{ needs.codeql.outputs.test }}"
             console.log(`Test output: ${test}`)  
 
-            const codeql = '${{ needs.codeql.outputs.codeql }}'
+            const codeql = `${{ needs.codeql.outputs.codeql }}`
             console.log(`CodeQL scan result: ${codeql}`)  
 
