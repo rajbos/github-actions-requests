@@ -240,6 +240,8 @@ jobs:
     needs: 
       - fork-action-test
       - find-action-name
+    outputs:
+      codeql: ${{ steps.get-codeql-results.codeql }}
     steps:
     # todo: what if the action.yml indicates it runs in a docker image? Then we have not neccesarily a way to run CodeQL on actual CODE
     - uses: actions/checkout@v2
@@ -287,4 +289,19 @@ jobs:
 
            const result = await script({github, owner, repo})
            console.log(`CodeQL scan completed with result: ${JSON.stringify(result)}`)
+           console.log(`::set-output name=codeql::${JSON.stringify(result)}`)
 
+  display-results:
+    needs: 
+      - codeql
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello world"
+      - uses: actions/github-script@v5
+        name: Display results
+        id: display-results
+        with:
+          github-token: ${{ secrets.GH_TOKEN }}
+          script: |
+            const codeql = "${{ needs.codeql.outputs.codeql }}"
+            console.log(`CodeQL scan result: ${codeql}`)  
