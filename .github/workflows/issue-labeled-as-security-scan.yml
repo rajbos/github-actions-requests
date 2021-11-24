@@ -295,6 +295,7 @@ jobs:
   display-results:
     needs: 
       - codeql
+      - find-action-name
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -318,4 +319,4 @@ jobs:
             const repo = "${{ needs.find-action-name.outputs.name }}"
             const issue = "${{ needs.find-action-name.outputs.request_issue }}"
             const script = require('./src/combine-results.js')
-            await script({github, owner, repo, issue, codeqlResult})
+            await script({github, owner, repo, issue_number: issue, codeqlResult})
