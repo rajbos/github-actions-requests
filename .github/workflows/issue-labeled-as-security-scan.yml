@@ -289,7 +289,7 @@ jobs:
 
            const result = await script({github, owner, repo})
            console.log(`CodeQL scan completed with result: ${JSON.stringify(result)}`)
-           console.log(`::set-output name=codeql::${JSON.stringify(result)}`)
+           console.log(`::set-output name=codeql::'${JSON.stringify(result)}'`)
 
   display-results:
     needs: 
