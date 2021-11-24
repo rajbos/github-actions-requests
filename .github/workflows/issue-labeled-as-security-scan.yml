@@ -313,5 +313,9 @@ jobs:
             console.log(`- results.count: [${codeqlResult.results_count}]`)
             console.log(`- environment: [${codeqlResult.environment}]`)
             console.log(`- created_at: [${codeqlResult.created_at}]`)
-            
 
+            const owner = "${{ needs.find-action-name.outputs.owner }}"
+            const repo = "${{ needs.find-action-name.outputs.name }}"
+            const issue = "${{ needs.find-action-name.outputs.request_issue }}"
+            const script = require('./src/combine-results.js')
+            await script({github, owner, repo, issue, codeqlResult})
