@@ -306,8 +306,8 @@ jobs:
           script: |            
             const codeql = `${{ needs.codeql.outputs.codeql }}`
             console.log(`CodeQL scan result: ${codeql}`)  
-            
-            const codeqlResult = JSON.parse(codeql)
+
+            const codeqlResult = JSON.parse(codeql.substring(1, codeql.length - 2))
             console.log(`CodeQL scan results:`)
             console.log(`- url: ${codeqlResult.url}`)
             console.log(`- results.count: [${codeqlResult.results_count}]`)
