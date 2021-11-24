@@ -3,7 +3,7 @@ module.exports = async ({github, owner, repo, issue_number, codeqlResult}) => {
     console.log(``)
     console.log(`Looking at this repository: [${owner}/${repo}] with issue number [${issue_number}]`)
 
-    const codeqlInfo = JSON.parse(codeqlResult.substring(1, codeql.length - 1))
+    const codeqlInfo = JSON.parse(codeqlResult.substring(1, codeqlResult.length - 1))
     console.log(`CodeQL scan results:`)
     console.log(`- url: ${codeqlInfo.url}`)
     console.log(`- results.count: [${codeqlInfo.results_count}]`)
