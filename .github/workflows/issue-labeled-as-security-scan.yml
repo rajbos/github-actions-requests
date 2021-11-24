@@ -241,8 +241,8 @@ jobs:
       - fork-action-test
       - find-action-name
     outputs:
-      codeql: ${{ steps.get-codeql-results.codeql }}
-      test: ${{ steps.get-codeql-results.test }}
+      codeql: ${{ steps.get-codeql-results.outputs.codeql }}
+      test: ${{ steps.get-codeql-results.outputs.test }}
     steps:
     # todo: what if the action.yml indicates it runs in a docker image? Then we have not neccesarily a way to run CodeQL on actual CODE
     - uses: actions/checkout@v2
@@ -292,7 +292,7 @@ jobs:
            console.log(`CodeQL scan completed with result: ${JSON.stringify(result)}`)
            const output = JSON.stringify(result)
            console.log(`::set-output name=codeql::'${output}'`)
-           console.log(`::set-output name=test::'my-test-value'`)
+           console.log(`::set-output name=test::my-test-value`)
 
   display-results:
     needs: 
