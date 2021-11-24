@@ -286,5 +286,5 @@ jobs:
            const repo = "${{ needs.find-action-name.outputs.name }}"
 
            const result = await script({github, owner, repo})
-           console.log(`CodeQL scan completed with result: ${result}`)
+           console.log(`CodeQL scan completed with result: ${JSON.stringify(result)}`)
 
