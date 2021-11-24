@@ -242,6 +242,7 @@ jobs:
       - find-action-name
     outputs:
       codeql: ${{ steps.get-codeql-results.codeql }}
+      test: ${{ steps.get-codeql-results.test }}
     steps:
     # todo: what if the action.yml indicates it runs in a docker image? Then we have not neccesarily a way to run CodeQL on actual CODE
     - uses: actions/checkout@v2
