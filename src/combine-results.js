@@ -31,10 +31,12 @@ module.exports = async ({github, owner, repo, issue_number, codeqlResult}) => {
       ]
       
       // create comment letting the user know the results
-      github.rest.issues.createComment({
+      await github.rest.issues.createComment({
         owner,
         repo,
         issue_number,
         body: commentBody.join('\n')
       });
+
+      console.log(`Created comment with results`)
 }  
