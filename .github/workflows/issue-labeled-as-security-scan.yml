@@ -305,9 +305,10 @@ jobs:
         id: display-results
         with:
           github-token: ${{ secrets.GH_TOKEN }}
-          script: |
-            const codeql = "${{ needs.codeql.outputs.codeql }}"
-            console.log(`CodeQL scan result: ${codeql}`)  
-
+          script: |            
             const test = "${{ needs.codeql.outputs.test }}"
             console.log(`Test output: ${test}`)  
+
+            const codeql = '${{ needs.codeql.outputs.codeql }}'
+            console.log(`CodeQL scan result: ${codeql}`)  
+
