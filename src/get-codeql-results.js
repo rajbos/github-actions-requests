@@ -21,12 +21,13 @@ module.exports = async ({github, owner, repo}) => {
         // todo: check if this scan was recent enough (not older then x days)
         // todo: check if the scan had any errors and act on it
         const mostRecentScan = recentScansData.data[0]
-        console.log(`Found most recent scan data that was created at [${mostRecentScan.created_at}] that can be found at [${mostRecentScan.url}]. The scan had [${mostRecentScan.results_count}] results and these errors: [${mostRecentScan.error}]. The scan ran with these environment values: [${JSON.stringify(mostRecentScan.environment)}]`)
+        const environment = mostRecentScan.environment.replace(/\\"/g, "")//.replace(/\\"/g, "")
+        console.log(`Found most recent scan data that was created at [${mostRecentScan.created_at}] that can be found at [${mostRecentScan.url}]. The scan had [${mostRecentScan.results_count}] results and these errors: [${mostRecentScan.error}]. The scan ran with these environment values: [${environment}]`)
         scanResult.created_at = mostRecentScan.created_at
         scanResult.url = mostRecentScan.url
         scanResult.results_count = mostRecentScan.results_count
         scanResult.error = mostRecentScan.error
-        scanResult.environment = mostRecentScan.environment.replace(/\\/g, "'").replace(/\\"/g, "")
+        scanResult.environment = environment
     }
 
     // list all alerts, not just the most recent scan:
