@@ -13,7 +13,23 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     repo: repo,
     issue_number: issue_number,
   })
-  console.log(`Issue body: [${JSON.stringify(issue.data)}]`)
+  console.log(`Issue body: [${JSON.stringify(issue.data.body)}]`)
+  let split = string.split(/\r\n/)
+  for (let i = 0; i < split.length; i++) {
+    console.log(`Line [${i}] [${split[i]}]`)
+    if (split[i].startsWith('uses: ')) {
+      console.log(`Found uses statement!`)
+        
+      action = split[i].substring(6)
+      let spaceIndex = action.indexOf(' ')
+      if (spaceIndex > 0) {
+        console.log(`found space at char [${spaceIndex}], cutting of the action text before it`)
+        action = action.substring(0, spaceIndex)
+      }
+      console.log(`Found action with name [${action}]`)
+
+    }
+  }
 
   // load all comments for this issue
   // todo, figure out pagination:
@@ -90,7 +106,6 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     action = action.substring(0, spaceIndex)
   }
   console.log(`Found action with name [${action}]`)
-  console.log(action)
 
   // return action
   let index = action.indexOf('/')

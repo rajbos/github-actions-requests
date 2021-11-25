@@ -12,7 +12,6 @@ jobs:
     - uses: actions/github-script@v5
       name: Find action from body
       id: get-action
-      continue-on-error: true
       with:
         result-encoding: string
         script: |
@@ -25,13 +24,3 @@ jobs:
           
           console.log(`issue number: [${{ steps.dispatch_issue_find.outputs.issue_number }}]`)
           console.log(await script({github, owner, repo, issue_number, core}))
-
-    - uses: ActionsDesk/parse-issue@v1
-      id: parser
-    
-    - uses: actions/github-script@v5
-      env: 
-        action: ${{ steps.parser.outputs.uses}}
-      with:
-         script: |
-           echo "Action: ${{ env.action }}"
