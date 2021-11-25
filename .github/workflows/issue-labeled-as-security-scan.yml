@@ -27,7 +27,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - id: dispatch_issue_find
-      name: Find action from issue
+      name: Find action from dispatch
       run: |
          echo "Testing for dispatch event with issue number: ${{ github.event.inputs.issue }}"
          issue_number=${{ github.event.inputs.issue }}
@@ -42,12 +42,12 @@ jobs:
          fi
 
     - uses: actions/github-script@v5
-      name: Find action from comment
+      name: Find action from issue comment
       id: get-action
       with:
         result-encoding: string
         script: |
-          const script = require('./src/find-action-from-comment.js')
+          const script = require('./src/find-action-from-issue.js')
                   
           const owner = context.repo.owner
           const repo = context.repo.repo
@@ -60,7 +60,8 @@ jobs:
             issue_number = `${{ steps.dispatch_issue_find.outputs.issue_number }}`
           }
 
-          console.log(await script({github, owner, repo, issue_number, core}))
+          const result = await script({github, owner, repo, issue_number, core})
+          return result
 
   # fork the repo so we can run dependabot security scan and a CodeQL scan on the fork        
   fork-action-test:
