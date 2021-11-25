@@ -1,0 +1,16 @@
+name: Add issue to project
+on:
+ issues:
+    types: [opened]
+
+jobs:
+  issue:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "Hello world"
+    - run: |
+        issue_number=${{ github.event.inputs.issue }}
+        issue_body=${{ github.event.inputs.body }}
+
+        echo "Issue number: [${{ issue_number }}]"
+        echo "Issue body: [${{ issue_body }}]"

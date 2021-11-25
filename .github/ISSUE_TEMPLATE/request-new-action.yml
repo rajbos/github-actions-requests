@@ -1,0 +1,30 @@
+name: Request new action
+description: Request new action to be added to the internal marketplace
+title: "New action request: "
+assignees:
+  - rajbos
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: input
+    id: action_name
+    attributes:
+      label: Action name
+      description: The name of the action you want to request in the format owner/repository
+      placeholder: devops-actions/issue-comment-tag
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reasons
+      description: Why do you want to request this action?
+      render: shell
+  - type: textarea
+    id: usage
+    attributes:
+      label: Intended usage
+      description: Describe the intended use of the action you want to request, include example repositories if you can.
+      render: markdown
