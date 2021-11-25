@@ -6,14 +6,7 @@ on:
 jobs:
   issue:
     runs-on: ubuntu-latest
-    steps:
-    - run: echo "Hello world"
-    - run: |
-        issue_number=${{ github.event.issue.number }}
-        issue_body="${{ github.event.issue.body }}"
-
-        echo "Issue number: [$issue_number]"
-        echo "Issue body: [$issue_body]"
+    steps:    
 
     - uses: actions/github-script@v5
       name: Find action from body
