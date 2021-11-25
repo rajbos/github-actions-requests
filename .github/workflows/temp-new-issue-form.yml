@@ -1,4 +1,4 @@
-name: Add issue to project
+name: Handle new issue form
 on:
  issues:
     types: [opened, labeled]
@@ -12,5 +12,5 @@ jobs:
         issue_number=${{ github.event.issue.number }}
         issue_body=${{ github.event.issue.body }}
 
-        echo "Issue number: [${{ issue_number }}]"
-        echo "Issue body: [${{ issue_body }}]"
+        echo "Issue number: [$issue_number]"
+        echo "Issue body: [$issue_body]"
