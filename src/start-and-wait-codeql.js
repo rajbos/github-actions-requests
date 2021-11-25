@@ -112,7 +112,6 @@ module.exports = async ({github, owner, repo, path, ref}) => {
     }
 
     const success = await triggerScans(github, owner, repo, path, ref)
-    console.log(`Result from triggerScans: [${JSON.stringify(success)}]`)
     console.log(`CodeQL workflow completion result: ${success.scanResult > 0}`)
     return success
 }

@@ -268,8 +268,6 @@ jobs:
               
            console.log(`Using this repository: [${owner}/${repo}] with path [${targetPath}] and ref [${ref}]`)
            const { scanResult, run_id } = await startAndWaitScript({github, owner, repo, path: targetPath, ref})
-           console.log(`run_id in the workflow is: [${JSON.stringify(run_id)}]`)
-           console.log(`scanResult in the workflow is: [${JSON.stringify(scanResult)}]`)
            if (scanResult === 0) {
              console.log(`CodeQL workflow with run_id [${run_id}] completed successfully`)
            } 
@@ -327,11 +325,11 @@ jobs:
             const owner = "${{ needs.find-action-name.outputs.request_owner }}"
             const repo = "${{ needs.find-action-name.outputs.request_repo }}"
             const issue = "${{ needs.find-action-name.outputs.request_issue }}"
-            const codeql_run_id = `${{ needs.codeql.outputs.codeql_run_id }}`
+            const codeql_run_id = ${{ needs.codeql.outputs.codeql_run_id }}
 
             // build up link to CodeQL workflow execution
             const forkedRepoOwner = "${{ env.fork-owner }}"
-            const forkedRepoName = "${{ needs.find-action-name.outputs.repo }}"
+            const forkedRepoName = "${{ needs.find-action-name.outputs.request_repo }}"
             const codeql_run_link = `https://github.com/${forkedRepoOwner}/${forkedRepoName}/actions/runs/${codeql_run_id}`
 
             const script = require('./src/combine-results.js')
