@@ -49,7 +49,6 @@ jobs:
         script: |
           const script = require('./src/find-action-from-comment.js')
                   
-          // note: owner is now the organization the FORK lives in:
           const owner = context.repo.owner
           const repo = context.repo.repo
           let issue_number = context.issue.number         

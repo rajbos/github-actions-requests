@@ -14,7 +14,8 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     issue_number: issue_number,
   })
   console.log(`Issue body: [${JSON.stringify(issue.data.body)}]`)
-  let split = string.split(/\r\n/)
+
+  let split = issue.data.body.split(/\r\n/)
   for (let i = 0; i < split.length; i++) {
     console.log(`Line [${i}] [${split[i]}]`)
     if (split[i].startsWith('uses: ')) {
