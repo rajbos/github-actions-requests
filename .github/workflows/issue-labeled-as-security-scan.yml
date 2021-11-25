@@ -267,7 +267,8 @@ jobs:
            const startAndWaitScript = require('./src/start-and-wait-codeql.js')
               
            console.log(`Using this repository: [${owner}/${repo}] with path [${targetPath}] and ref [${ref}]`)
-           const success = await startAndWaitScript({github, owner, repo, path: targetPath, ref})
+           const {success} = await startAndWaitScript({github, owner, repo, path: targetPath, ref})
+           console.log(`success in the workflow is: [${JSON.stringify(success)}]`)
            if (success.scanResult === 0) {
              console.log(`CodeQL workflow with run_id [${scanResult.run_id}] completed successfully`)
            } 
@@ -326,7 +327,7 @@ jobs:
             const repo = "${{ needs.find-action-name.outputs.request_repo }}"
             const issue = "${{ needs.find-action-name.outputs.request_issue }}"
             const codeql_run_id = `${{ needs.codeql.outputs.codeql_run_id }}`
-            
+
             // build up link to CodeQL workflow execution
             const forkedRepoOwner = "${{ env.fork-owner }}"
             const forkedRepoName = "${{ needs.find-action-name.outputs.repo }}"
