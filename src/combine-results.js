@@ -17,13 +17,12 @@ module.exports = async ({github, owner, repo, issue_number, codeqlResult}) => {
     }
 
     let commentBody = [
-        "Found these results:",
-        "",
-        "|Check|Results|",
-        "|---|---|",
-        '|CodeQL on the forked repo|${codeQLSymbol}|',
-        "",
-        ":robot:"
+        `:robot: Found these results:`,
+        ``,
+        `|Check|Results|`,
+        `|---|---|`,
+        `|CodeQL on the forked repo|${codeQLSymbol}|`,
+        ``
       ]
       
       // create comment letting the user know the results
