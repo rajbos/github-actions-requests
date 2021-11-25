@@ -33,5 +33,5 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
         body: commentBody.join('\n')
     });
 
-    console.log(`Issue created result: [${JSON.stringify(result)}]`)
+    //console.log(`Issue created result: [${JSON.stringify(result)}]`)
 }  
