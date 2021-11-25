@@ -73,11 +73,12 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   console.log(`::set-output name=request_issue::${issue_number}`)
 
   // create comment letting the user know the results
-  const result = await github.rest.issues.createComment({
+  await github.rest.issues.createComment({
     owner,
     repo,
     issue_number,
     body: commentBody.join('\n')
   });
+  
   return 0
 }
