@@ -329,7 +329,7 @@ jobs:
 
             // build up link to CodeQL workflow execution
             const forkedRepoOwner = "${{ env.fork-owner }}"
-            const forkedRepoName = "${{ needs.find-action-name.outputs.request_repo }}"
+            const forkedRepoName = "${{ needs.find-action-name.outputs.name }}"
             const codeql_run_link = `https://github.com/${forkedRepoOwner}/${forkedRepoName}/actions/runs/${codeql_run_id}`
 
             const script = require('./src/combine-results.js')
