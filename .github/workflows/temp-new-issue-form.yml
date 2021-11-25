@@ -21,4 +21,5 @@ jobs:
           const repo = context.repo.repo
           const issue_number = context.issue.number
           
-          console.log(await script({github, owner, repo, issue_number, core}))
+          const result = await script({github, owner, repo, issue_number, core})
+          return result

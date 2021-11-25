@@ -26,92 +26,40 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
       let spaceIndex = action.indexOf(' ')
       if (spaceIndex > 0) {
         console.log(`found space at char [${spaceIndex}], cutting of the action text before it`)
-        action = action.substring(0, spaceIndex)
+        action = action.substring(0, spaceIndex)        
       }
       console.log(`Found action with name [${action}]`)
+      break
     }
   }
 
-  // load all comments for this issue
-  // todo, figure out pagination:
-  const comments = await github.rest.issues.listComments({
-    owner: owner,
-    repo: repo,
-    issue_number: issue_number,
-  })
-
-  // find the last comment
-  let lastItem            
-  if (comments.data.length > 0) {
-    // find latest
-    console.log(`Using last comment's data, found [${comments.data.length}] comments on the issue.`)
-    lastItem = comments.data[comments.data.length-1]
-  } else {
-    // use issue body
-    // todo
-    core.setFailed(`Can't find issue comment, we should use issue body. This is not supported yet.`)
-    return
-  }
-
-  const body = lastItem.body
-  if (!body) {
-    console.log(`Can't load issue body`)
-
-    let commentBody = [
-      "Couldn't find the action uses statement in the last comment.",
-      "Please create a comment that only has `uses: owner/action-name` in it.",
-      "",
-      ":robot:"
+  let commentBody
+  let result
+  if (action == null) {
+    console.log('Action to use not found')
+    commentBody = [
+      `:robot: Could not find action from the request in the issue body :danger:`,
+      ``,
+      `Please make sure you have this on a line in the body:`,
+      `uses: organization/repo`
     ]
     
-    // create comment letting the user now what to do
-    github.rest.issues.createComment({
-      owner,
-      repo,
-      issue_number,
-      body: commentBody.join('\n')
-    });
-
-    core.setFailed(`Can't find action text in the last comment`)
-    return
+    result = 1
   }
-
-  console.log(`Body we are analyzing: [${body}]`)
-  let action2
-  if (!body.startsWith('uses: ')) {              
-    console.log(`No action found in the last comment: [${body}]`)
-
-    let commentBody = [
-      "Couldn't find the action uses statement in the last comment.",
-      "Please create a comment that only has `uses: owner/action-name` in it.",
-      "",
-      ":robot:"
+  else {
+    console.log('Action to use found')
+    commentBody = [
+      `:robot: Found action from the request in the issue body ✅: [${action}]`,
+      `This action will now be checked automatically and the results will be posted back in this issue.`
     ]
     
-    // create comment letting the user know that we didn't find a comment
-    github.rest.issues.createComment({
-      owner,
-      repo,
-      issue_number,
-      body: commentBody.join('\n')
-    });
-
-    core.setFailed(`Can't find action text in the last comment`)
-    return
-  } 
-
-  action2 = body.substring(6)
-  let spaceIndex = action2.indexOf(' ')
-  if (spaceIndex > 0) {
-    console.log(`found space at char [${spaceIndex}], cutting of the action text before it`)
-    action2 = action2.substring(0, spaceIndex)
+    result = 0
   }
-  console.log(`Found action with name [${action2}]`)
 
   // return action
-  let index = action2.indexOf('/')
-  let actionOwner = action2.substring(0, index)
-  let actionName = action2.substring(index+1)
+  let index = action.indexOf('/')
+  let actionOwner = action.substring(0, index)
+  let actionName = action.substring(index+1)
 
   console.log(`Found owner:${actionOwner}`)
   console.log(`Found action:${actionName}`)
@@ -124,5 +72,12 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   console.log(`::set-output name=request_repo::${repo}`)
   console.log(`::set-output name=request_issue::${issue_number}`)
 
+  // create comment letting the user know the results
+  const result = await github.rest.issues.createComment({
+    owner,
+    repo,
+    issue_number,
+    body: commentBody.join('\n')
+  });
   return 0
 }

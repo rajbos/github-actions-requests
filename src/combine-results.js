@@ -23,15 +23,15 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
         `|---|---|---|`,
         `|CodeQL on the forked repo|${codeQLSymbol}|[CodeQL run](${codeql_run_link})|`,
         ``
-      ]
+    ]
       
-      // create comment letting the user know the results
-      const result = await github.rest.issues.createComment({
+    // create comment letting the user know the results
+    const result = await github.rest.issues.createComment({
         owner,
         repo,
         issue_number,
         body: commentBody.join('\n')
-      });
+    });
 
-      console.log(`Issue created result: [${JSON.stringify(result)}]`)
+    console.log(`Issue created result: [${JSON.stringify(result)}]`)
 }  
