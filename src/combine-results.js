@@ -19,9 +19,9 @@ module.exports = async ({github, owner, repo, issue_number, codeqlResult}) => {
     let commentBody = [
         `:robot: Found these results:`,
         ``,
-        `|Check|Results|`,
-        `|---|---|`,
-        `|CodeQL on the forked repo|${codeQLSymbol}|`,
+        `|Check|Results|Links|`,
+        `|---|---|---|`,
+        `|CodeQL on the forked repo|${codeQLSymbol}|[CodeQL run](${codeqlResult.url})|`,
         ``
       ]
       
