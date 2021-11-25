@@ -77,7 +77,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   }
 
   console.log(`Body we are analyzing: [${body}]`)
-  let action
+  let action2
   if (!body.startsWith('uses: ')) {              
     console.log(`No action found in the last comment: [${body}]`)
 
@@ -100,18 +100,18 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     return
   } 
 
-  action = body.substring(6)
-  let spaceIndex = action.indexOf(' ')
+  action2 = body.substring(6)
+  let spaceIndex = action2.indexOf(' ')
   if (spaceIndex > 0) {
     console.log(`found space at char [${spaceIndex}], cutting of the action text before it`)
-    action = action.substring(0, spaceIndex)
+    action2 = action2.substring(0, spaceIndex)
   }
-  console.log(`Found action with name [${action}]`)
+  console.log(`Found action with name [${action2}]`)
 
   // return action
-  let index = action.indexOf('/')
-  let actionOwner = action.substring(0, index)
-  let actionName = action.substring(index+1)
+  let index = action2.indexOf('/')
+  let actionOwner = action2.substring(0, index)
+  let actionName = action2.substring(index+1)
 
   console.log(`Found owner:${actionOwner}`)
   console.log(`Found action:${actionName}`)
