@@ -16,6 +16,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   console.log(`Issue body: [${JSON.stringify(issue.data.body)}]`)
 
   let split = issue.data.body.split(/\r\n/)
+  let action
   for (let i = 0; i < split.length; i++) {
     console.log(`Line [${i}] [${split[i]}]`)
     if (split[i].startsWith('uses: ')) {
@@ -28,7 +29,6 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
         action = action.substring(0, spaceIndex)
       }
       console.log(`Found action with name [${action}]`)
-
     }
   }
 
@@ -77,7 +77,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   }
 
   console.log(`Body we are analyzing: [${body}]`)
-  let action  
+  let action
   if (!body.startsWith('uses: ')) {              
     console.log(`No action found in the last comment: [${body}]`)
 
