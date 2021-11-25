@@ -13,18 +13,19 @@ module.exports = async ({github, owner, repo, path, ref}) => {
         console.log(`Working with workflow path [${path}] and ref [${ref}]`)
 
         try {
+            // trigger the worklfow
             // https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event
-            const dispatchWorkflow = true // seems like adding the file to the repo as we currently do, already triggers the workflow. Now clue why!
-            if (dispatchWorkflow) {
-                await github.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
-                    owner,
-                    repo,
-                    workflow_id: path,
-                    ref
-                })
-                // wait for the dispatch event to trigger
-                await wait(5000)
-            }
+            await github.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
+                owner,
+                repo,
+                workflow_id: path,
+                ref
+            })
+
+            // wait for the backend to handle the request completely, before we read the status
+            await wait(5000)
+            
+            // load all the worfklow runs
             // https://docs.github.com/en/rest/reference/actions#list-workflow-runs-for-a-repository
             const {
                 data: {workflow_runs}
@@ -35,12 +36,14 @@ module.exports = async ({github, owner, repo, path, ref}) => {
                 })
             let run_id = 0
             let lastRun = new Date(0)
+            // find the run that was created the last
             for (const wfr of workflow_runs) {
                 if (wfr.name === 'CodeQL' && getDateFromString(wfr.created_at) > lastRun) {
                     run_id = wfr.id
                     lastRun = getDateFromString(wfr.created_at)
                 }
             }
+
             // wait for the scanner to finish
             if (run_id > 0) {                
                 const scanResult = await waitForScan(github, owner, repo, run_id, lastRun)
@@ -109,6 +112,7 @@ module.exports = async ({github, owner, repo, path, ref}) => {
     }
 
     const success = await triggerScans(github, owner, repo, path, ref)
-    console.log(`CodeQL workflow completion result: ${success > 0}`)
+    console.log(`Result from triggerScans: [${JSON.stringify(scanResult)}]`)
+    console.log(`CodeQL workflow completion result: ${success.scanResult > 0}`)
     return success
 }
