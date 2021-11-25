@@ -8,6 +8,13 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     return
   }
 
+  const issue = await github.issues.get({
+    owner: owner,
+    repo: repo,
+    issue_number: issue_number,
+  })
+  console.log(`Issue body: [${JSON.stringify(issue.data)}]`)
+
   // load all comments for this issue
   // todo, figure out pagination:
   const comments = await github.rest.issues.listComments({

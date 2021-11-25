@@ -10,7 +10,33 @@ jobs:
     - run: echo "Hello world"
     - run: |
         issue_number=${{ github.event.issue.number }}
-        issue_body=${{ github.event.issue.body }}
+        issue_body="${{ github.event.issue.body }}"
 
         echo "Issue number: [$issue_number]"
         echo "Issue body: [$issue_body]"
+
+    - uses: actions/github-script@v5
+      name: Find action from body
+      id: get-action
+      with:
+        result-encoding: string
+        script: |
+          const script = require('./src/find-action-from-comment.js')
+                  
+          // note: owner is now the organization the FORK lives in:
+          const owner = context.repo.owner
+          const repo = context.repo.repo
+          let issue_number = context.issue.number
+          
+          console.log(`issue number: [${{ steps.dispatch_issue_find.outputs.issue_number }}]`)
+          console.log(await script({github, owner, repo, issue_number, core}))
+
+    - uses: ActionsDesk/parse-issue
+      id: parser
+    
+    - uses: actions/github-script@v5
+      env: 
+        action: ${{ steps.parser.outputs.uses}}
+      with:
+         script: |
+           echo "Action: ${{ env.action }}"
