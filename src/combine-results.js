@@ -1,4 +1,4 @@
-module.exports = async ({github, owner, repo, issue_number, codeqlResult}) => {
+module.exports = async ({github, owner, repo, issue_number, codeql_run_link, codeqlResult}) => {
 
     console.log(``)
     console.log(`Looking at this repository: [${owner}/${repo}] with issue number [${issue_number}]`)
@@ -21,7 +21,7 @@ module.exports = async ({github, owner, repo, issue_number, codeqlResult}) => {
         ``,
         `|Check|Results|Links|`,
         `|---|---|---|`,
-        `|CodeQL on the forked repo|${codeQLSymbol}|[CodeQL run](${codeqlResult.url})|`,
+        `|CodeQL on the forked repo|${codeQLSymbol}|[CodeQL run](${codeql_run_link})|`,
         ``
       ]
       

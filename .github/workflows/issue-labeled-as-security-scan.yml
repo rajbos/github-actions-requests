@@ -242,6 +242,7 @@ jobs:
       - find-action-name
     outputs:
       codeql: ${{ steps.get-codeql-results.outputs.codeql }}
+      codeql_run_id: ${{ steps.CodeQL-inject.outputs.codeql_run_id }}
     steps:
     # todo: what if the action.yml indicates it runs in a docker image? Then we have not neccesarily a way to run CodeQL on actual CODE
     - uses: actions/checkout@v2
@@ -267,13 +268,15 @@ jobs:
               
            console.log(`Using this repository: [${owner}/${repo}] with path [${targetPath}] and ref [${ref}]`)
            const success = await startAndWaitScript({github, owner, repo, path: targetPath, ref})
-           if (success === 0) {
-             console.log(`CodeQL workflow completed successfully`)
+           if (success.scanResult === 0) {
+             console.log(`CodeQL workflow with run_id [${scanResult.run_id}] completed successfully`)
            } 
            else {
              // todo: output information so it can be read by the user (issue comment)
-             console.log(`CodeQL workflow failed with exit code ${success}`)
-           }
+             console.log(`CodeQL workflow with run_id [${scanResult.run_id}] failed with exit code ${success.scanResult}`)
+           }           
+           
+           console.log(`::set-output name=codeql_run_id::'${ scanResult.run_id}'`)
 
     - uses: actions/github-script@v5
       name: Get resuls from CodeQL scan
@@ -322,5 +325,12 @@ jobs:
             const owner = "${{ needs.find-action-name.outputs.request_owner }}"
             const repo = "${{ needs.find-action-name.outputs.request_repo }}"
             const issue = "${{ needs.find-action-name.outputs.request_issue }}"
+            const codeql_run_id = `${{ needs.codeql.outputs.codeql_run_id }}`
+            
+            // build up link to CodeQL workflow execution
+            const forkedRepoOwner = "${{ env.fork-owner }}"
+            const forkedRepoName = "${{ needs.find-action-name.outputs.repo }}"
+            const codeql_run_link = `https://github.com/${forkedRepoOwner}/${forkedRepoName}/actions/runs/${codeql_run_id}`
+
             const script = require('./src/combine-results.js')
-            await script({github, owner, repo, issue_number: issue, codeqlResult})
+            await script({github, owner, repo, issue_number: issue, codeql_run_link, codeqlResult})

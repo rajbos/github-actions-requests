@@ -44,11 +44,11 @@ module.exports = async ({github, owner, repo, path, ref}) => {
             // wait for the scanner to finish
             if (run_id > 0) {                
                 const scanResult = await waitForScan(github, owner, repo, run_id, lastRun)
-                return scanResult
+                return {scanResult, run_id}
             }
             else {
                 console.log('No CodeQL runs found')
-                return 1
+                return {scanResult: 1, run_id}
             }
         } catch (error) {
             throw error
