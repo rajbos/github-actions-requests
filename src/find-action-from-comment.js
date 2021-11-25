@@ -8,7 +8,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     return
   }
 
-  const issue = await github.issues.get({
+  const issue = await github.rest.issues.get({
     owner: owner,
     repo: repo,
     issue_number: issue_number,
