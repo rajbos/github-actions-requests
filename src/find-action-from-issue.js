@@ -49,7 +49,8 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   else {
     console.log('Action to use found')
     commentBody = [
-      `:robot: Found action from the request in the issue body ✅: [${action}]`,
+      `:robot: Found action from the request in the issue body ✅`,
+      ```${action}```,
       `This action will now be checked automatically and the results will be posted back in this issue.`
     ]
     
