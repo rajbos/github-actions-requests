@@ -267,17 +267,18 @@ jobs:
            const startAndWaitScript = require('./src/start-and-wait-codeql.js')
               
            console.log(`Using this repository: [${owner}/${repo}] with path [${targetPath}] and ref [${ref}]`)
-           const {success} = await startAndWaitScript({github, owner, repo, path: targetPath, ref})
-           console.log(`success in the workflow is: [${JSON.stringify(success)}]`)
-           if (success.scanResult === 0) {
-             console.log(`CodeQL workflow with run_id [${scanResult.run_id}] completed successfully`)
+           const { scanResult, run_id } = await startAndWaitScript({github, owner, repo, path: targetPath, ref})
+           console.log(`run_id in the workflow is: [${JSON.stringify(run_id)}]`)
+           console.log(`scanResult in the workflow is: [${JSON.stringify(scanResult)}]`)
+           if (scanResult === 0) {
+             console.log(`CodeQL workflow with run_id [${run_id}] completed successfully`)
            } 
            else {
              // todo: output information so it can be read by the user (issue comment)
-             console.log(`CodeQL workflow with run_id [${scanResult.run_id}] failed with exit code ${success.scanResult}`)
+             console.log(`CodeQL workflow with run_id [${run_id}] failed with exit code ${scanResult}`)
            }           
            
-           console.log(`::set-output name=codeql_run_id::'${ scanResult.run_id}'`)
+           console.log(`::set-output name=codeql_run_id::'${run_id}'`)
 
     - uses: actions/github-script@v5
       name: Get resuls from CodeQL scan
