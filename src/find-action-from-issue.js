@@ -13,7 +13,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     repo: repo,
     issue_number: issue_number,
   })
-  console.log(`Issue body: [${JSON.stringify(issue.data.body)}]`)
+  \\console.log(`Issue body: [${JSON.stringify(issue.data.body)}]`)
 
   let split = issue.data.body.split(/\r\n/)
   let action
@@ -50,7 +50,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     console.log('Action to use found')
     commentBody = [
       `:robot: Found action from the request in the issue body ✅`,
-      ```${action}```,
+      `\`${action}\``,
       `This action will now be checked automatically and the results will be posted back in this issue.`
     ]
     
