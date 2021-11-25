@@ -1,7 +1,7 @@
 name: Add issue to project
 on:
  issues:
-    types: [opened]
+    types: [opened, labeled]
 
 jobs:
   issue:
@@ -9,8 +9,8 @@ jobs:
     steps:
     - run: echo "Hello world"
     - run: |
-        issue_number=${{ github.event.inputs.issue }}
-        issue_body=${{ github.event.inputs.body }}
+        issue_number=${{ github.event.issue.number }}
+        issue_body=${{ github.event.issue.body }}
 
         echo "Issue number: [${{ issue_number }}]"
         echo "Issue body: [${{ issue_body }}]"
