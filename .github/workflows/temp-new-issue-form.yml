@@ -12,6 +12,7 @@ jobs:
     - uses: actions/github-script@v5
       name: Find action from body
       id: get-action
+      continue-on-error: true
       with:
         result-encoding: string
         script: |
