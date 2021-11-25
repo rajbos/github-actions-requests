@@ -304,19 +304,22 @@ jobs:
         id: display-results
         with:
           github-token: ${{ secrets.GH_TOKEN }}
+          debug: false
           script: |            
             const codeql = `${{ needs.codeql.outputs.codeql }}`
             console.log(`CodeQL scan substring: [${codeql.substring(1, codeql.length - 1)}]`)  
 
             const codeqlResult = JSON.parse(codeql.substring(1, codeql.length - 1))
-            console.log(`CodeQL scan results:`)
-            console.log(`- url: ${codeqlResult.url}`)
-            console.log(`- results.count: [${codeqlResult.results_count}]`)
-            console.log(`- environment: [${codeqlResult.environment}]`)
-            console.log(`- created_at: [${codeqlResult.created_at}]`)
+            if (${{ env.debug }}) {}
+              console.log(`CodeQL scan results:`)
+              console.log(`- url: ${codeqlResult.url}`)
+              console.log(`- results.count: [${codeqlResult.results_count}]`)
+              console.log(`- environment: [${codeqlResult.environment}]`)
+              console.log(`- created_at: [${codeqlResult.created_at}]`)
+            }
 
-            const owner = "${{ needs.find-action-name.outputs.owner }}"
-            const repo = "${{ needs.find-action-name.outputs.name }}"
+            const owner = "${{ needs.find-action-name.outputs.request_owner }}"
+            const repo = "${{ needs.find-action-name.outputs.request_repo }}"
             const issue = "${{ needs.find-action-name.outputs.request_issue }}"
             const script = require('./src/combine-results.js')
             await script({github, owner, repo, issue_number: issue, codeqlResult})
