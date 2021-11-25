@@ -310,7 +310,7 @@ jobs:
             console.log(`CodeQL scan substring: [${codeql.substring(1, codeql.length - 1)}]`)  
 
             const codeqlResult = JSON.parse(codeql.substring(1, codeql.length - 1))
-            if (${{ env.debug }}) {}
+            if (${{ env.debug }}) {
               console.log(`CodeQL scan results:`)
               console.log(`- url: ${codeqlResult.url}`)
               console.log(`- results.count: [${codeqlResult.results_count}]`)
