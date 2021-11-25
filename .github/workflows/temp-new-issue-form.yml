@@ -17,10 +17,8 @@ jobs:
         script: |
           const script = require('./src/find-action-from-comment.js')
                   
-          // note: owner is now the organization the FORK lives in:
           const owner = context.repo.owner
           const repo = context.repo.repo
-          let issue_number = context.issue.number
+          const issue_number = context.issue.number
           
-          console.log(`issue number: [${{ steps.dispatch_issue_find.outputs.issue_number }}]`)
           console.log(await script({github, owner, repo, issue_number, core}))
