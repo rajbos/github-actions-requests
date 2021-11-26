@@ -10,6 +10,9 @@ on:
         description: 'Issue number to work with'
         required: true
         default: '11'
+
+env: 
+  fork-owner: rajbos-actions-test # where the forks are place
     
 jobs:
   find-action-name:
@@ -79,7 +82,7 @@ jobs:
            const script = require('./src/dependabot.js')
                   
            // note: owner is now the organization the FORK lives in:
-           const owner = "${{ needs.find-action-name.outputs.owner }}"
+           const owner = "${{ env.fork-owner }}"
            const repo = "${{ needs.find-action-name.outputs.request_repo }}"
 
            // check if  dependabot security updates are enabled for the repo
