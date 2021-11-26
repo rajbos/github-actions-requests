@@ -254,9 +254,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Run npm ci for require imports to work
+        run: npm ci
       - uses: actions/download-artifact@v1
         with:
-          name: security-scan-result
+          name: security-scan-result.md
           url: ${{ steps.check-action-security-setup.outputs.security_scan_result }}
       - run: ls -la
 
@@ -291,4 +293,4 @@ jobs:
             const codeql_run_link = `https://github.com/${forkedRepoOwner}/${forkedRepoName}/actions/runs/${codeql_run_id}`
 
             const script = require('./src/combine-results.js')
-            await script({github, owner, repo, issue_number: issue, codeql_run_link, codeqlResult})
+            await script({github, owner, repo, issue_number: issue, codeql_run_link, codeqlResult, securityScanResult: 'security-scan-result.md'})

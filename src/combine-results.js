@@ -1,4 +1,6 @@
-module.exports = async ({github, owner, repo, issue_number, codeql_run_link, codeqlResult}) => {
+var fs = require('fs');
+
+module.exports = async ({github, owner, repo, issue_number, codeql_run_link, codeqlResult, securityScanResult}) => {
 
     console.log(``)
     console.log(`Looking at this repository: [${owner}/${repo}] with issue number [${issue_number}]`)
@@ -7,6 +9,7 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
     console.log(`- results.count: [${codeqlResult.results_count}]`)
     console.log(`- environment: [${codeqlResult.environment}]`)
     console.log(`- created_at: [${codeqlResult.created_at}]`)
+    console.log(`- securityScanResults: [${securityScanResult}]`)
     
     let codeQLSymbol = ''
     if (codeqlResult.results_count === 0) {
@@ -34,4 +37,13 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
     });
 
     //console.log(`Issue created result: [${JSON.stringify(result)}]`)
+
+    // load the securityScanResult file
+    fs.readFile( __dirname + securityScanResult, function (err, data) {
+        if (err) {
+          throw err
+        }
+        console.log('file info:')
+        console.log(data.toString())
+    });
 }  
