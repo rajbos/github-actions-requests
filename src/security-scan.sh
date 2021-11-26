@@ -3,6 +3,7 @@
 set -euo pipefail
 
 function github_folder_checks() {
+    echo "Checking for files in the .github folder"
     if [ ! -d "action/.github" ] ; then
         echo ::set-output name=has_github_folder::false
         echo ::set-output name=has_workflows_folder::false
@@ -51,9 +52,9 @@ function github_folder_checks() {
 }
 
 function action_docker_checks() {
+    echo "Checking for docker configuration"
     if [ "docker" != `yq e '.runs.using' action/action.yml` ] ; then
         echo ::set-output name=action_uses_docker::false
-
         exit 0
     fi
 

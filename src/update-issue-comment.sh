@@ -32,7 +32,7 @@ else
 fi
 
 if [ $ACTION_USES_DOCKER == true ]; then
-    echo "| ℹ️ | Uses Docker container |" >> result.md
+    echo "| Uses Docker container | ℹ️ |" >> result.md
 
     if [ $HAS_LOW_MEDIUM_ISSUES == true ]; then
         echo "| $LOW_MEDIUM_ISSUES Low or medium issues found | ⚠️ |" >> result.md
