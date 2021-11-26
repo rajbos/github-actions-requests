@@ -17,7 +17,7 @@ env:
 jobs:
   find-action-name:
     runs-on: ubuntu-latest
-    #if: github.event.label.name == 'security-check'
+    if: github.event.label.name == 'security-check'
 
     outputs:
       action: ${{ steps.get-action.outputs.action }}
