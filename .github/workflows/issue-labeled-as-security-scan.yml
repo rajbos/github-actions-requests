@@ -93,13 +93,14 @@ jobs:
           return result
 
   # fork the repo so we can run dependabot security scan and a CodeQL scan on the fork        
-  fork-action-test:
-    name: Check input variables have values
+  fork-action-test:    
     runs-on: ubuntu-latest
+    name: Fork action to test organization
     needs: find-action-name
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/github-script@v5       
+    - uses: actions/github-script@v5  
+      name: Check input variables have values     
       with: 
         github-token: ${{ secrets.GH_TOKEN }}
         script: |
@@ -109,19 +110,19 @@ jobs:
           const owner = `${{ needs.find-action-name.outputs.owner }}`
           const org = `${{ env.fork-owner }}`
 
-          if (repo == null) {
+          if (repo === null || repo === '') {
             console.log(`repo not found in the outputs of the find-action-name step`)
             console.log(`repo: [${{ needs.find-action-name.outputs.name }}]`)
             return 1
           }
 
-          if (owner == null) {
+          if (owner === null || owner === '') {
             console.log(`owner not found in the outputs of the find-action-name step`)
             console.log(`owner: [${{ needs.find-action-name.outputs.repo }}]`)
             return 1
           }
 
-          if (org == null) {
+          if (org === null || org === '') {
             console.log(`org not found in the outputs of the find-action-name step`)
             console.log(`org: [${{ needs.find-action-name.outputs.repo }}]`)
             return 1

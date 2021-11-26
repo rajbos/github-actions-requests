@@ -18,7 +18,8 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     repo: repo,
     issue_number: issue_number,
   })
-  //console.log(`Issue body: [${JSON.stringify(issue.data.body)}]`)
+  
+  console.log(`Issue body: [${JSON.stringify(issue.data.body)}]`)
 
   let split = issue.data.body.split(/\r\n/)
   let action
@@ -39,8 +40,9 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   }
 
   let result
-  if (action == null) {
-    console.log('Action to use not found')        
+  if (action === null) {
+    console.log('Action to use not found')
+    core.setFailed('Action to use not found')
     result = 1
   }
   else {
