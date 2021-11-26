@@ -83,7 +83,7 @@ jobs:
                   
            // note: owner is now the organization the FORK lives in:
            const owner = "${{ env.fork-owner }}"
-           const repo = "${{ needs.find-action-name.outputs.request_repo }}"
+           const repo = "${{ steps.get-action.outputs.name }}"
 
            // check if  dependabot security updates are enabled for the repo
            const enabledResult = await github.request('GET /repos/{owner}/{repo}/vulnerability-alerts', {
