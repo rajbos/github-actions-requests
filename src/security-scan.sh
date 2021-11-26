@@ -73,7 +73,7 @@ function action_docker_checks() {
         docker image rm action-checkout/$ACTION
         else
         IMAGE=`yq e '.runs.image' action/action.yml`
-        if  [[ $image = docker://* ]] ; then
+        if  [[ $IMAGE = docker://* ]] ; then
             IMAGE=${IMAGE#docker://}
         fi 
         echo "Scan docker image with trivy [$IMAGE]"
