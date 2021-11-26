@@ -155,7 +155,9 @@ jobs:
 
     - name: Check for .github and workflows folder
       id: scan
-      run: src/security-scan.sh
+      run: | 
+        ls -la ./src/
+        src/security-scan.sh
       env:
         ACTION: ${{ needs.find-action-name.outputs.action }}
         
