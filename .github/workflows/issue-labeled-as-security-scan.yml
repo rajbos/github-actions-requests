@@ -176,7 +176,7 @@ jobs:
         HIGH_CRITICAL_ISSUES: ${{ steps.scan.outputs.high_critical_issues }}
 
     - name: Upload result file as artefact
-      uses: actions/artifact@v1
+      uses: actions/upload-artifact@v1
       with:
         name: security-scan-result
         path: result.md
