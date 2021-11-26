@@ -39,7 +39,7 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
         console.log("The file does not exist");
     }
 
-    await fs.readFile(securityScanResult, function (err, data) {
+    const fileResult = await fs.readFile(securityScanResult, function (err, data) {
         if (err) {
           throw err
         }
