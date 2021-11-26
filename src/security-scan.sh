@@ -31,23 +31,23 @@ function github_folder_checks() {
 
     echo ::set-output name=has_workflows_folder::true
 
-        # Look for CodeQL init workflow
-        if [ `grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/init' | wc -l` -gt 0 ]; then
-            WORKFLOW_INIT=`grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/init' -H | cut -f1 -d' ' | sed "s/:$//g"`
-            echo ::set-output name=workflow_with_codeql_init::${WORKFLOW_INIT}
-            echo ::set-output name=has_codeql_init::true
-        else
-            echo ::set-output name=has_codeql_init::false
-        fi
+    # Look for CodeQL init workflow
+    if [ `grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/init' | wc -l` -gt 0 ]; then
+        WORKFLOW_INIT=`grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/init' -H | cut -f1 -d' ' | sed "s/:$//g"`
+        echo ::set-output name=workflow_with_codeql_init::${WORKFLOW_INIT}
+        echo ::set-output name=has_codeql_init::true
+    else
+        echo ::set-output name=has_codeql_init::false
+    fi
 
-        # Look for CodeQL analyze workflow
-        if [ `grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/analyze' | wc -l` -gt 0 ]; then
-            WORKFLOW_ANALYZE=`grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/analyze' -H | cut -f1 -d' ' | sed "s/:$//g"`
-            echo ::set-output name=workflow_with_codeql_analyze::${WORKFLOW_ANALYZE}
-            echo ::set-output name=has_codeql_analyze::true
-        else
-            echo ::set-output name=has_codeql_analyze::false
-        fi
+    # Look for CodeQL analyze workflow
+    if [ `grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/analyze' | wc -l` -gt 0 ]; then
+        WORKFLOW_ANALYZE=`grep action/.github/workflows/*.yml -e 'uses: github/codeql-action/analyze' -H | cut -f1 -d' ' | sed "s/:$//g"`
+        echo ::set-output name=workflow_with_codeql_analyze::${WORKFLOW_ANALYZE}
+        echo ::set-output name=has_codeql_analyze::true
+    else
+        echo ::set-output name=has_codeql_analyze::false
+    fi
 }
 
 function action_docker_checks() {

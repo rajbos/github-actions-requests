@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+echo "HAS_CODEQL_INIT: $HAS_CODEQL_INIT"
+echo "HAS_CODEQL_ANALYZE: $HAS_CODEQL_ANALYZE"
+echo "HAS_GITHUB_FOLDER: $HAS_GITHUB_FOLDER"
+echo ""
+
 echo "| Result | Step |" > result.md
 echo "|---|---|" >> result.md
 
@@ -19,7 +24,7 @@ else
     echo "| ⛔️ | No Dependabot configuration found |" >> result.md
 fi
 
-if [ $HAS_CODEQL_INIT ]; then
+if [ $HAS_CODEQL_INIT == true ]; then
     echo "| ✅ | CodeQL Init found in $WORKFLOW_WITH_CODEQL_INIT |" >> result.md
 else
     echo "| ⛔️ | No CodeQL Init found |" >> result.md
