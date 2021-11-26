@@ -46,13 +46,25 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
         console.log('file info:')
         console.log(data.toString())
             
-        commentBody.push(``)
-        commentBody.push(`Security scan: `)
-        commentBody.push(`${data}`)
+        // commentBody.push(``)
+        // commentBody.push(`Security scan: `)
+        // commentBody.push(`${data}`)
 
+        let securityBody = [
+            ``,
+            `Security scan: `,
+            `${data}`
+        ]
+
+        commentBody.push.apply(securityBody)
         console.log(`commentBody length: [${commentBody.length}]`)
     });
 
+    console.log(`commentBody length: [${commentBody.length}]`)
+    foreach(commentBody, (line) => {
+        console.log(`line: [${line}]`)
+    })
+    
     // create comment letting the user know the results
     const result = await github.rest.issues.createComment({
         owner,
