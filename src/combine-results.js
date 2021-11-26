@@ -37,7 +37,7 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
     //console.log(`Issue created result: [${JSON.stringify(result)}]`)
 
     // load the securityScanResult file
-    fs.readFile( __dirname + securityScanResult, function (err, data) {
+    fs.readFile( securityScanResult, function (err, data) {
         if (err) {
           throw err
         }
