@@ -37,7 +37,15 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
     //console.log(`Issue created result: [${JSON.stringify(result)}]`)
 
     // load the securityScanResult file
-    fs.readFile( securityScanResult, function (err, data) {
+    console.log(`Loading securityScanResult file: [${securityScanResult}]`)
+    console.log(`Running in this dir [${__dirname}]`)
+    if (fs.existsSync(securityScanResult)) {
+        console.log("The file exists");
+    } else {
+        console.log("The file does not exist");
+    }
+
+    fs.readFile(securityScanResult, function (err, data) {
         if (err) {
           throw err
         }
