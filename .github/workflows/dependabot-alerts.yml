@@ -79,7 +79,7 @@ jobs:
            const script = require('./src/dependabot.js')
                   
            // note: owner is now the organization the FORK lives in:
-           const owner = "${{ needs.find-action-name.outputs.request_owner }}"
+           const owner = "${{ needs.find-action-name.outputs.owner }}"
            const repo = "${{ needs.find-action-name.outputs.request_repo }}"
 
            // check if  dependabot security updates are enabled for the repo
@@ -119,7 +119,7 @@ jobs:
              `Found ${totalVulnerabilities} Dependabot security vulnerabilities: `,
              `${results.high} where high and ${results.moderate} where moderate.`,
              ``,
-             `Use this [link](https://github.com/${owner}/{repo}/security/dependabot) to verify the alerts.`
+             `Use this [link](https://github.com/${owner}/${repo}/security/dependabot) to verify the alerts.`
            ]
            issue_number = `${{ needs.find-action-name.outputs.request_issue }}`
            console.log(`Commenting the information on issue with number: ${issue_number}`)
