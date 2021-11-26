@@ -128,8 +128,8 @@ jobs:
            console.log(`Body: [${body}]`)
 
            // comment in the right repository
-           let owner = "${{ needs.find-action-name.outputs.request_owner }}"
-           let repo = "${{ needs.find-action-name.outputs.request_repo }}"
+           owner = "${{ needs.find-action-name.outputs.request_owner }}"
+           repo = "${{ needs.find-action-name.outputs.request_repo }}"
 
            github.rest.issues.createComment({
               owner,
