@@ -256,8 +256,9 @@ jobs:
       - uses: actions/checkout@v2      
       - uses: actions/download-artifact@v1
         with:
-          name: security-scan-result.md
+          name: security-scan-result
           url: ${{ steps.check-action-security-setup.outputs.security_scan_result }}
+          path: security-scan-result.md
       - run: ls -la
 
       - run: npm install fs
