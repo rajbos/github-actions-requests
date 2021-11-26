@@ -70,7 +70,7 @@ module.exports = async ({github, owner, repo, path, ref}) => {
           run_id
         })
         if (status !== 'completed') {
-          await wait(60000)
+          await wait(15000)
           return await waitForScan(github, owner, repo, run_id, lastRun)
         } 
         else {
