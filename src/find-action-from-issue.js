@@ -84,5 +84,5 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     body: commentBody.join('\n')
   });
   
-  return 0
+  return result
 }

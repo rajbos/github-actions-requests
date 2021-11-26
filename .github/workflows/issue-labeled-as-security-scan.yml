@@ -45,7 +45,7 @@ jobs:
          fi
 
     - uses: actions/github-script@v5
-      name: Find action from issue comment
+      name: Find action from issue
       id: get-action
       with:
         result-encoding: string
