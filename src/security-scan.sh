@@ -72,7 +72,8 @@ function action_docker_checks() {
         trivy --quiet image action-checkout/$ACTION > issues
         docker image rm action-checkout/$ACTION
         else
-        echo "Scan docker image with trivy"
+        IMAGE=`yq e '.runs.image' action/action.yml`
+        echo "Scan docker image with trivy [$IMAGE]"      
         trivy --quiet image $IMAGE > issues
     fi
 
