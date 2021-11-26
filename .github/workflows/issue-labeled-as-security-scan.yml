@@ -259,11 +259,7 @@ jobs:
           name: security-scan-result
           #url: ${{ steps.check-action-security-setup.outputs.security_scan_result }}
           path: security-scan-result
-      - run: |
-          ls -la
-          cd security-scan-result
-          ls -la
-
+     
       - run: npm install fs
 
       - uses: actions/github-script@v5
