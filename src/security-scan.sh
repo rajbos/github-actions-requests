@@ -80,6 +80,9 @@ function action_docker_checks() {
         trivy --quiet image $IMAGE > issues
     fi
 
+    echo "Issues:"
+    cat issues
+
     # Check if LOW or MEDIUM issues are found (remove count from header)
     LOW_MEDIUM_ISSUES = $((`cat issues | grep -e LOW -e MEDIUM | wc -l`--))
 
