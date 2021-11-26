@@ -156,13 +156,15 @@ jobs:
     - name: Check for .github and workflows folder
       id: scan
       run: | 
-        ls -la ./src/
+        chmod +x src/security-scan.sh
         src/security-scan.sh
       env:
         ACTION: ${{ needs.find-action-name.outputs.action }}
         
     - name: Update comment with results
-      run: src/update-issue-comment.sh
+      run: |
+        chmod +x src/update-issue-comment.sh
+        src/update-issue-comment.sh
       env:
         HAS_GITHUB_FOLDER: ${{ steps.scan.outputs.has_github_folder }}
         HAS_WORKFLOWS_FOLDER: ${{ steps.scan.outputs.has_workflows_folder }}
