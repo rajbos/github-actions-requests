@@ -118,6 +118,7 @@ jobs:
            }
            let body = [
              `:robot: Check completed with result: ${status}`,
+             ``,
              `Found ${totalVulnerabilities} Dependabot security vulnerabilities: `,
              `${results.high} where high and ${results.moderate} where moderate.`,
              ``,
@@ -130,6 +131,7 @@ jobs:
            // comment in the right repository
            owner = "${{ needs.find-action-name.outputs.request_owner }}"
            repo = "${{ needs.find-action-name.outputs.request_repo }}"
+           console.log(`Posting the findings back into this repo: ${owner}/${repo} on issue ${issue_number}`)
 
            github.rest.issues.createComment({
               owner,
