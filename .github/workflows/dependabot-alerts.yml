@@ -129,7 +129,7 @@ jobs:
               owner,
               repo,
               issue_number,
-              body: ody.join('\n')
+              body: body.join('\n')
             });
 
             
