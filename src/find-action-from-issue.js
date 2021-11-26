@@ -22,7 +22,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   console.log(`Issue body: [${JSON.stringify(issue.data.body)}]`)
 
   let split
-  if (split.indexOf('\r\n') > -1) {
+  if (issue.data.body.indexOf('\r\n') > -1) {
     split = issue.data.body.split(/\r\n/) // normal issue
   }
   else {
