@@ -61,10 +61,10 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
     });
 
     console.log(`commentBody length: [${commentBody.length}]`)
-    foreach(commentBody, (line) => {
-        console.log(`line: [${line}]`)
-    })
-    
+    commentBody.forEach(element => {
+        console.log(`line: [${element}]`)
+    });
+
     // create comment letting the user know the results
     const result = await github.rest.issues.createComment({
         owner,
