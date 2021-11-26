@@ -21,10 +21,16 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   
   console.log(`Issue body: [${JSON.stringify(issue.data.body)}]`)
 
-  let splitted = issue.data.body.split(/\r\n/) // normal issue
-  let split = splitted.split(/\n\n/) // issue from template
+  let split
+  if (split.indexOf('\r\n') > -1) {
+    split = issue.data.body.split(/\r\n/) // normal issue
+  }
+  else {
+    split = issue.data.body.split(/\n\n/) // issue from template
+  }
+
   let action
-  console.log(`After splitting the body we have [${slit.length}] lines`)
+  console.log(`After splitting the body we have [${split.length}] lines`)
   for (let i = 0; i < split.length; i++) {
     console.log(`Line [${i}] [${split[i]}]`)
     if (split[i].startsWith('uses: ')) {
