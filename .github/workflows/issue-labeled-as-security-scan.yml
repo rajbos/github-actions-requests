@@ -63,7 +63,34 @@ jobs:
             issue_number = `${{ steps.dispatch_issue_find.outputs.issue_number }}`
           }
 
-          const result = await script({github, owner, repo, issue_number, core})
+          let { result, action } = await script({github, owner, repo, issue_number})
+
+          let commentBody
+          if (result === 0) {
+            console.log(`issue found: [${issue_found}]`)
+            commentBody = [
+              `:robot: Found action from the request in the issue body ✅`,
+              `\`${action}\``,
+              `This action will now be checked automatically and the results will be posted back in this issue.`
+            ]
+          }
+          else {
+            commentBody = [
+              `:robot: Could not find action from the request in the issue body :high_voltage:`,
+              ``,
+              `Please make sure you have this on a line in the body:`,
+              `uses: organization/repo`
+            ]
+          }
+
+          // create comment letting the user know the results
+          await github.rest.issues.createComment({
+            owner,
+            repo,
+            issue_number,
+            body: commentBody.join('\n')
+          });
+          
           return result
 
   # fork the repo so we can run dependabot security scan and a CodeQL scan on the fork        

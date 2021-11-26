@@ -1,3 +1,5 @@
+name: Get Dependabot alerts
+  
 on:
   issues: 
     types: [labeled, unlabeled]
@@ -58,7 +60,8 @@ jobs:
             issue_number = `${{ steps.dispatch_issue_find.outputs.issue_number }}`
           }
 
-          console.log(await script({github, owner, repo, issue_number}))
+          await script({github, owner, repo, issue_number})
+          
 
   # find the results from security vulnerabilities in Dependabot 
   dependabot-results:

@@ -38,27 +38,13 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     }
   }
 
-  let commentBody
   let result
   if (action == null) {
-    console.log('Action to use not found')
-    commentBody = [
-      `:robot: Could not find action from the request in the issue body :high_voltage:`,
-      ``,
-      `Please make sure you have this on a line in the body:`,
-      `uses: organization/repo`
-    ]
-    
+    console.log('Action to use not found')        
     result = 1
   }
   else {
     console.log('Action to use found')
-    commentBody = [
-      `:robot: Found action from the request in the issue body ✅`,
-      `\`${action}\``,
-      `This action will now be checked automatically and the results will be posted back in this issue.`
-    ]
-    
     result = 0
   }
 
@@ -76,13 +62,5 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     console.log(`::set-output name=name::${actionName}`)
   }
 
-  // create comment letting the user know the results
-  await github.rest.issues.createComment({
-    owner,
-    repo,
-    issue_number,
-    body: commentBody.join('\n')
-  });
-  
-  return result
+  return { result, action }
 }
