@@ -1,6 +1,4 @@
-var fs = require('fs');
-
-module.exports = async ({github, owner, repo, issue_number, codeql_run_link, codeqlResult, securityScanResult}) => {
+module.exports = async ({github, owner, repo, issue_number, codeql_run_link, codeqlResult, securityScanResult, fs}) => {
 
     console.log(``)
     console.log(`Looking at this repository: [${owner}/${repo}] with issue number [${issue_number}]`)
