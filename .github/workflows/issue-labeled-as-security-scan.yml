@@ -3,7 +3,7 @@ name: Issue labeled security scan
 on:
   issues: 
     types: [labeled, unlabeled]
-  push:
+
   workflow_dispatch:
     inputs:
       issue:
