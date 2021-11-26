@@ -21,7 +21,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   
   console.log(`Issue body: [${JSON.stringify(issue.data.body)}]`)
 
-  let split = issue.data.body.split(/\r\n/)
+  let split = issue.data.body.split(/\r\n/).split(/\n\n/)
   let action
   for (let i = 0; i < split.length; i++) {
     console.log(`Line [${i}] [${split[i]}]`)
@@ -40,7 +40,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   }
 
   let result
-  if (action === null) {
+  if (action === null || action === undefined || action === '') {
     console.log('Action to use not found')
     core.setFailed('Action to use not found')
     result = 1
