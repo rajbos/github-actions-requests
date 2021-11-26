@@ -43,7 +43,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   if (action == null) {
     console.log('Action to use not found')
     commentBody = [
-      `:robot: Could not find action from the request in the issue body :danger:`,
+      `:robot: Could not find action from the request in the issue body :high_voltage:`,
       ``,
       `Please make sure you have this on a line in the body:`,
       `uses: organization/repo`

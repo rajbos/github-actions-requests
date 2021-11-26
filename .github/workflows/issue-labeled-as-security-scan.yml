@@ -72,6 +72,33 @@ jobs:
     needs: find-action-name
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/github-script@v5       
+      with: 
+        github-token: ${{ secrets.GH_TOKEN }}
+        script: |
+          
+          // note: owner is now the organization the FORK lives in:
+          const repo = ${{ needs.find-action-name.outputs.name }}
+          const owner = ${{ needs.find-action-name.outputs.owner }}
+          const org = ${{ env.fork-owner }}
+
+          if (repo == null) {
+            console.log(`repo not found in the outputs of the find-action-name step`)
+            console.log(`repo: [${{ needs.find-action-name.outputs.name }}]`)
+            return 1
+          }
+
+          if (owner == null) {
+            console.log(`owner not found in the outputs of the find-action-name step`)
+            console.log(`owner: [${{ needs.find-action-name.outputs.repo }}]`)
+            return 1
+          }
+
+          if (org == null) {
+            console.log(`org not found in the outputs of the find-action-name step`)
+            console.log(`org: [${{ needs.find-action-name.outputs.repo }}]`)
+            return 1
+          }
 
     - name: Fork the action repository to rajbos-actions-test
       uses: rajbos-actions/forker@v0.0.1
