@@ -3,7 +3,7 @@ This repository is meant to hold the setup for requesting actions to be used int
 
 # Process description:
 1. User creates a new issue in this repo
-1. The review team gets a notification about the new issue (TODO, using [issue-comment-tag](https://github.com/devops-actions/issue-comment-tag))
+1. The review team gets a notification about the new issue (using this action: [issue-comment-tag](https://github.com/devops-actions/issue-comment-tag))
 1. After manual review, the review team labels the issue with 'security check'
 1. The workflow `Issue labeled security scan` is triggered, executing several automated checks.
 1. The results of all the checks are added back into the request issue.
