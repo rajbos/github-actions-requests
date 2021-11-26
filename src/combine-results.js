@@ -57,10 +57,10 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
         ]
 
         commentBody.push.apply(commentBody, securityBody)
-        console.log(`commentBody length: [${commentBody.length}]`)
+        console.log(`commentBody length2: [${commentBody.length}]`)
     });
 
-    console.log(`commentBody length: [${commentBody.length}]`)
+    console.log(`commentBody length3: [${commentBody.length}]`)
     commentBody.forEach(element => {
         console.log(`line: [${element}]`)
     });
