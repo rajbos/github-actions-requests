@@ -39,11 +39,7 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
         console.log("The file does not exist");
     }
 
-    const scanResult = fs.readFileSync(securityScanResult, function (err, data) {
-        if (err) {
-          throw err
-        }        
-    });
+    const scanResult = fs.readFileSync(securityScanResult);
     console.log(`scanResult: [${scanResult}]`)
     let securityBody = [
         ``,
