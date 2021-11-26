@@ -43,7 +43,7 @@ if [ $ACTION_USES_DOCKER == true ]; then
     if [ $HAS_HIGH_CRITICAL_ISSUES == true ]; then
         echo "| $HIGH_CRITICAL_ISSUES High or critical issues found | ⛔️ |" >> result.md
     else
-        echo "| ✅ | No High or Critical issues found | ✅ |" >> result.md
+        echo "| No High or Critical issues found | ✅ |" >> result.md
     fi
 fi
 
