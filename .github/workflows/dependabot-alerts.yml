@@ -39,12 +39,12 @@ jobs:
          fi
 
     - uses: actions/github-script@v5
-      name: Find action from comment
+      name: Find action from issue
       id: get-action
       with:
         result-encoding: string
         script: |
-          const script = require('./src/find-action-from-comment.js')
+          const script = require('./src/find-action-from-issue.js')
                   
           // note: owner is now the organization the FORK lives in:
           const owner = context.repo.owner
