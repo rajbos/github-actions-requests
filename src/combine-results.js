@@ -26,7 +26,8 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
         `|---|---|---|`,
         `|CodeQL on the forked repo|${codeQLSymbol}|[CodeQL run](${codeql_run_link})|`,
         ``
-    ]        
+    ]   
+    console.log(`commentBody length: [${commentBody.length}]`)     
     
 
     // load the securityScanResult file
@@ -48,6 +49,8 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
         commentBody.push(``)
         commentBody.push(`Security scan: `)
         commentBody.push(`${data}`)
+
+        console.log(`commentBody length: [${commentBody.length}]`)
     });
 
     // create comment letting the user know the results
