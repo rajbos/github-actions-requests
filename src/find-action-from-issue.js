@@ -3,7 +3,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   console.log(`Looking at this repository: [${owner}/${repo}]`)
   console.log(`Running with issue number [${issue_number}]`)
 
-  if (issue_number == null) {
+  if (issue_number == null || issue_number == undefined || issue_number == '') {
     core.setFailed('Issue_number not found')
     return
   }
