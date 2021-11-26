@@ -88,9 +88,17 @@ module.exports = async ({github, owner, repo, path, ref}) => {
             })
 
             // check each job
+            let successfullJobs = 0
             console.log(`Job results:`)
             for (const job of data.jobs) {
                 console.log(` - Job [${job.name}] status [${job.status}] conclusion [${job.conclusion}]`)
+                if (job.status === 'completed' && job.conclusion === 'success') {
+                    successfullJobs++
+                }
+            }
+
+            if (successfullJobs === 0) {
+                // post this information back into the request issue
             }
 
             return 1
