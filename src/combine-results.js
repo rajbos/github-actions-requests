@@ -27,18 +27,8 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
         `|CodeQL on the forked repo|${codeQLSymbol}|[CodeQL run](${codeql_run_link})|`,
         ``
     ]   
-    console.log(`commentBody length: [${commentBody.length}]`)     
-    
 
-    // load the securityScanResult file
-    console.log(`Loading securityScanResult file: [${securityScanResult}]`)
-    console.log(`Running in this dir [${__dirname}]`)
-    if (fs.existsSync(securityScanResult)) {
-        console.log("The file exists");
-    } else {
-        console.log("The file does not exist");
-    }
-
+    // load the securityScanResult file    
     const scanResult = fs.readFileSync(securityScanResult);
     console.log(`scanResult: [${scanResult}]`)
     let securityBody = [
