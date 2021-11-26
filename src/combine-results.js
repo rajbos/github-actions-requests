@@ -56,7 +56,7 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
             `${data}`
         ]
 
-        commentBody.push.apply(securityBody)
+        commentBody.push.apply(commentBody, securityBody)
         console.log(`commentBody length: [${commentBody.length}]`)
     });
 
