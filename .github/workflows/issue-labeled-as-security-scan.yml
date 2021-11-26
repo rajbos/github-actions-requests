@@ -78,9 +78,9 @@ jobs:
         script: |
           
           // note: owner is now the organization the FORK lives in:
-          const repo = ${{ needs.find-action-name.outputs.name }}
-          const owner = ${{ needs.find-action-name.outputs.owner }}
-          const org = ${{ env.fork-owner }}
+          const repo = `${{ needs.find-action-name.outputs.name }}`
+          const owner = `${{ needs.find-action-name.outputs.owner }}`
+          const org = `${{ env.fork-owner }}`
 
           if (repo == null) {
             console.log(`repo not found in the outputs of the find-action-name step`)
