@@ -42,26 +42,18 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
     const scanResult = fs.readFileSync(securityScanResult, function (err, data) {
         if (err) {
           throw err
-        }
-        console.log('file info:')
-        console.log(data.toString())
-            
-        // commentBody.push(``)
-        // commentBody.push(`Security scan: `)
-        // commentBody.push(`${data}`)
-
-        let securityBody = [
-            ``,
-            `Security scan: `,
-            `${data}`
-        ]
-
-        commentBody.push.apply(commentBody, securityBody)
-        console.log(`commentBody length2: [${commentBody.length}]`)
+        }        
     });
     console.log(`scanResult: [${scanResult}]`)
+    let securityBody = [
+        ``,
+        `Security scan: `,
+        `${scanResult}`
+    ]
 
-    console.log(`commentBody length3: [${commentBody.length}]`)
+    commentBody.push.apply(commentBody, securityBody)
+    console.log(`commentBody length2: [${commentBody.length}]`)
+
     commentBody.forEach(element => {
         console.log(`line: [${element}]`)
     });
