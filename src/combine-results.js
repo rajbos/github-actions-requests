@@ -1,3 +1,5 @@
+const { secureHeapUsed } = require("crypto")
+
 module.exports = async ({github, owner, repo, issue_number, codeql_run_link, codeqlResult, securityScanResult, fs}) => {
 
     console.log(``)
@@ -24,17 +26,8 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
         `|---|---|---|`,
         `|CodeQL on the forked repo|${codeQLSymbol}|[CodeQL run](${codeql_run_link})|`,
         ``
-    ]
-      
-    // create comment letting the user know the results
-    const result = await github.rest.issues.createComment({
-        owner,
-        repo,
-        issue_number,
-        body: commentBody.join('\n')
-    });
-
-    //console.log(`Issue created result: [${JSON.stringify(result)}]`)
+    ]        
+    
 
     // load the securityScanResult file
     console.log(`Loading securityScanResult file: [${securityScanResult}]`)
@@ -51,5 +44,18 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
         }
         console.log('file info:')
         console.log(data.toString())
+            
+        commentBody.push(``)
+        commentBody.push(`Security scan: `)
+        commentBody.push(`${data}`)
     });
+
+    // create comment letting the user know the results
+    const result = await github.rest.issues.createComment({
+        owner,
+        repo,
+        issue_number,
+        body: commentBody.join('\n')
+    });
+    //console.log(`Issue created result: [${JSON.stringify(result)}]`)
 }  

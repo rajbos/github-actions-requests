@@ -298,5 +298,5 @@ jobs:
             const codeql_run_link = `https://github.com/${forkedRepoOwner}/${forkedRepoName}/actions/runs/${codeql_run_id}`
 
             const script = require('./src/combine-results.js')
-            const securityFile = `/home/runner/work/github-actions-requests/github-actions-requests/security-scan-result/result.md`
+            const securityFile = `../result.md`
             await script({github, owner, repo, issue_number: issue, codeql_run_link, codeqlResult, securityScanResult: securityFile, fs})
