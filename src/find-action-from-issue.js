@@ -21,8 +21,10 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   
   console.log(`Issue body: [${JSON.stringify(issue.data.body)}]`)
 
-  let split = issue.data.body.split(/\r\n/).split(/\n\n/)
+  let splitted = issue.data.body.split(/\r\n/) // normal issue
+  let split = splitted.split(/\n\n/) // issue from template
   let action
+  console.log(`After splitting the body we have [${slit.length}] lines`)
   for (let i = 0; i < split.length; i++) {
     console.log(`Line [${i}] [${split[i]}]`)
     if (split[i].startsWith('uses: ')) {
@@ -31,7 +33,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
       action = split[i].substring(6)
       let spaceIndex = action.indexOf(' ')
       if (spaceIndex > 0) {
-        console.log(`found space at char [${spaceIndex}], cutting of the action text before it`)
+        console.log(`Found space at char [${spaceIndex}], cutting of the action text before it`)
         action = action.substring(0, spaceIndex)        
       }
       console.log(`Found action with name [${action}]`)
