@@ -31,8 +31,6 @@ else
     echo "| ⛔️ | No CodeQL Analyze found |" >> result.md
 fi
 
-echo "|---|---|" >> result.md
-
 if [ $ACTION_USES_DOCKER ]; then
     echo "| ℹ️ | Uses Docker container |" >> result.md
 
@@ -50,4 +48,3 @@ if [ $ACTION_USES_DOCKER ]; then
 fi
 
 cat result.md
-
