@@ -3,6 +3,11 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   console.log(`Looking at this repository: [${owner}/${repo}]`)
   console.log(`Running with issue number [${issue_number}]`)
 
+  // we always need these in the next steps:
+  console.log(`::set-output name=request_owner::${owner}`)            
+  console.log(`::set-output name=request_repo::${repo}`)
+  console.log(`::set-output name=request_issue::${issue_number}`)
+
   if (issue_number == null || issue_number == undefined || issue_number == '') {
     core.setFailed('Issue_number not found')
     return
@@ -70,10 +75,6 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     console.log(`::set-output name=owner::${actionOwner}`)
     console.log(`::set-output name=name::${actionName}`)
   }
-
-  console.log(`::set-output name=request_owner::${owner}`)            
-  console.log(`::set-output name=request_repo::${repo}`)
-  console.log(`::set-output name=request_issue::${issue_number}`)
 
   // create comment letting the user know the results
   await github.rest.issues.createComment({
