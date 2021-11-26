@@ -105,6 +105,5 @@ function action_docker_checks() {
     fi
 }
 
-github_folder_checks
-
 action_docker_checks
+github_folder_checks
