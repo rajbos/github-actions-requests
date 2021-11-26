@@ -3,7 +3,12 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   console.log(`Looking at this repository: [${owner}/${repo}]`)
   console.log(`Running with issue number [${issue_number}]`)
 
-  if (issue_number == null) {
+  // we always need these in the next steps:
+  console.log(`::set-output name=request_owner::${owner}`)            
+  console.log(`::set-output name=request_repo::${repo}`)
+  console.log(`::set-output name=request_issue::${issue_number}`)
+
+  if (issue_number == null || issue_number == undefined || issue_number == '') {
     core.setFailed('Issue_number not found')
     return
   }
@@ -38,7 +43,7 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   if (action == null) {
     console.log('Action to use not found')
     commentBody = [
-      `:robot: Could not find action from the request in the issue body :danger:`,
+      `:robot: Could not find action from the request in the issue body :high_voltage:`,
       ``,
       `Please make sure you have this on a line in the body:`,
       `uses: organization/repo`
@@ -58,20 +63,18 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
   }
 
   // return action
-  let index = action.indexOf('/')
-  let actionOwner = action.substring(0, index)
-  let actionName = action.substring(index+1)
+  if (result === 0) {
+    let index = action.indexOf('/')
+    let actionOwner = action.substring(0, index)
+    let actionName = action.substring(index+1)
 
-  console.log(`Found owner:${actionOwner}`)
-  console.log(`Found action:${actionName}`)
+    console.log(`Found owner:${actionOwner}`)
+    console.log(`Found action:${actionName}`)
 
-  console.log(`::set-output name=action::${action}`)
-  console.log(`::set-output name=owner::${actionOwner}`)
-  console.log(`::set-output name=name::${actionName}`)
-
-  console.log(`::set-output name=request_owner::${owner}`)            
-  console.log(`::set-output name=request_repo::${repo}`)
-  console.log(`::set-output name=request_issue::${issue_number}`)
+    console.log(`::set-output name=action::${action}`)
+    console.log(`::set-output name=owner::${actionOwner}`)
+    console.log(`::set-output name=name::${actionName}`)
+  }
 
   // create comment letting the user know the results
   await github.rest.issues.createComment({
@@ -81,5 +84,5 @@ module.exports = async ({github, owner, repo, issue_number, core}) => {
     body: commentBody.join('\n')
   });
   
-  return 0
+  return result
 }
