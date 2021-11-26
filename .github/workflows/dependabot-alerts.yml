@@ -115,7 +115,7 @@ jobs:
               status = '✅'
            }
            let body = [
-             `${status} Check completed`,
+             `:robot: Check completed with result: ${status}`,
              `Found ${totalVulnerabilities} Dependabot security vulnerabilities: `,
              `${results.high} where high and ${results.moderate} where moderate.`,
              ``,
