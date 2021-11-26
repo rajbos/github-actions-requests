@@ -3,7 +3,7 @@
 set -euo pipefail
 
 echo "| Result | Step |" > result.md
-echo "|---|------|" >> result.md
+echo "|---|---|" >> result.md
 
 if [ $HAS_GITHUB_FOLDER == false  ]; then
     echo "| ⛔️ | No .github folder found |" >> result.md    
@@ -31,7 +31,7 @@ else
     echo "| ⛔️ | No CodeQL Analyze found |" >> result.md
 fi
 
-echo "|---|------|" >> result.md
+echo "|---|---|" >> result.md
 
 if [ $ACTION_USES_DOCKER ]; then
     echo "| ℹ️ | Uses Docker container |" >> result.md

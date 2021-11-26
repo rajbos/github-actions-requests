@@ -175,6 +175,12 @@ jobs:
         HAS_HIGH_CRITICAL_ISSUES: ${{ steps.scan.outputs.has_high_critical_issues }}
         HIGH_CRITICAL_ISSUES: ${{ steps.scan.outputs.high_critical_issues }}
 
+    - name: Upload result file as artefact
+      uses: actions/artifact@v1
+      with:
+        name: security-scan-result
+        path: result.md
+
   # add a CodeQL scan on the forked repo
   codeql:
     runs-on: ubuntu-latest
@@ -240,9 +246,16 @@ jobs:
     needs: 
       - codeql
       - find-action-name
+      - check-action-security-setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/download-artifact@v1
+        with:
+          name: security-scan-result
+          url: ${{ steps.check-action-security-setup.outputs.security_scan_result }}
+      - run: ls -la
+
       - uses: actions/github-script@v5
         name: Display results
         id: display-results
