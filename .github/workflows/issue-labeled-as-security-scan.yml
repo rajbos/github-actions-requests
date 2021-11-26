@@ -1,3 +1,5 @@
+name: Issue labeled security scan
+
 on:
   issues: 
     types: [labeled, unlabeled]
@@ -28,7 +30,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - id: dispatch_issue_find
-      name: Find action from issue
+      name: Find action from dispatch
       run: |
          echo "Testing for dispatch event with issue number: ${{ github.event.inputs.issue }}"
          issue_number=${{ github.event.inputs.issue }}
@@ -43,14 +45,13 @@ jobs:
          fi
 
     - uses: actions/github-script@v5
-      name: Find action from comment
+      name: Find action from issue comment
       id: get-action
       with:
         result-encoding: string
         script: |
-          const script = require('./src/find-action-from-comment.js')
+          const script = require('./src/find-action-from-issue.js')
                   
-          // note: owner is now the organization the FORK lives in:
           const owner = context.repo.owner
           const repo = context.repo.repo
           let issue_number = context.issue.number         
@@ -62,7 +63,8 @@ jobs:
             issue_number = `${{ steps.dispatch_issue_find.outputs.issue_number }}`
           }
 
-          console.log(await script({github, owner, repo, issue_number, core}))
+          const result = await script({github, owner, repo, issue_number, core})
+          return result
 
   # fork the repo so we can run dependabot security scan and a CodeQL scan on the fork        
   fork-action-test:
@@ -151,6 +153,7 @@ jobs:
       - find-action-name
     outputs:
       codeql: ${{ steps.get-codeql-results.outputs.codeql }}
+      codeql_run_id: ${{ steps.CodeQL-inject.outputs.codeql_run_id }}
     steps:
     # todo: what if the action.yml indicates it runs in a docker image? Then we have not neccesarily a way to run CodeQL on actual CODE
     - uses: actions/checkout@v2
@@ -175,14 +178,16 @@ jobs:
            const startAndWaitScript = require('./src/start-and-wait-codeql.js')
               
            console.log(`Using this repository: [${owner}/${repo}] with path [${targetPath}] and ref [${ref}]`)
-           const success = await startAndWaitScript({github, owner, repo, path: targetPath, ref})
-           if (success === 0) {
-             console.log(`CodeQL workflow completed successfully`)
+           const { scanResult, run_id } = await startAndWaitScript({github, owner, repo, path: targetPath, ref})
+           if (scanResult === 0) {
+             console.log(`CodeQL workflow with run_id [${run_id}] completed successfully`)
            } 
            else {
              // todo: output information so it can be read by the user (issue comment)
-             console.log(`CodeQL workflow failed with exit code ${success}`)
-           }
+             console.log(`CodeQL workflow with run_id [${run_id}] failed with exit code ${scanResult}`)
+           }           
+           
+           console.log(`::set-output name=codeql_run_id::'${run_id}'`)
 
     - uses: actions/github-script@v5
       name: Get resuls from CodeQL scan
@@ -231,5 +236,12 @@ jobs:
             const owner = "${{ needs.find-action-name.outputs.request_owner }}"
             const repo = "${{ needs.find-action-name.outputs.request_repo }}"
             const issue = "${{ needs.find-action-name.outputs.request_issue }}"
+            const codeql_run_id = ${{ needs.codeql.outputs.codeql_run_id }}
+
+            // build up link to CodeQL workflow execution
+            const forkedRepoOwner = "${{ env.fork-owner }}"
+            const forkedRepoName = "${{ needs.find-action-name.outputs.name }}"
+            const codeql_run_link = `https://github.com/${forkedRepoOwner}/${forkedRepoName}/actions/runs/${codeql_run_id}`
+
             const script = require('./src/combine-results.js')
-            await script({github, owner, repo, issue_number: issue, codeqlResult})
+            await script({github, owner, repo, issue_number: issue, codeql_run_link, codeqlResult})

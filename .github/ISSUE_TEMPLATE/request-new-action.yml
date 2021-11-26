@@ -1,0 +1,40 @@
+name: Request new action
+description: Request new action to be added to the internal marketplace
+title: "New action request: <name of action here>"
+assignees:
+  - rajbos
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks you for your request. We need some information before we can proceed.
+        After that, the request will be reviewed including an security assesment. Process tracking will happen inside this issue.
+
+        Please tag '@-username' or '@-teamname' to notifiy them in comments.
+  - type: input
+    id: action_name
+    attributes:
+      label: Action name
+      description: The name of the action you want to request in the format owner/repository
+      placeholder: "uses: devops-actions/issue-comment-tag"
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reasons
+      description: Why do you want to request this action?
+      render: shell
+  - type: textarea
+    id: usage
+    attributes:
+      label: Intended usage
+      description: Describe the intended use of the action you want to request, include example repositories if you can.
+      render: markdown
+  - type: checkboxes
+    id: duplication
+    attributes:
+      label: I have checked the internal marketplace for similar actions and couldn't find one that works for us.
+      options:
+        - label: I have checked the internal marketplace first
+          required: true
