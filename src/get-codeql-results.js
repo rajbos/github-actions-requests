@@ -19,7 +19,7 @@ module.exports = async ({github, owner, repo}) => {
         error: null,
         environment: null
     }
-    
+
     if (recentScansData === undefined) {
         console.log(`recentScansData is undefined`)
     }
@@ -39,10 +39,16 @@ module.exports = async ({github, owner, repo}) => {
     }
 
     // list all alerts, not just the most recent scan:
-    const { data } = await github.rest.codeScanning.listAlertsForRepo({ 
-        owner,
-        repo
-    })
+    let data
+    try {
+        let { data } = await github.rest.codeScanning.listAlertsForRepo({ 
+            owner,
+            repo
+        })
+    }
+    catch (error) {
+        console.log(`Error getting all alerts for the forked repository: [${error}]`)
+    }
     
     if (data === undefined) {
         console.log(`Alert response is undefined`)
