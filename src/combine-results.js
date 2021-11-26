@@ -39,7 +39,7 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
         console.log("The file does not exist");
     }
 
-    fs.readFileSync(securityScanResult, function (err, data) {
+    const scanResult = fs.readFileSync(securityScanResult, function (err, data) {
         if (err) {
           throw err
         }
@@ -59,6 +59,7 @@ module.exports = async ({github, owner, repo, issue_number, codeql_run_link, cod
         commentBody.push.apply(commentBody, securityBody)
         console.log(`commentBody length2: [${commentBody.length}]`)
     });
+    console.log(`scanResult: [${scanResult}]`)
 
     console.log(`commentBody length3: [${commentBody.length}]`)
     commentBody.forEach(element => {
