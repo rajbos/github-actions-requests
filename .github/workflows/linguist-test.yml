@@ -1,0 +1,12 @@
+name: Liguist test
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/linguist-test.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run : gem install github-linguist
