@@ -93,6 +93,7 @@ module.exports = async ({github, owner, repo, languages}) => {
     console.log(`Languages inputs: [${JSON.stringify(languages)}]`)
     console.log(`languages.type = [${typeof(languages)}]`)
     console.log(`languages.length = [${languages.length}]`)
+    console.log(`languages.Javascript = [${languages.JavaScript}]`)
     for (let i = 0; i < languages.length; i++) {
       console.log(`Language [${JSON.stringify(languages[i])}]`)
     }
