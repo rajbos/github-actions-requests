@@ -94,11 +94,11 @@ module.exports = async ({github, owner, repo, languages}) => {
       // language: [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
       console.log(`Languages inputs: [${JSON.stringify(languages)}]`)
       let languagesToAnalyse = []
-      if (languages.C !== null) {
+      if (languages.C !== undefined) {
         languagesToAnalyse.push('cpp')
       }
 
-      if (languages.Csharp !== null) {
+      if (languages.Csharp !== undefined) {
         languagesToAnalyse.push('csharp')
       }
       
@@ -110,10 +110,10 @@ module.exports = async ({github, owner, repo, languages}) => {
         languagesToAnalyse.push('java')
       }
 
-      if (languages.Python !== null) {
+      if (languages.Python) {
         languagesToAnalyse.push('python')
       }
-      if (languages.JavaScript !== null) {
+      if (languages.JavaScript) {
         languagesToAnalyse.push('javascript')
       }
       return languagesToAnalyse
@@ -121,14 +121,14 @@ module.exports = async ({github, owner, repo, languages}) => {
 
     console.log(`Looking at this repository: [${owner}/${repo}]`)
     const languagesToAnalyse = loadLanguagesToAnalyse(languages)
-    console.log(`Languages to analyse: [${JSON.stringify(languagesToAnalyse)}]`)
+    console.log(`Languages to analyse1: [${JSON.stringify(languagesToAnalyse)}]`)
     let languageString = 'language: ['
     for (const language of languagesToAnalyse) {
-      languageString += `'${language}'', `
+      languageString += `'${language}', `
     }
     // cut off last comma:
     languageString = languageString.substring(0, languageString.length - 2) + ']'
-    console.log(`Languages to analyse: [${languageString}]`)
+    console.log(`Languages to analyse2: [${languageString}]`)
 
     const ref = await deleteExistingWorkflows(github, owner, repo)
     const targetPath = await addCodeQLworkflow(github, owner, repo)
