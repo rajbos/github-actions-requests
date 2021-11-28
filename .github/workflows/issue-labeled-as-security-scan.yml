@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "${{ github.event }}" // is type Object
+      - run: echo "${{ github.event.name }}" // 
+      - run: echo "${{ github.event.workflow_dispatch }}" // 
       - uses: actions/github-script@v5  
         name: Check input variables have values     
         with: 
