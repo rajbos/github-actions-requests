@@ -15,9 +15,15 @@ env:
   fork-owner: rajbos-actions-test # where to place the forks
     
 jobs:
+  test: 
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ github.event }}"
+
+
   find-action-name:
     runs-on: ubuntu-latest
-    if: github.event.label.name == 'security-check'
+    if: github.event.label.name == 'security-check' || github.event.workflow_dispatch
 
     outputs:
       action: ${{ steps.get-action.outputs.action }}
