@@ -1,10 +1,13 @@
-module.exports = async ({github, owner, repo}) => {
+module.exports = async ({github, owner, repo, languages}) => {
 
-    async function addCodeQLworkflow(github, owner, repo) {
+    async function addCodeQLworkflow(github, owner, repo, languageString) {
         
         const { readFileSync } = require('fs')
         const path = 'codeql-analysis.yml'
-        const content = readFileSync(`${process.env.GITHUB_WORKSPACE}/${path}`)
+        let content = readFileSync(`${process.env.GITHUB_WORKSPACE}/${path}`, 'utf8')
+        // replace the default language string with the new one
+        const language = "language: [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]"
+        content = content.toString('utf8').replace(language, languageString)
         
         const targetPath = ".github/workflows/codeql-analysis.yml"                                    
         console.log(`Uploading the CodeQL workflow to the forked repository`)
@@ -13,7 +16,7 @@ module.exports = async ({github, owner, repo}) => {
             repo,
             path: targetPath,
             message: "🤖 Adding CodeQL workflow file",
-            content: content.toString('base64'),
+            content: Buffer.from(content).toString('base64'), //content.toString('base64'),
             sha: undefined
         })
 
@@ -33,6 +36,7 @@ module.exports = async ({github, owner, repo}) => {
 
         console.log(`Default_branch for repo [${repo}] is [${repository.default_branch}]`)
         
+        // get ref for default branch
         const ref = repository.default_branch
         try {
           // https://docs.github.com/en/rest/reference/git#get-a-reference
@@ -45,6 +49,8 @@ module.exports = async ({github, owner, repo}) => {
             repo,
             ref: `heads/${ref}`
           })
+
+          // delete everything in the .github/workflows folder
           // https://docs.github.com/en/graphql/reference/mutations#createcommitonbranch
           const {
             createCommitOnBranch: {
@@ -75,7 +81,7 @@ module.exports = async ({github, owner, repo}) => {
           )
           this.oid = oid || sha
         } catch (error) {
-          throw error
+          console.log(`Error deleting content from .github/workflows: [${error}]`)
         }
         return ref
     }
@@ -87,11 +93,52 @@ module.exports = async ({github, owner, repo}) => {
           }
           setTimeout(() => _resolve('done!'), milliseconds)
       })
-  }
+    }
+
+    function loadLanguagesToAnalyse(languages) {      
+      // goal is to replace the line below with only the languages we get from Linguist:
+      // language: [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
+      console.log(`Languages inputs: [${JSON.stringify(languages)}]`)
+      let languagesToAnalyse = []
+      if (languages.C) {
+        languagesToAnalyse.push('cpp')
+      }
+
+      if (languages.Csharp) {
+        languagesToAnalyse.push('csharp')
+      }
+      
+      if (languages.Go) {
+        languagesToAnalyse.push('go')
+      }
+
+      if (languages.Java) {
+        languagesToAnalyse.push('java')
+      }
+
+      if (languages.Python) {
+        languagesToAnalyse.push('python')
+      }
+      if (languages.JavaScript) {
+        languagesToAnalyse.push('javascript')
+      }      
+
+      // convert to string for the YAML file
+      let languageString = 'language: ['
+      for (const language of languagesToAnalyse) {
+        languageString += `'${language}', `
+      }
+      // cut off last comma:
+      languageString = languageString.substring(0, languageString.length - 2) + ']'
+
+      return languageString
+    }
 
     console.log(`Looking at this repository: [${owner}/${repo}]`)
     const ref = await deleteExistingWorkflows(github, owner, repo)
-    const targetPath = await addCodeQLworkflow(github, owner, repo)
+
+    const languageString = loadLanguagesToAnalyse(languages)
+    const targetPath = await addCodeQLworkflow(github, owner, repo, languageString)
 
     return { ref, targetPath }
 }

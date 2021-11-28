@@ -15,9 +15,10 @@ env:
   fork-owner: rajbos-actions-test # where to place the forks
     
 jobs:
+
   find-action-name:
     runs-on: ubuntu-latest
-    if: github.event.label.name == 'security-check'
+    if: github.event.label.name == 'security-check' || github.event_name == 'workflow_dispatch'
 
     outputs:
       action: ${{ steps.get-action.outputs.action }}
@@ -91,6 +92,34 @@ jobs:
           });
 
           return result
+  
+  get-languages-from-action:
+    name: Load action code languages
+    runs-on: ubuntu-latest
+    outputs:
+      languages: ${{ steps.analysis.outputs.languages }}
+    steps:
+      - uses: ruby/setup-ruby@v1
+        name: Setup Ruby
+        with:
+          # Not needed with a .ruby-version file
+          ruby-version: 3.0
+          # runs 'bundle install' and caches installed gems automatically
+          bundler-cache: true
+      - run : gem install github-linguist
+        name: Install linguist gem
+
+      - run: git clone https://github.com/rajbos/github-actions-requests.git
+        name: Clone actions repo
+
+      - name: Get linguist analysis
+        id: analysis
+        run: | 
+         cd github-actions-requests
+         linguist=$(github-linguist --json)
+         echo "Linquist results:"
+         echo $linguist
+         echo "::set-output name=languages::$linguist"
 
   # fork the repo so we can run dependabot security scan and a CodeQL scan on the fork        
   fork-action-test:    
@@ -218,6 +247,7 @@ jobs:
     needs: 
       - fork-action-test
       - find-action-name
+      - get-languages-from-action
     outputs:
       codeql: ${{ steps.get-codeql-results.outputs.codeql }}
       codeql_run_id: ${{ steps.CodeQL-inject.outputs.codeql_run_id }}
@@ -237,7 +267,9 @@ jobs:
            const repo = "${{ needs.find-action-name.outputs.name }}"
 
            console.log(`Using this repository: [${owner}/${repo}]`)
-           const { ref, targetPath } = await script({github, owner, repo})
+           const languages = `${{ needs.get-languages-from-action.outputs.languages }}`
+           const lang = JSON.parse(languages)
+           const { ref, targetPath } = await script({github, owner, repo, languages: lang})
     
            console.log(`Waiting for CodeQL workflow to complete`)
            
