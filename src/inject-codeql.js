@@ -5,11 +5,9 @@ module.exports = async ({github, owner, repo, languages}) => {
         const { readFileSync } = require('fs')
         const path = 'codeql-analysis.yml'
         let content = readFileSync(`${process.env.GITHUB_WORKSPACE}/${path}`, 'utf8')
+        // replace the default language string with the new one
         const language = "language: [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]"
-        const regEx = new RegExp(language, `g`)
         content = content.toString('utf8').replace(language, languageString)
-        console.log('new content:')
-        console.log(content)
         
         const targetPath = ".github/workflows/codeql-analysis.yml"                                    
         console.log(`Uploading the CodeQL workflow to the forked repository`)
@@ -123,22 +121,23 @@ module.exports = async ({github, owner, repo, languages}) => {
       }
       if (languages.JavaScript) {
         languagesToAnalyse.push('javascript')
+      }      
+
+      // convert to string for the YAML file
+      let languageString = 'language: ['
+      for (const language of languagesToAnalyse) {
+        languageString += `'${language}', `
       }
-      return languagesToAnalyse
+      // cut off last comma:
+      languageString = languageString.substring(0, languageString.length - 2) + ']'
+
+      return languageString
     }
 
     console.log(`Looking at this repository: [${owner}/${repo}]`)
-    const languagesToAnalyse = loadLanguagesToAnalyse(languages)
-    // convert to string for the YAML file
-    let languageString = 'language: ['
-    for (const language of languagesToAnalyse) {
-      languageString += `'${language}', `
-    }
-    // cut off last comma:
-    languageString = languageString.substring(0, languageString.length - 2) + ']'
-    console.log(`Languages to analyse2: [${languageString}]`)
-
     const ref = await deleteExistingWorkflows(github, owner, repo)
+
+    const languageString = loadLanguagesToAnalyse(languages)
     const targetPath = await addCodeQLworkflow(github, owner, repo, languageString)
 
     return { ref, targetPath }
