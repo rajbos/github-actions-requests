@@ -32,3 +32,10 @@ jobs:
          echo "Linquist results:"
          echo $linguist
          echo "::set-output name=analysis::$linguist"
+
+  get-analysis-results:
+    runs-on: ubuntu-latest
+    needs: get-languages
+    steps:
+      # load results from analysis job
+      - run: echo "${{ needs.get-language.outputs.languages }}"
