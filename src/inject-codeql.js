@@ -7,7 +7,7 @@ module.exports = async ({github, owner, repo, languages}) => {
         let content = readFileSync(`${process.env.GITHUB_WORKSPACE}/${path}`, 'utf8')
         const language = "language: [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]"
         const regEx = new RegExp(language, `g`)
-        content = content.toString('utf8').replace(regEx, languageString)
+        content = content.toString('utf8').replace(language, languageString)
         console.log('new content:')
         console.log(content)
         
