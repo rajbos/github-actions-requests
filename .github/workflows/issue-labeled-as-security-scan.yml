@@ -28,6 +28,7 @@ jobs:
           script: |
             let temp = `${{ github.event }}`
             console.log(`temp: ${JSON.stringify(temp)}`)
+      - uses: hmarr/debug-action@v2
 
 
   find-action-name:
