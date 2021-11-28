@@ -21,13 +21,15 @@ jobs:
       - run: echo "${{ github.event }}" // is type Object
       - run: echo "${{ github.event.name }}" //  empty
       - run: echo "${{ github.event.workflow_dispatch }}" // empty
-      - run: echo "${{ github.event.type }}" 
+      - run: echo "${{ github.event_name }}" 
       - uses: actions/github-script@v5  
         name: Check input variables have values     
         with: 
           script: |
             let temp = `${{ github.event }}`
             console.log(`temp: ${JSON.stringify(temp)}`)
+
+            console.log(`github.event.name: ${env.GITHUB_EVENT_NAME}`)
       - uses: hmarr/debug-action@v2
 
 
