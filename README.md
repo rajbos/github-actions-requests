@@ -1,7 +1,7 @@
 # GitHub Actions Requests
 This repository is meant to hold the setup for requesting actions to be used internally, for example together with the [Internl Actions Marketplace](https://devopsjournal.io/blog/2021/10/14/GitHub-Actions-Internal-Marketplace).
 
-# Process description:
+# Process description
 1. User creates a new issue in this repo
 1. The review team gets a notification about the new issue (using this action: [issue-comment-tag](https://github.com/devops-actions/issue-comment-tag))
 1. After manual review, the review team labels the issue with `security-check`
@@ -9,6 +9,8 @@ This repository is meant to hold the setup for requesting actions to be used int
 1. The results of all the checks are added back into the request issue.
 1. After reviewing the results and approving them, the action repo can be forked into your actions organization and users can start using them.
 
+# Video explanation
+<iframe width="1230" height="692" src="https://www.youtube.com/embed/hYvFrlzeU8o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 # Checks
 Currently we run the following checks:
