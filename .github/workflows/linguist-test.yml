@@ -6,8 +6,10 @@ on:
       - ".github/workflows/linguist-test.yml"
 
 jobs:
-  test:
+  get-languages:
     runs-on: ubuntu-latest
+    outputs:
+      languages: ${{ steps.analysis.outputs.languages }}
     steps:
       - uses: ruby/setup-ruby@v1
         name: Setup Ruby
@@ -22,8 +24,11 @@ jobs:
       - run: git clone https://github.com/rajbos/github-actions-requests.git
         name: Clone actions repo
 
-      - name: Enter actions repo
+      - name: Get linguist analysis
+        id: analysis
         run: | 
          cd github-actions-requests
-         github-linguist
-        
+         linguist=$(github-linguist --json)
+         echo "Linquist results:"
+         echo $linguist
+         echo "::set-output name=analysis::$linguist"
