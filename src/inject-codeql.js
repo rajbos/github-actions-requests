@@ -93,9 +93,9 @@ module.exports = async ({github, owner, repo, languages}) => {
     console.log(`Languages inputs: [${JSON.stringify(languages)}]`)
     console.log(`languages.type = [${typeof(languages)}]`)
     console.log(`languages.length = [${languages.length}]`)
-    console.log(`languages.Javascript = [${languages.JavaScript}]`)
-    for (let i = 0; i < languages.length; i++) {
-      console.log(`Language [${JSON.stringify(languages[i])}]`)
+    console.log(`languages.Javascript = [${JSON.stringify(languages.JavaScript)}]`)
+    if (languages.JavaScript !== null) {
+      console.log(`Found JavaScript language`)
     }
     const ref = await deleteExistingWorkflows(github, owner, repo)
     const targetPath = await addCodeQLworkflow(github, owner, repo)
