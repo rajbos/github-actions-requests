@@ -89,14 +89,47 @@ module.exports = async ({github, owner, repo, languages}) => {
       })
     }
 
-    console.log(`Looking at this repository: [${owner}/${repo}]`)
-    console.log(`Languages inputs: [${JSON.stringify(languages)}]`)
-    console.log(`languages.type = [${typeof(languages)}]`)
-    console.log(`languages.length = [${languages.length}]`)
-    console.log(`languages.Javascript = [${JSON.stringify(languages.JavaScript)}]`)
-    if (languages.JavaScript !== null) {
-      console.log(`Found JavaScript language`)
+    function loadLanguagesToAnalyse(languages) {      
+      // goal is to replace the line below with only the languages we get from Linguist:
+      // language: [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
+      console.log(`Languages inputs: [${JSON.stringify(languages)}]`)
+      let languagesToAnalyse = []
+      if (languages.C !== null) {
+        languagesToAnalyse.push('cpp')
+      }
+
+      if (languages.Csharp !== null) {
+        languagesToAnalyse.push('csharp')
+      }
+      
+      if (languages.Go !== null) {
+        languagesToAnalyse.push('go')
+      }
+
+      if (languages.Java !== null) {
+        languagesToAnalyse.push('java')
+      }
+
+      if (languages.Python !== null) {
+        languagesToAnalyse.push('python')
+      }
+      if (languages.JavaScript !== null) {
+        languagesToAnalyse.push('javascript')
+      }
+      return languagesToAnalyse
     }
+
+    console.log(`Looking at this repository: [${owner}/${repo}]`)
+    const languagesToAnalyse = loadLanguagesToAnalyse(languages)
+    console.log(`Languages to analyse: [${JSON.stringify(languagesToAnalyse)}]`)
+    let languageString = 'language: ['
+    for (const language of languagesToAnalyse) {
+      languageString += `'${language}'', `
+    }
+    // cut off last comma:
+    languageString = languageString.substring(0, languageString.length - 2) + ']'
+    console.log(`Languages to analyse: [${languageString}]`)
+
     const ref = await deleteExistingWorkflows(github, owner, repo)
     const targetPath = await addCodeQLworkflow(github, owner, repo)
 
