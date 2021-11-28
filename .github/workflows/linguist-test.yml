@@ -18,3 +18,12 @@ jobs:
           bundler-cache: true
       - run : gem install github-linguist
         name: Install linguist gem
+
+      - run: git clone https://github.com/rajbos/github-actions-requests.git
+        name: Clone actions repo
+
+      - name: Enter actions repo
+        run: | 
+         cd github-actions-requests
+         github-linguist
+        
