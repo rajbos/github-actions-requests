@@ -267,11 +267,8 @@ jobs:
            const repo = "${{ needs.find-action-name.outputs.name }}"
 
            console.log(`Using this repository: [${owner}/${repo}]`)
-           console.log(`Input: [${{ needs.get-languages-from-action.outputs.languages }}]`)
            const languages = `${{ needs.get-languages-from-action.outputs.languages }}`
-           console.log(`Languages: [${languages}]`)
            const lang = JSON.parse(languages)
-           console.log(`Languages parsed: [${JSON.stringify(lang)}]`)
            const { ref, targetPath } = await script({github, owner, repo, languages: lang})
     
            console.log(`Waiting for CodeQL workflow to complete`)
