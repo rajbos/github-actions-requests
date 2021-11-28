@@ -18,14 +18,13 @@ jobs:
   test: 
     runs-on: ubuntu-latest
     steps:
-      - run: echo "${{ github.event }}"
+      - run: echo "${{ github.event }}" // is type Object
       - uses: actions/github-script@v5  
         name: Check input variables have values     
         with: 
           script: |
-            let temp = "${{ github.event }}"
+            let { temp } = ${{ github.event.workflow_dispatch }}
             console.log(`temp: ${JSON.stringify(temp)}`)
-      - uses: Dovyski/payload-info-action@master
 
 
   find-action-name:
