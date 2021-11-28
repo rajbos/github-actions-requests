@@ -22,6 +22,8 @@ jobs:
       - run: echo "${{ github.event.name }}" //  empty
       - run: echo "${{ github.event.workflow_dispatch }}" // empty
       - run: echo "${{ github.event_name }}" 
+      - run: echo "${{ GITHUB_EVENT_NAME }}" 
+      - run: echo "${{ github.EVENT_NAME }}" 
       - uses: actions/github-script@v5  
         name: Check input variables have values     
         with: 
@@ -29,7 +31,7 @@ jobs:
             let temp = `${{ github.event }}`
             console.log(`temp: ${JSON.stringify(temp)}`)
 
-            console.log(`github.event.name: ${env.GITHUB_EVENT_NAME}`)
+            // console.log(`github.event.name: ${env.GITHUB_EVENT_NAME}`) // fails
       - uses: hmarr/debug-action@v2
 
 
