@@ -23,7 +23,7 @@ jobs:
         name: Check input variables have values     
         with: 
           script: |
-            let { temp } = ${{ github.event.workflow_dispatch }}
+            let temp = ${{ github.event.workflow_dispatch }}
             console.log(`temp: ${JSON.stringify(temp)}`)
 
 
