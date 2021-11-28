@@ -19,6 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "${{ github.event }}"
+      - uses: actions/github-script@v5  
+        name: Check input variables have values     
+        with: 
+          script: |
+            let temp = "${{ github.event }}"
+            console.log(`temp: ${JSON.stringify(temp)}`)
 
 
   find-action-name:
