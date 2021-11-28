@@ -38,4 +38,4 @@ jobs:
     needs: get-languages
     steps:
       # load results from analysis job
-      - run: echo "${{ needs.get-language.outputs.languages }}"
+      - run: echo "${{ needs.get-languages.outputs.languages }}"
