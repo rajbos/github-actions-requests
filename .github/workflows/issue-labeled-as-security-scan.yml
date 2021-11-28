@@ -37,7 +37,7 @@ jobs:
 
   find-action-name:
     runs-on: ubuntu-latest
-    if: github.event.label.name == 'security-check' || github.github.event_name == `workflow_dispatch`
+    if: github.event.label.name == 'security-check' || github.github.event_name == 'workflow_dispatch'
 
     outputs:
       action: ${{ steps.get-action.outputs.action }}
