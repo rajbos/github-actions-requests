@@ -1,10 +1,14 @@
 module.exports = async ({github, owner, repo, languages}) => {
 
-    async function addCodeQLworkflow(github, owner, repo) {
+    async function addCodeQLworkflow(github, owner, repo, languageString) {
         
         const { readFileSync } = require('fs')
         const path = 'codeql-analysis.yml'
-        const content = readFileSync(`${process.env.GITHUB_WORKSPACE}/${path}`)
+        let content = readFileSync(`${process.env.GITHUB_WORKSPACE}/${path}`, 'utf8')
+        const language = "language: [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]"
+        content = content.toString('utf8').replace(new RegExp(language, "g"), languageString)
+        console.log('new content:')
+        console.log(content)
         
         const targetPath = ".github/workflows/codeql-analysis.yml"                                    
         console.log(`Uploading the CodeQL workflow to the forked repository`)
@@ -94,19 +98,19 @@ module.exports = async ({github, owner, repo, languages}) => {
       // language: [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
       console.log(`Languages inputs: [${JSON.stringify(languages)}]`)
       let languagesToAnalyse = []
-      if (languages.C !== undefined) {
+      if (languages.C) {
         languagesToAnalyse.push('cpp')
       }
 
-      if (languages.Csharp !== undefined) {
+      if (languages.Csharp) {
         languagesToAnalyse.push('csharp')
       }
       
-      if (languages.Go !== null) {
+      if (languages.Go) {
         languagesToAnalyse.push('go')
       }
 
-      if (languages.Java !== null) {
+      if (languages.Java) {
         languagesToAnalyse.push('java')
       }
 
@@ -121,7 +125,7 @@ module.exports = async ({github, owner, repo, languages}) => {
 
     console.log(`Looking at this repository: [${owner}/${repo}]`)
     const languagesToAnalyse = loadLanguagesToAnalyse(languages)
-    console.log(`Languages to analyse1: [${JSON.stringify(languagesToAnalyse)}]`)
+    // convert to string for the YAML file
     let languageString = 'language: ['
     for (const language of languagesToAnalyse) {
       languageString += `'${language}', `
@@ -131,7 +135,7 @@ module.exports = async ({github, owner, repo, languages}) => {
     console.log(`Languages to analyse2: [${languageString}]`)
 
     const ref = await deleteExistingWorkflows(github, owner, repo)
-    const targetPath = await addCodeQLworkflow(github, owner, repo)
+    const targetPath = await addCodeQLworkflow(github, owner, repo, languageString)
 
     return { ref, targetPath }
 }
