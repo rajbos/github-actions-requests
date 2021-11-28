@@ -19,13 +19,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "${{ github.event }}" // is type Object
-      - run: echo "${{ github.event.name }}" // 
-      - run: echo "${{ github.event.workflow_dispatch }}" // 
+      - run: echo "${{ github.event.name }}" //  empty
+      - run: echo "${{ github.event.workflow_dispatch }}" // empty
+      - run: echo "${{ github.event.type }}" 
       - uses: actions/github-script@v5  
         name: Check input variables have values     
         with: 
           script: |
-            let temp = ${{ github.event }}
+            let temp = `${{ github.event }}`
             console.log(`temp: ${JSON.stringify(temp)}`)
 
 
