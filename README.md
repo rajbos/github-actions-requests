@@ -10,7 +10,7 @@ This repository is meant to hold the setup for requesting actions to be used int
 1. After reviewing the results and approving them, the action repo can be forked into your actions organization and users can start using them.
 
 # Video explanation
-<iframe width="1230" height="692" src="https://www.youtube.com/embed/hYvFrlzeU8o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![YouTube Link](./src/github-actions-request.png)](https://youtu.be/hYvFrlzeU8o)
 
 # Checks
 Currently we run the following checks:
