@@ -90,7 +90,7 @@ module.exports = async ({github, owner, repo, languages}) => {
     }
 
     console.log(`Looking at this repository: [${owner}/${repo}]`)
-    console.log(`Languages inputs: [${languages}]`)
+    console.log(`Languages inputs: [${JSON.stringify(languages)}]`)
     const ref = await deleteExistingWorkflows(github, owner, repo)
     const targetPath = await addCodeQLworkflow(github, owner, repo)
 
