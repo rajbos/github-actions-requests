@@ -25,6 +25,7 @@ jobs:
           script: |
             let temp = "${{ github.event }}"
             console.log(`temp: ${JSON.stringify(temp)}`)
+      - uses: Dovyski/payload-info-action@master
 
 
   find-action-name:
