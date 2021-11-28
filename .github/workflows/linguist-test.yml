@@ -31,7 +31,7 @@ jobs:
          linguist=$(github-linguist --json)
          echo "Linquist results:"
          echo $linguist
-         echo "::set-output name=analysis::$linguist"
+         echo "::set-output name=languages::$linguist"
 
   get-analysis-results:
     runs-on: ubuntu-latest
