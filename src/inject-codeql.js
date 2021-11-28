@@ -38,6 +38,7 @@ module.exports = async ({github, owner, repo, languages}) => {
 
         console.log(`Default_branch for repo [${repo}] is [${repository.default_branch}]`)
         
+        // get ref for default branch
         const ref = repository.default_branch
         try {
           // https://docs.github.com/en/rest/reference/git#get-a-reference
@@ -50,6 +51,8 @@ module.exports = async ({github, owner, repo, languages}) => {
             repo,
             ref: `heads/${ref}`
           })
+
+          // delete everything in the .github/workflows folder
           // https://docs.github.com/en/graphql/reference/mutations#createcommitonbranch
           const {
             createCommitOnBranch: {
@@ -80,7 +83,7 @@ module.exports = async ({github, owner, repo, languages}) => {
           )
           this.oid = oid || sha
         } catch (error) {
-          throw error
+          console.log(`Error deleting content from .github/workflows: [${error}]`)
         }
         return ref
     }
