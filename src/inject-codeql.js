@@ -6,7 +6,8 @@ module.exports = async ({github, owner, repo, languages}) => {
         const path = 'codeql-analysis.yml'
         let content = readFileSync(`${process.env.GITHUB_WORKSPACE}/${path}`, 'utf8')
         const language = "language: [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]"
-        content = content.toString('utf8').replace(new RegExp(language, "g"), languageString)
+        const regEx = new RegExp(language, `g`)
+        content = content.toString('utf8').replace(regEx, languageString)
         console.log('new content:')
         console.log(content)
         
@@ -17,7 +18,7 @@ module.exports = async ({github, owner, repo, languages}) => {
             repo,
             path: targetPath,
             message: "🤖 Adding CodeQL workflow file",
-            content: content.toString('base64'),
+            content: Buffer.from(content).toString('base64'), //content.toString('base64'),
             sha: undefined
         })
 
