@@ -31,7 +31,7 @@ jobs:
           // note: owner is now the organization the FORK lives in:
           const repo = `${{ needs.find-action-name.outputs.name }}`
           const owner = `${{ needs.find-action-name.outputs.owner }}`
-          const issue_number = `${{ needs.find-action-name.outputs.issue_number }}`
+          const issue_number = `${{ needs.find-action-name.outputs.request_issue }}`
 
           console.log(`owner: ${owner}, repo: ${repo}, with issue_number: ${issue_number}`)
 
