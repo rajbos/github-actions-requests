@@ -1,0 +1,17 @@
+name: Final signoff
+
+on:
+  issues:
+    types: [labeled]
+
+  workflow_dispatch:
+        
+jobs:
+  tag-a-user:
+    runs-on: ubuntu-latest
+    steps:     
+      - run: echo "Hello world"
+      
+      - uses: rajbos/github-actions-request/.github/workflows/reusable-workflows/get-action-from-issue.yml@add-final-clone
+        with: 
+          issue_number: 11
