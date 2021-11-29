@@ -6,12 +6,24 @@ on:
         description: The issue number to get the action from
         type: number
     outputs:
-      action: ${{ jobs.find-action-name.outputs.action }}
-      owner: ${{ jobs.find-action-name.outputs.owner }}
-      name: ${{ jobs.find-action-name.outputs.name }}
-      request_owner: ${{ jobs.find-action-name.outputs.request_owner }}
-      request_repo: ${{ jobs.find-action-name.outputs.request_repo }}
-      request_issue: ${{ jobs.find-action-name.outputs.request_issue }}
+      action: 
+        description: "action name"
+        value: ${{ jobs.find-action-name.outputs.action }}
+      owner:  
+        description: "owner name"
+        value: ${{ jobs.find-action-name.outputs.owner }}
+      name:  
+        description: "owner/action name"
+        value: ${{ jobs.find-action-name.outputs.name }}
+      request_owner:  
+        description: "owner of the request repo"
+        value: ${{ jobs.find-action-name.outputs.request_owner }}
+      request_repo:  
+        description: "name of the request repo"
+        value: ${{ jobs.find-action-name.outputs.request_repo }}
+      request_issue:  
+        description: "issue with the request"
+        value: ${{ jobs.find-action-name.outputs.request_issue }}
 
 jobs:
   find-action-name:
