@@ -17,9 +17,22 @@ jobs:
     with:
       issue_number: 11
 
-  tag-a-user:
+  test-parameters:
     runs-on: ubuntu-latest
-    steps:     
-      - run: echo "Hello world"
+    needs: find-action-name
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/github-script@v5  
+      name: Check input variables have values     
+      with: 
+        github-token: ${{ secrets.GH_TOKEN }}
+        script: |
+          
+          // note: owner is now the organization the FORK lives in:
+          const repo = `${{ needs.find-action-name.outputs.name }}`
+          const owner = `${{ needs.find-action-name.outputs.owner }}`
+          const issue_number = `${{ needs.find-action-name.outputs.issue_number }}`
+
+          console.log(`owner: ${owner}, repo: ${repo}, with issue_number: ${issue_number}`)
 
       
