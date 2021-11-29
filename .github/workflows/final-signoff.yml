@@ -7,11 +7,14 @@ on:
   workflow_dispatch:
         
 jobs:
+  find-action-name:
+    uses: rajbos/github-actions-request/.github/workflows/reusable-workflows/get-action-from-issue.yml@add-final-clone
+    with:
+      issue_number: 11
+
   tag-a-user:
     runs-on: ubuntu-latest
     steps:     
       - run: echo "Hello world"
+
       
-      - uses: rajbos/github-actions-request/.github/workflows/reusable-workflows/get-action-from-issue.yml@add-final-clone
-        with: 
-          issue_number: 11
