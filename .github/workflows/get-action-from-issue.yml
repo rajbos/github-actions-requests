@@ -4,6 +4,7 @@ on:
       issue_number:
         required: true
         description: The issue number to get the action from
+        type: number
     outputs:
       action: ${{ jobs.find-action-name.outputs.action }}
       owner: ${{ jobs.find-action-name.outputs.owner }}
@@ -12,8 +13,8 @@ on:
       request_repo: ${{ jobs.find-action-name.outputs.request_repo }}
       request_issue: ${{ jobs.find-action-name.outputs.request_issue }}
 
-  jobs:
-    find-action-name:
+jobs:
+  find-action-name:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'final-signoff' || github.event_name == 'workflow_dispatch'
 
@@ -30,17 +31,17 @@ on:
     - id: dispatch_issue_find
       name: Find action from dispatch
       run: |
-         echo "Testing for dispatch event with issue number: ${{ github.event.inputs.issue }}"
-         issue_number=${{ github.event.inputs.issue }}
-         if [ "${{ github.event.inputs.issue }}" == "" ]; then
-           echo "issue number not found in workflow dispatch event"
-           echo 'Found the issue that triggered this event with number [${{ github.event.issue.number }}]'
-           echo 'Found the issue title [${{ github.event.issue.title }}]'
-         else
-           echo "issue number found: [$issue_number]"
-           # output a fixed variable
-           echo "::set-output name=issue_number::${issue_number}"
-         fi
+          echo "Testing for dispatch event with issue number: ${{ github.event.inputs.issue }}"
+          issue_number=${{ github.event.inputs.issue }}
+          if [ "${{ github.event.inputs.issue }}" == "" ]; then
+            echo "issue number not found in workflow dispatch event"
+            echo 'Found the issue that triggered this event with number [${{ github.event.issue.number }}]'
+            echo 'Found the issue title [${{ github.event.issue.title }}]'
+          else
+            echo "issue number found: [$issue_number]"
+            # output a fixed variable
+            echo "::set-output name=issue_number::${issue_number}"
+          fi
 
     - uses: actions/github-script@v5
       name: Find action from issue

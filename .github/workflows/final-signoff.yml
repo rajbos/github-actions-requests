@@ -8,7 +8,7 @@ on:
         
 jobs:
   find-action-name:
-    uses: rajbos/github-actions-request/.github/workflows/reusable-workflows/get-action-from-issue.yml@add-final-clone
+    uses: rajbos/github-actions-request/.github/workflows/get-action-from-issue.yml@add-final-clone
     with:
       issue_number: 11
 
