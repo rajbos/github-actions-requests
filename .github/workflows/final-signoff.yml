@@ -12,7 +12,7 @@ on:
         default: '11'
         
 env: 
-  fork-destination: rajbos-action # where to place the forks
+  fork-destination: rajbos-actions # where to place the forks
     
 jobs:
   find-action-name:
