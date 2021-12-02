@@ -67,10 +67,10 @@ jobs:
 
           // tell the user that it happened
           // TODO: does this work with github.com or load url from env variable
-          const link = `/${destinationOrg}/${{ needs.find-action-name.outputs.name }}`
+          const linkUrl = `/${destinationOrg}/${{ needs.find-action-name.outputs.name }}`
           const commentBody = [
               `:robot: Forked the action repository over to ${destinationOrg} :high_voltage:`,
-              `Go to ${link}](${link}) to see the action repository.`
+              `Go to ${linkUrl}](${linkUrl}) to see the action repository.`
             ]
           }
 
