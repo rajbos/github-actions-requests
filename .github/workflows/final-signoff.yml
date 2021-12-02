@@ -11,8 +11,12 @@ on:
         required: true
         default: '11'
         
+env: 
+  fork-destination: rajbos-action # where to place the forks
+    
 jobs:
   find-action-name:
+    if: github.event.label.name == 'final-signoff' || github.event_name == 'workflow_dispatch'
     uses: rajbos/github-actions-requests/.github/workflows/get-action-from-issue.yml@add-final-clone
     with:
       issue_number: 11
@@ -32,7 +36,51 @@ jobs:
           const repo = `${{ needs.find-action-name.outputs.name }}`
           const owner = `${{ needs.find-action-name.outputs.owner }}`
           const issue_number = `${{ needs.find-action-name.outputs.request_issue }}`
-
-          console.log(`owner: ${owner}, repo: ${repo}, with issue_number: ${issue_number}`)
+          
+          const destination-org = `${{ env.fork-destination }}`
+          console.log(`owner: ${owner}, repo: ${repo}, with issue_number: ${issue_number} to fork it to ${destination-org}`)
+         
+    # fork the action repo to the correct org
+    - name: Fork the action repository to ${{ env.fork-destination }}
+      uses: rajbos-actions/forker@v0.0.1
+      with:
+        token: ${{ secrets.GH_TOKEN }}
+        repo: ${{ needs.find-action-name.outputs.name }}
+        owner: ${{ needs.find-action-name.outputs.owner }}
+        org: ${{ env.fork-destination }}
 
       
+    - uses: actions/github-script@v5  
+      name: Check input variables have values     
+      with: 
+        github-token: ${{ secrets.GH_TOKEN }}
+        script: |
+          
+          // note: owner is now the organization the FORK lives in:
+          const repo = `${{ needs.find-action-name.outputs.name }}`
+          const owner = `${{ needs.find-action-name.outputs.owner }}`
+          const issue_number = `${{ needs.find-action-name.outputs.request_issue }}`
+          
+          const destination-org = `${{ env.fork-destination }}`
+
+          console.log(`owner: ${owner}, repo: ${repo}, with issue_number: ${issue_number} to fork it to ${destination-org}`)
+
+          // tell the user that it happened
+          // TODO: does this work with github.com or load url from env variable
+          const link = `/${{ env.fork-destination }}/${{ needs.find-action-name.outputs.name }}`
+          const commentBody = [
+              `:robot: Forked the action repository over to ${{ env.fork-destination }} :high_voltage:`,
+              `Go to ${link}](${link}) to see the action repository.`
+            ]
+          }
+
+          // create comment letting the user know the results
+          await github.rest.issues.createComment({
+            owner,
+            repo,
+            issue_number,
+            body: commentBody.join('\n')
+          });
+
+          // close the issue
+          // todo
