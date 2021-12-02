@@ -37,8 +37,8 @@ jobs:
           const owner = `${{ needs.find-action-name.outputs.owner }}`
           const issue_number = `${{ needs.find-action-name.outputs.request_issue }}`
           
-          const destination-org = `${{ env.fork-destination }}`
-          console.log(`owner: ${owner}, repo: ${repo}, with issue_number: ${issue_number} to fork it to ${destination-org}`)
+          const destinationOrg = `${{ env.fork-destination }}`
+          console.log(`owner: ${owner}, repo: ${repo}, with issue_number: ${issue_number} to fork it to ${destinationOrg}`)
          
     # fork the action repo to the correct org
     - name: Fork the action repository to ${{ env.fork-destination }}
@@ -51,7 +51,7 @@ jobs:
 
       
     - uses: actions/github-script@v5  
-      name: Check input variables have values     
+      name: Report back to user
       with: 
         github-token: ${{ secrets.GH_TOKEN }}
         script: |
@@ -61,15 +61,15 @@ jobs:
           const owner = `${{ needs.find-action-name.outputs.owner }}`
           const issue_number = `${{ needs.find-action-name.outputs.request_issue }}`
           
-          const destination-org = `${{ env.fork-destination }}`
+          const destinationOrg = `${{ env.fork-destination }}`
 
-          console.log(`owner: ${owner}, repo: ${repo}, with issue_number: ${issue_number} to fork it to ${destination-org}`)
+          console.log(`owner: ${owner}, repo: ${repo}, with issue_number: ${issue_number} to fork it to ${destinationOrg}`)
 
           // tell the user that it happened
           // TODO: does this work with github.com or load url from env variable
-          const link = `/${{ env.fork-destination }}/${{ needs.find-action-name.outputs.name }}`
+          const link = `/${{ destinationOrg }}/${{ needs.find-action-name.outputs.name }}`
           const commentBody = [
-              `:robot: Forked the action repository over to ${{ env.fork-destination }} :high_voltage:`,
+              `:robot: Forked the action repository over to ${{ destinationOrg }} :high_voltage:`,
               `Go to ${link}](${link}) to see the action repository.`
             ]
           }
