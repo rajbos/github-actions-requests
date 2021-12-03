@@ -72,7 +72,7 @@ jobs:
           console.log(`Forked ${linkUrl} to ${destinationOrg}`)
 
           const commentBody = [
-              `:robot: Forked the action repository over to ${destinationOrg} :high_voltage:`,
+              `:robot: Forked the action repository over to ${destinationOrg} :zap:`,
               `Go to [${linkUrl}](${linkUrl}) to see the action repository.`
           ]          
 
@@ -84,8 +84,6 @@ jobs:
             body: commentBody.join('\n')
           });
 
-          // close the issue
-          // todo
+          // todo?: close the issue
 
-          console.log(`commentResult: ${JSON.stringify(commentResult)}`)
           console.log(`The End`)

@@ -86,7 +86,7 @@ jobs:
           }
           else {
             commentBody = [
-              `:robot: Could not find action from the request in the issue body :high_voltage:`,
+              `:robot: Could not find action from the request in the issue body :zap:`,
               ``,
               `Please make sure you have this on a line in the body:`,
               `uses: organization/repo`
@@ -95,11 +95,11 @@ jobs:
 
           // todo: make boolean parameter to indicate if this happens or not!
           // create comment letting the user know the results
-          await github.rest.issues.createComment({
-            owner,
-            repo,
-            issue_number,
-            body: commentBody.join('\n')
-          });
+          // await github.rest.issues.createComment({
+          //   owner,
+          //   repo,
+          //   issue_number,
+          //   body: commentBody.join('\n')
+          // });
 
           return result
