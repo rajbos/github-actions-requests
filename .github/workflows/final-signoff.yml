@@ -56,10 +56,10 @@ jobs:
         github-token: ${{ secrets.GH_TOKEN }}
         script: |          
           // note: owner is now the organization the FORK lives in:         
-          owner: ${{ needs.find-action-name.outputs.owner }}
-          name: ${{ needs.find-action-name.outputs.name }}
-          request_owner: ${{ needs.find-action-name.outputs.request_owner }}
-          request_repo: ${{ needs.find-action-name.outputs.request_repo }}
+          owner: "${{ needs.find-action-name.outputs.owner }}"
+          name: "${{ needs.find-action-name.outputs.name }}"
+          request_owner: "${{ needs.find-action-name.outputs.request_owner }}"
+          request_repo: "${{ needs.find-action-name.outputs.request_repo }}"
           request_issue: ${{ needs.find-action-name.outputs.request_issue }}
           
           const destinationOrg = `${{ env.fork-destination }}`
