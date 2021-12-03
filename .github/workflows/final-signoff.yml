@@ -55,14 +55,16 @@ jobs:
       with: 
         github-token: ${{ secrets.GH_TOKEN }}
         script: |          
-          // note: owner is now the organization the FORK lives in:
-          const repo = `${{ needs.find-action-name.outputs.name }}`
-          const owner = context.repo.owner
-          const issue_number = `${{ needs.find-action-name.outputs.request_issue }}`
+          // note: owner is now the organization the FORK lives in:         
+          owner: ${{ needs.find-action-name.outputs.owner }}
+          name: ${{ needs.find-action-name.outputs.name }}
+          request_owner: ${{ needs.find-action-name.outputs.request_owner }}
+          request_repo: ${{ needs.find-action-name.outputs.request_repo }}
+          request_issue: ${{ needs.find-action-name.outputs.request_issue }}
           
           const destinationOrg = `${{ env.fork-destination }}`
 
-          console.log(`owner: ${owner}, repo: ${repo}, with issue_number: ${issue_number} to fork it to ${destinationOrg}`)
+          console.log(`owner: ${owner}, repo: ${name}, with issue_number: ${request_issue} to fork it to ${destinationOrg}`)
 
           // tell the user that it happened
           // TODO: does this work with github.com or load url from env variable
@@ -71,14 +73,14 @@ jobs:
 
           const commentBody = [
               `:robot: Forked the action repository over to ${destinationOrg} :high_voltage:`,
-              `Go to [linkUrl](linkUrl) to see the action repository.`
+              `Go to [${linkUrl}](${linkUrl}) to see the action repository.`
           ]          
 
           // create comment letting the user know the results
           const commentResult = await github.rest.issues.createComment({
-            owner,
-            repo,
-            issue_number,
+            owner: request_owner,
+            repo: request_repo,
+            issue_number: request_issue,
             body: commentBody.join('\n')
           });
 
