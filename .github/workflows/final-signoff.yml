@@ -57,7 +57,7 @@ jobs:
         script: |          
           // note: owner is now the organization the FORK lives in:
           const repo = `${{ needs.find-action-name.outputs.name }}`
-          const owner = `${{ needs.find-action-name.outputs.owner }}`
+          const owner = context.repo.owner
           const issue_number = `${{ needs.find-action-name.outputs.request_issue }}`
           
           const destinationOrg = `${{ env.fork-destination }}`
