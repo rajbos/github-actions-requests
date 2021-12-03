@@ -16,7 +16,7 @@ module.exports = async ({github, owner, repo, languages}) => {
             repo,
             path: targetPath,
             message: "🤖 Adding CodeQL workflow file",
-            content: Buffer.from(content).toString('base64'), //content.toString('base64'),
+            content: Buffer.from(content).toString('base64'),
             sha: undefined
         })
 

@@ -1,0 +1,105 @@
+on:
+  workflow_call:
+    inputs:
+      issue_number:
+        required: true
+        description: The issue number to get the action from
+        type: number
+    outputs:
+      action: 
+        description: "action name"
+        value: ${{ jobs.find-action-name.outputs.action }}
+      owner:  
+        description: "owner name"
+        value: ${{ jobs.find-action-name.outputs.owner }}
+      name:  
+        description: "owner/action name"
+        value: ${{ jobs.find-action-name.outputs.name }}
+      request_owner:  
+        description: "owner of the request repo"
+        value: ${{ jobs.find-action-name.outputs.request_owner }}
+      request_repo:  
+        description: "name of the request repo"
+        value: ${{ jobs.find-action-name.outputs.request_repo }}
+      request_issue:  
+        description: "issue with the request"
+        value: ${{ jobs.find-action-name.outputs.request_issue }}
+
+jobs:
+  find-action-name:
+    runs-on: ubuntu-latest
+    if: github.event.label.name == 'final-signoff' || github.event_name == 'workflow_dispatch'
+
+    outputs:
+      action: ${{ steps.get-action.outputs.action }}
+      owner: ${{ steps.get-action.outputs.owner }}
+      name: ${{ steps.get-action.outputs.name }}
+      request_owner: ${{ steps.get-action.outputs.request_owner }}
+      request_repo: ${{ steps.get-action.outputs.request_repo }}
+      request_issue: ${{ steps.get-action.outputs.request_issue }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - id: dispatch_issue_find
+      name: Find action from dispatch
+      run: |
+          echo "Testing for dispatch event with issue number: ${{ github.event.inputs.issue }}"
+          issue_number=${{ github.event.inputs.issue }}
+          if [ "${{ github.event.inputs.issue }}" == "" ]; then
+            echo "issue number not found in workflow dispatch event"
+            echo 'Found the issue that triggered this event with number [${{ github.event.issue.number }}]'
+            echo 'Found the issue title [${{ github.event.issue.title }}]'
+          else
+            echo "issue number found: [$issue_number]"
+            # output a fixed variable
+            echo "::set-output name=issue_number::${issue_number}"
+          fi
+
+    - uses: actions/github-script@v5
+      name: Find action from issue
+      id: get-action
+      with:
+        result-encoding: string
+        script: |
+          const script = require('./src/find-action-from-issue.js')
+                  
+          const owner = context.repo.owner
+          const repo = context.repo.repo
+          let issue_number = context.issue.number         
+          
+          if (issue_number == null) {
+            // try to load issue number from other step:
+            console.log(`issue number not found in context, searching for it in workflow dispatch step`)
+            console.log(`issue number: [${{ steps.dispatch_issue_find.outputs.issue_number }}]`)
+            issue_number = `${{ steps.dispatch_issue_find.outputs.issue_number }}`
+          }
+
+          let { result, action } = await script({github, owner, repo, issue_number})
+
+          let commentBody
+          if (result === 0) {
+            commentBody = [
+              `:robot: Found action from the request in the issue body ✅`,
+              `\`${action}\``,
+              `This action will now be checked automatically and the results will be posted back in this issue.`
+            ]
+          }
+          else {
+            commentBody = [
+              `:robot: Could not find action from the request in the issue body :zap:`,
+              ``,
+              `Please make sure you have this on a line in the body:`,
+              `uses: organization/repo`
+            ]
+          }
+
+          // todo: make boolean parameter to indicate if this happens or not!
+          // create comment letting the user know the results
+          // await github.rest.issues.createComment({
+          //   owner,
+          //   repo,
+          //   issue_number,
+          //   body: commentBody.join('\n')
+          // });
+
+          return result
