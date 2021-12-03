@@ -21,7 +21,7 @@ jobs:
     with:
       issue_number: 11
 
-  test-parameters:
+  fork-the-action:
     runs-on: ubuntu-latest
     needs: find-action-name
     steps:
@@ -54,34 +54,34 @@ jobs:
       name: Report back to user
       with: 
         github-token: ${{ secrets.GH_TOKEN }}
-        script: |
-          
+        script: |          
           // note: owner is now the organization the FORK lives in:
           const repo = `${{ needs.find-action-name.outputs.name }}`
           const owner = `${{ needs.find-action-name.outputs.owner }}`
           const issue_number = `${{ needs.find-action-name.outputs.request_issue }}`
           
-          const destinationOrg = `${{ env.fork-destination }}`
+          //const destinationOrg = `${{ env.fork-destination }}`
 
-          console.log(`owner: ${owner}, repo: ${repo}, with issue_number: ${issue_number} to fork it to ${destinationOrg}`)
+          //console.log(`owner: ${owner}, repo: ${repo}, with issue_number: ${issue_number} to fork it to ${destinationOrg}`)
 
           // tell the user that it happened
           // TODO: does this work with github.com or load url from env variable
           //const linkUrl = `/${destinationOrg}/${{ needs.find-action-name.outputs.name }}`
-          
-          const commentBody = [
-              `:robot: Forked the action repository over to ${destinationOrg} :high_voltage:`,
-              `Go to [linkUrl](linkUrl) to see the action repository.`
-            ]
-          }
+
+          //const commentBody = [
+          //    `:robot: Forked the action repository over to ${destinationOrg} :high_voltage:`,
+          //    `Go to [linkUrl](linkUrl) to see the action repository.`
+          //  ]
+          //}
 
           // create comment letting the user know the results
-          await github.rest.issues.createComment({
-            owner,
-            repo,
-            issue_number,
-            body: commentBody.join('\n')
-          });
+          //await github.rest.issues.createComment({
+          //  owner,
+          //  repo,
+          ///  issue_number,
+          //  body: commentBody.join('\n')
+          //});
 
           // close the issue
           // todo
+          console.log(`The end`)
