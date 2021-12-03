@@ -75,7 +75,7 @@ jobs:
           ]          
 
           // create comment letting the user know the results
-          await github.rest.issues.createComment({
+          cosnt commentResult = await github.rest.issues.createComment({
             owner,
             repo,
             issue_number,
@@ -84,4 +84,6 @@ jobs:
 
           // close the issue
           // todo
+          
+          console.log(`commentResult: ${commentResult}`)
           console.log(`The End`)
