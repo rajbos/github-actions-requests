@@ -75,13 +75,13 @@ jobs:
           ]          
 
           // create comment letting the user know the results
-          //await github.rest.issues.createComment({
-          //  owner,
-          //  repo,
-          ///  issue_number,
-          //  body: commentBody.join('\n')
-          //});
+          await github.rest.issues.createComment({
+            owner,
+            repo,
+            issue_number,
+            body: commentBody.join('\n')
+          });
 
           // close the issue
           // todo
-          console.log(`The end`)
+          console.log(`The End`)
