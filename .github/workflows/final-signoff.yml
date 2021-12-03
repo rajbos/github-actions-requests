@@ -10,7 +10,7 @@ env:
 jobs:
   find-action-name:
     if: github.event.label.name == 'final-signoff'
-    uses: rajbos/github-actions-requests/.github/workflows/get-action-from-issue.yml@add-final-clone
+    uses: rajbos/github-actions-requests/.github/workflows/get-action-from-issue.yml@main
     with:
       issue_number: ${{ github.event.inputs.issue }}
 
