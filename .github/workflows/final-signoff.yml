@@ -69,11 +69,10 @@ jobs:
           const linkUrl = `/${destinationOrg}/${{ needs.find-action-name.outputs.name }}`
           console.log(`Forked ${linkUrl} to ${destinationOrg}`)
 
-          //const commentBody = [
-          //    `:robot: Forked the action repository over to ${destinationOrg} :high_voltage:`,
-          //    `Go to [linkUrl](linkUrl) to see the action repository.`
-          //  ]
-          //}
+          const commentBody = [
+              `:robot: Forked the action repository over to ${destinationOrg} :high_voltage:`,
+              `Go to [linkUrl](linkUrl) to see the action repository.`
+          ]          
 
           // create comment letting the user know the results
           //await github.rest.issues.createComment({
