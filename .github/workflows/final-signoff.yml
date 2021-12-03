@@ -85,5 +85,5 @@ jobs:
           // close the issue
           // todo
 
-          console.log(`commentResult: ${commentResult}`)
+          console.log(`commentResult: ${JSON.stringify(commentResult)}`)
           console.log(`The End`)
