@@ -209,7 +209,7 @@ jobs:
       run: |
         git clone https://github.com/${{ needs.find-action-name.outputs.action }} action
 
-    - name: Check for .github and workflows folder
+    - name: Check for .github and workflows folder and run docker scan
       id: scan
       run: | 
         chmod +x src/security-scan.sh
