@@ -81,9 +81,9 @@ function action_docker_checks() {
         trivy --quiet image $IMAGE > issues
     fi
 
-    echo "Trivy results file        --------------------------------------"
+    echo "Trivy results file        --------------------------------------------------------------------------------------------------------"
     cat issues
-    echo "End of Trivy results file --------------------------------------"
+    echo "End of Trivy results file --------------------------------------------------------------------------------------------------------"
 
     echo "Checking for trivy issues count:"
     # Check if LOW or MEDIUM issues are found (remove count from header)
