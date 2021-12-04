@@ -216,6 +216,13 @@ jobs:
         src/security-scan.sh
       env:
         ACTION: ${{ needs.find-action-name.outputs.action }}
+
+    - name: Upload Trivy report
+      uses: actions/upload-artifact@v1
+      with:
+        path: issues
+        name: trivy-issues.txt
+        mime-type: application/text
         
     - name: Update comment with results
       run: |
