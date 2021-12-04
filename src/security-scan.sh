@@ -87,9 +87,9 @@ function action_docker_checks() {
 
     echo "Checking for trivy issues count:"
     # Check if LOW or MEDIUM issues are found (remove count from header)
-    LOW_MEDIUM_ISSUES = $(cat issues | grep -e LOW -e MEDIUM | wc -l)
+    LOW_MEDIUM_ISSUES=$(cat issues | grep -e LOW -e MEDIUM | wc -l)
 
-    if [ $LOW_MEDIUM_ISSUES  -gt 0 ] ; then
+    if [ $LOW_MEDIUM_ISSUES -gt 0 ] ; then
         echo ::set-output name=low_medium_issues::$LOW_MEDIUM_ISSUES
         echo ::set-output name=has_low_medium_issues::true
     else
