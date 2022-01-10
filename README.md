@@ -1,5 +1,5 @@
 # GitHub Actions Requests
-This repository is meant to hold the setup for requesting actions to be used internally, for example together with the [Internl Actions Marketplace](https://devopsjournal.io/blog/2021/10/14/GitHub-Actions-Internal-Marketplace).
+This repository is meant to hold the setup for requesting actions to be used internally, for example together with the [Internal Actions Marketplace](https://devopsjournal.io/blog/2021/10/14/GitHub-Actions-Internal-Marketplace).
 
 # Process description
 1. User creates a new issue in this repo
