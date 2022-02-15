@@ -17,7 +17,7 @@ jobs:
   fork-the-action:
     runs-on: ubuntu-latest
     needs: find-action-name
-    name: Fork the action to [${{ env.fork-destination }}]
+    name: Fork the action to the fork destination
     steps:
     - uses: actions/checkout@v2
     - uses: actions/github-script@v5  
