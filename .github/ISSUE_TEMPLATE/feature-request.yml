@@ -1,0 +1,29 @@
+name: Request a new feature for the actions-request repository
+description: Request new feature for the actions-request repository
+title: "New feature request: "
+assignees:
+  - rajbos
+ labels:
+  - feature-request
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks you for your request. We need some information before we can proceed.
+        After that, the request will be reviewed including an security assesment. Process tracking will happen inside this issue.
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Describe the feature you want
+      description: What do you want to achieve?
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reasons
+      description: Why do you want to request this feature?
+  - type: textarea
+    id: usage
+    attributes:
+      label: Intended usage
+      description: Describe the intended use of the feature you want to request, include example repositories if you can.
+      render: markdown
