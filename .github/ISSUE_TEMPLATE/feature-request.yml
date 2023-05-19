@@ -3,7 +3,7 @@ description: Request new feature for the actions-request repository
 title: "New feature request: "
 assignees:
   - rajbos
- labels:
+labels:
   - "feature-request"
 body:
   - type: markdown
