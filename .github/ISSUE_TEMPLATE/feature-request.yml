@@ -4,7 +4,7 @@ title: "New feature request: "
 assignees:
   - rajbos
  labels:
-  - feature-request
+  - "feature-request"
 body:
   - type: markdown
     attributes:
@@ -12,6 +12,11 @@ body:
         Thanks you for your request. We need some information before we can proceed.
         After that, the request will be reviewed including an security assesment. Process tracking will happen inside this issue.
   - type: textarea
+    id: feature-description
+    attributes:
+      label: Describe the feature you want
+      description: What do you want to achieve?
+- type: textarea
     id: reason
     attributes:
       label: Reasons
