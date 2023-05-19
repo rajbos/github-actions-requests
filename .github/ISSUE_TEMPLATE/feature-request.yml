@@ -16,7 +16,7 @@ body:
     attributes:
       label: Describe the feature you want
       description: What do you want to achieve?
-- type: textarea
+  - type: textarea
     id: reason
     attributes:
       label: Reasons
